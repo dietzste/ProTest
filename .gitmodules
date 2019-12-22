@@ -1,0 +1,3 @@
+[submodule "ProTest.wiki"]
+	path = ProTest.wiki
+	url = https://github.com/dietzste/ProTest.wiki.git
