@@ -44,7 +44,7 @@ else if (fnIntroValue = "IntroGetSex")
 	PreloadName := GetIniValue(ProjectFile, BasicSettingsMenu, "e_sex")
 	if (PreloadName = "ERROR")
 		PreloadName := GetIniValue(BasicFile, BasicSettingsMenu, "e_sex")
-	EnterPreloadValue(PreloadName)
+	EnterPreloadValue(fnOCR, PreloadName)
 	return 
 	}
 else if (fnIntroValue = "IntroGetDateOfBirth")
