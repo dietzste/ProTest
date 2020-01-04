@@ -21,11 +21,10 @@ SleepBufferCount := 0
 ; Working Variables
 PreloadList := ""
 RemoteSimulation := false
-AddOns := false
 
 ; History
 RemoteHistoryOutput := false
-DeleteHistory := false
+DeleteHistory := true
 VerboseHistory := false
 RemoteHistoryFile := "RemoteHistory.txt"
 
@@ -660,6 +659,37 @@ If (ErrorLevel = 1 OR ButtonVisible = 0)
 else
 	return true
 }
+
+;;;;;;;;; KlickeClearundBack ;;;;;;;;;; 
+ 
+PgDn::
+	KlickeClearundBack()
+return
+
+PgUp::
+	KlickeVerweigert()
+return
+
+KlickeClearundBack(){
+global NipoFenster
+Sleep, 50
+if (IsButtonVisible("&Back") = true)
+	{
+	ControlClick, &Clear, %NipoFenster%,,,, NA
+	ControlClick, &Back, %NipoFenster%,,,, NA
+	}
+}
+
+KlickeVerweigert(){
+local
+global NipoFenster
+sleep, 50
+if (IsButtonVisible("verweigert") = true)
+	ControlClick, verweigert, %NipoFenster%,,,, NA
+}
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 #PERSISTENT
 Winset, AlwaysOnTop, Off, %NipoFenster%

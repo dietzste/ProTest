@@ -46,7 +46,7 @@ QuickSetupMenu := "QuickSetupMenu"
 LFDFinderMenu := "LFDFinderMenu"
 AdvancedSearchMenu := "AdvancedSearchMenu"
 PreloadReaderMenu := "PreloadReaderMenu"
-BasicSettingsMenu := "BasicSettingsMenu"
+AdvancedSettings := "AdvancedSettings"
 
 ; special Menu Settings
 DisON := "Disabled1"
@@ -60,21 +60,22 @@ sz := "ß"
 
 ; Work Variables
 WorkWindow := "TeamViewer"
-Verbose := false
 CurrentLFD 	:= ""
 ultrafast := 30
 fast := 100
 med := 130
 
 ; Variables Advanced Settings
-LFDLimit		:= GetIniValue(BasicFile, "BasicSettings",  "LFDLimit")
-fnLimit			:= GetIniValue(BasicFile, "BasicSettings",  "fnLimit")
-DefaultSleep	:= GetIniValue(BasicFile, "BasicSettings",  "DefaultSleep")
-TimeOutTest		:= GetIniValue(BasicFile, "BasicSettings",  "TimeOutTest")
-SleepAfterEnter := GetIniValue(BasicFile, "BasicSettings",  "SleepAfterEnter")
-RemoteBuffer 	:= GetIniValue(BasicFile, "BasicSettings",  "RemoteBuffer")
-WaitForXModulSec := := GetIniValue(BasicFile, "BasicSettings",  "WaitForXModulSec")
-LFDMatchMsgDuration := GetIniValue(BasicFile, "BasicSettings",  "LFDMatchMsgDuration")
+LFDLimit		:= GetIniValue(BasicFile, AdvancedSettings,  "LFDLimit")
+fnLimit			:= GetIniValue(BasicFile, AdvancedSettings,  "fnLimit")
+DefaultSleep	:= GetIniValue(BasicFile, AdvancedSettings,  "DefaultSleep")
+TimeOutRemoteTest := GetIniValue(BasicFile, AdvancedSettings,  "TimeOutRemoteTest")
+SleepAfterEnter := GetIniValue(BasicFile, AdvancedSettings,  "SleepAfterEnter")
+RemoteBuffer 	:= GetIniValue(BasicFile, AdvancedSettings,  "RemoteBuffer")
+WaitForXModulSec := GetIniValue(BasicFile, AdvancedSettings,  "WaitForXModulSec")
+MsgDurationLFDMatch := GetIniValue(BasicFile, AdvancedSettings,  "MsgDurationLFDMatch")
+MsgSkippedIntro := GetIniValue(BasicFile, AdvancedSettings,  "MsgSkippedIntro")
+VerboseHistory := GetIniValue(BasicFile, AdvancedSettings,  "VerboseHistory")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea
@@ -204,7 +205,7 @@ Return
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_SkipIntro.ahk
-#Include Protest_fnSearch.ahk
+#Include Protest_FnSearch.ahk
 #Include Protest_InputBoxes.ahk
 #Include Protest_WorkFunctions.ahk
 
