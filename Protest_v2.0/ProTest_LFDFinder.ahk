@@ -8,6 +8,7 @@ global ProjectFile
 global LFDFound := false
 global CurrentLFD
 global ae, med
+global LFDMatchMsgDuration
 static NeedRemotePreloads
 static LFDWasEntered
 GetSearchCriteria()
@@ -43,18 +44,18 @@ if (LFDFound = true)
 		{
 		if (LFDWasEntered = true)
 			{
-			ShowMatchLFDMessage(2000)
+			ShowMatchLFDMessage(LFDMatchMsgDuration)
 			return
 			}
 		else
 			{
-			ShowMatchLFDMessage(2000)
+			ShowMatchLFDMessage(LFDMatchMsgDuration)
 			Send, {Enter}
 			}
 		}
 	L_WaitUntilPreloadsLoaded()
 	SaveToHistory("ENDE LFD-Suche - Match mit " . CurrentLFD)
-	ShowMatchLFDMessage("No")
+	ShowMatchLFDMessage(LFDMatchMsgDuration)
 	return
 	}
 else
@@ -95,14 +96,14 @@ else
 } ; ende Loop
 } ; Ende LFDFinderRoutine
 
-ShowMatchLFDMessage(SleepTime){
+ShowMatchLFDMessage(LFDMatchMsgDuration){
 local
 global CurrentLFD
 global MatchWindowName := "Match mit " . CurrentLFD 
 Gosub LFDMatchWindow
-if (SleepTime != "No")
+if (LFDMatchMsgDuration > 0)
 	{
-	Sleep, SleepTime
+	Sleep, LFDMatchMsgDuration
 	Gui 33:Destroy
 	WinWaitClose, %MatchWindowName%
 	}
@@ -304,7 +305,7 @@ Loop, Parse, LFDListTempFile, "`n"
 			{
 			CurrentLFD := LFD
 			SaveToHistory("Passende LFD gefunden: " . CurrentLFD)
-			ShowMatchLFDMessage(2000)
+			ShowMatchLFDMessage(LFDMatchMsgDuration)
 			EnterLFD(CurrentLFD, "LFDCheck")
 			L_WaitUntilPreloadsLoaded()
 			return true

@@ -74,6 +74,7 @@ TimeOutTest		:= GetIniValue(BasicFile, "BasicSettings",  "TimeOutTest")
 SleepAfterEnter := GetIniValue(BasicFile, "BasicSettings",  "SleepAfterEnter")
 RemoteBuffer 	:= GetIniValue(BasicFile, "BasicSettings",  "RemoteBuffer")
 WaitForXModulSec := := GetIniValue(BasicFile, "BasicSettings",  "WaitForXModulSec")
+LFDMatchMsgDuration := GetIniValue(BasicFile, "BasicSettings",  "LFDMatchMsgDuration")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea
@@ -100,7 +101,6 @@ if (A_IsCompiled != 1)
 SettingUpCapture2Text(){
 local
 global ConfigFolder
-global Capture2TextIniFileAppDataPath
 global Capture2TextWorkDir :=  A_Workingdir . "\Capture2Text"
 global Capture2TextAppDataFolder := A_AppData . "\Capture2Text"
 global Capture2TextIniFileAppDataPath := Capture2TextAppDataFolder . "\Capture2Text.ini"
