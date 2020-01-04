@@ -5,7 +5,7 @@ global fast, IntroIsOver, CurrentLFD
 global SleepAfterEnter
 global BasicSettingsMenu
 global IntroIsOver 
-global Verbose
+global VerboseHistory
 SetKeyDelay, fast
 ; Check in LibraryFile
 fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
@@ -37,6 +37,7 @@ else
 if fnIntroValue is digit
 	{
 	Send, %fnIntroValue%{Enter}
+	Sleep, SleepAfterEnter
 	return 
 	}
 else if (fnIntroValue = "IntroGetSex") 
@@ -106,7 +107,14 @@ global e_BirthDay, e_BirthMonth, e_BirthYear
 global e_Input1, e_Input2, e_Input3
 global CurrentLFD
 global MultiplePreloadArray
-CreateMultiplePreloadArray("GetDateOfBirth", e_BirthDay, e_BirthMonth, e_BirthYear)
+
+; Create BirthdayArray
+MultiplePreloadArray := []
+MultiplePreloadArray[e_BirthDay] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthDay, "Missing")
+MultiplePreloadArray[e_BirthMonth] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthMonth, "Missing")
+MultiplePreloadArray[e_BirthYear] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthYear, "Missing")
+
+; Get PreloadValues
 L_ReadMultiplePreloads(e_BirthDay, e_BirthMonth, e_BirthYear)
 for Preload, PreloadValue in MultiplePreloadArray
 	{

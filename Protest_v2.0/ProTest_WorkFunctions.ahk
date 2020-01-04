@@ -7,7 +7,7 @@ local
 global ue, fast, med, CurrentLFD
 global WorkWindow, HistoryFileName
 global DefaultSleep, SleepAfterEnter
-global c_ShowSkipMessage
+global MsgSkippedIntro
 global r_Main1, r_Main2, r_Main3
 global r_LFD1, r_LFD2, cb_UseLFD
 global c_Beginning, e_Beginning, c_SendDate, c_SkipLastPart
@@ -34,7 +34,7 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 	if (r_LFD1 = 1)
 		{
 		Sleep, DefaultSleep
-		EnterLFD(cb_UseLFD, "Menu")
+		EnterLFD(cb_UseLFD)
 		CurrentLFD := cb_UseLFD
 		SaveToHistory("LFD Eingabe: " . CurrentLFD)
 		L_WaitUntilPreloadsLoaded()
@@ -67,8 +67,8 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 			
 		Sleep, SleepAfterEnter
 		} Until (IntroIsOver = true)
-		;if (c_ShowSkipMessage = 1)
-		;	MsgBox, 4096, Intro %ue%bersprungen! , Intro %ue%bersprungen! (No match for fn: "%fnOCR%") 
+		if (MsgSkippedIntro = true)
+			MsgBox, 4096, Intro %ue%bersprungen! , Intro %ue%bersprungen! (No match for fn: "%fnOCR%") 
 		SaveToHistory("INTRO OVER")
 		}
 	}
@@ -89,6 +89,18 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	} Until (fnSearchIsOver = true)
 	}
 }
+
+EnterLFD(LFD){
+local
+global fast, med
+CheckWorkWindow()
+SetKeyDelay, med
+Send, %LFD%{Enter}
+sleep, fast 
+Send, {Enter}
+SetKeyDelay, fast
+}
+
 
 OCRIsEmpty(){
 local 
@@ -128,7 +140,7 @@ return
 SaveToHistory(Info, params*){
 local
 global AddOns
-global HistoryFile, Verbose
+global HistoryFile, VerboseHistory
 ListLines Off
 TimeStemp := A_DDD . A_Space . A_DD . "." A_MMM . A_Space . A_Hour . ":" . A_Min . ":" . A_Sec 
 if (Strlen(Info) <= 4)
@@ -144,7 +156,7 @@ else if (params.MaxIndex() = 2)
 else if (params.MaxIndex() = 3)	
 	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . " - " . params[3] . ")"
 
-if (Verbose = true)
+if (VerboseHistory = true)
 	{
 	; Verbose-Kommentare mit speichern
 	if (AddOns = true)
