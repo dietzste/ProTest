@@ -46,6 +46,7 @@ QuickSetupMenu := "QuickSetupMenu"
 LFDFinderMenu := "LFDFinderMenu"
 AdvancedSearchMenu := "AdvancedSearchMenu"
 PreloadReaderMenu := "PreloadReaderMenu"
+BasicSettingsMenu := "BasicSettingsMenu"
 AdvancedSettings := "AdvancedSettings"
 
 ; special Menu Settings

@@ -4,9 +4,8 @@
 
 LFDFinderRoutine(){
 local
+global ae
 global ProjectFile
-global LFDFound := false
-global ae, med
 
 ; (1) Create Arrays - Request/Exclude-Array
 CreateLFDArrays()
@@ -26,7 +25,7 @@ static NeedRemotePreloads := false
 static LFDWasEntered := false
 
 ; (4) Start Loop
-SaveToHistory("START LFD-Suche LFD: " . CurrentLFD
+SaveToHistory("START LFD-Suche LFD: " . CurrentLFD)
 loop {
 ; Current State
 global LFDCount := A_Index - 1
