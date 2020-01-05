@@ -17,7 +17,8 @@ MsgBox, 4096 , F1 - %GuiF1%,
 Basic Hotkeys:
 F6		= Vorgang pausieren/fortfahren
 Shift + F5%A_Tab%%A_Tab%= Startet Skript neu (Restart)
-Shift + ESC%A_Tab%= Hotkeys (de-)aktivieren 
+Shift + ESC%A_Tab%= Hotkeys (de-)aktivieren
+F9		= %GuiF9%
 F12		= ProTest beenden
 
 Men%ue%s:
@@ -26,7 +27,6 @@ F3		= %GuiF3%
 F4		= %GuiF4% 
 F7		= %AddOnComment%%GuiF7%
 F8		= %GuiF8%
-F9		= %GuiF9%
 F10		= %GuiF10%
 
 Weitere:
@@ -35,8 +35,6 @@ Strg + d 	 	= gibt aktuelles Datum ein
 Shift + F3/F8	= %AddOnComment%%oe%ffnet AutoEdit Men%ue%
 Strg + m 	 	= %AddOnComment%%ue%berspringt XModul
 Strg + l 	 	= %AddOnComment%%oe%ffnet LibraryTool
-Bild 'hoch'  	= %AddOnComment%dr%ue%ckt verweigert-Button
-Bild 'unten'  	= %AddOnComment%dr%ue%ckt Clear&Back-Button 
 )
 return
 
