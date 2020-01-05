@@ -35,8 +35,6 @@ Strg + d 	 	= gibt aktuelles Datum ein
 Shift + F3/F8	= %AddOnComment%%oe%ffnet AutoEdit Men%ue%
 Strg + m 	 	= %AddOnComment%%ue%berspringt XModul
 Strg + l 	 	= %AddOnComment%%oe%ffnet LibraryTool
-Bild 'hoch'  	= %AddOnComment%dr%ue%ckt verweigert-Button
-Bild 'unten'  	= %AddOnComment%dr%ue%ckt Clear&Back-Button 
 )
 return
 
