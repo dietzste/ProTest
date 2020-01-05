@@ -66,18 +66,18 @@ fast := 100
 med := 130
 
 ; Changable Settings
-SleepAfterEnter := GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
+SleepAfterEnter 	:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
 MsgDurationLFDMatch := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationLFDMatch")
-MsgDurationSkippedIntro := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationSkippedIntro")
-VerboseHistory := GetIniValue(BasicFile, "ChangableSettings",  "VerboseHistory")
+MsgDurationSkippedIntro := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationSkippedIntro")/1000
+VerboseHistory 		:= GetIniValue(BasicFile, "ChangableSettings",  "VerboseHistory")
 
 ; Advanced Settings
-DefaultSleep	:= GetIniValue(BasicFile, AdvancedSettings,  "DefaultSleep")
-LFDLimit		:= GetIniValue(BasicFile, AdvancedSettings,  "LFDLimit")
-fnLimit			:= GetIniValue(BasicFile, AdvancedSettings,  "fnLimit")
-TimeOutRemoteTest := GetIniValue(BasicFile, AdvancedSettings,  "TimeOutRemoteTest")
-RemoteBuffer 	:= GetIniValue(BasicFile, AdvancedSettings,  "RemoteBuffer")
-WaitForXModulSec := GetIniValue(BasicFile, AdvancedSettings,  "WaitForXModulSec")
+DefaultSleep	:= GetIniValue(BasicFile, "AdvancedSettings",  "DefaultSleep")
+LFDLimit		:= GetIniValue(BasicFile, "AdvancedSettings",  "LFDLimit")
+fnLimit			:= GetIniValue(BasicFile, "AdvancedSettings",  "fnLimit")
+TimeOutRemoteTest := GetIniValue(BasicFile, "AdvancedSettings",  "TimeOutRemoteTest")
+RemoteBuffer 	:= GetIniValue(BasicFile, "AdvancedSettings",  "RemoteBuffer")
+WaitForXModulSec := GetIniValue(BasicFile, "AdvancedSettings",  "WaitForXModulSec")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea
@@ -208,7 +208,6 @@ Return
 
 #Include Protest_SkipIntro.ahk
 #Include Protest_FnSearch.ahk
-#Include Protest_InputBoxes.ahk
 #Include Protest_WorkFunctions.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
