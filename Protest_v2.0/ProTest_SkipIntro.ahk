@@ -1,11 +1,9 @@
 SkipIntro(fnOCR){
 local
-global BasicFile, ProjectFile, TempFile, LibraryFile
-global fast, IntroIsOver, CurrentLFD
+global BasicFile, ProjectFile, LibraryFile
+global fast, IntroIsOver
 global SleepAfterEnter
 global BasicSettingsMenu
-global IntroIsOver 
-global VerboseHistory
 SetKeyDelay, fast
 ; Check in LibraryFile
 fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
@@ -92,7 +90,7 @@ if (PreloadName = "ERROR")
 	PreloadName := GetIniValue(BasicFile, BasicSettingsMenu, "e_sex")
 GeschlechtZP := GetIniValue(TempFile, "LFD_" . CurrentLFD , PreloadName)
 if (GeschlechtZP = "ERROR")
-	InputBoxProtest(fnOCR, GeschlechtZP)
+	GeschlechtZP := InputBoxGeschlecht(fnOCR)
 If (GeschlechtZP = 1)
 	GeschlechtZPReverse := 2
 else
@@ -153,4 +151,25 @@ SetKeyDelay, med
 Send, %Order1%{Enter}%Order2%{Enter}%Order3%{Enter}
 SetKeyDelay, fast
 Sleep, DefaultSleep
+}
+
+;;; INPUTBOX 
+
+InputBoxGeschlecht(fnOCR){
+local
+global ue, oe, ae
+
+; Setting Up InPut Box
+InputBoxText := "Geschlechtsangabe f" . ue . "r fn """ . fnOCR . """ ben" . oe . "tigt!`n`n1: m" . ae . "nnlich `n2: weiblich"
+InptBoxTitle := "Geschlechtsangabe fehlt!"
+InputBoxDefault := 2
+
+InputBox, GeschlechtEntered , %InptBoxTitle% , %InputBoxText%,, 300, 200,,,,,%InputBoxDefault%
+if (ErrorLevel = 1) ;Cancel or Closed
+	{
+	MsgBox, 4096, Ende , Durchlauf wurde beendet!
+	Exit
+	}
+else
+	return GeschlechtEntered
 }

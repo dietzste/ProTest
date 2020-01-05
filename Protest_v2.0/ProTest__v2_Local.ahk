@@ -47,7 +47,6 @@ LFDFinderMenu := "LFDFinderMenu"
 AdvancedSearchMenu := "AdvancedSearchMenu"
 PreloadReaderMenu := "PreloadReaderMenu"
 BasicSettingsMenu := "BasicSettingsMenu"
-AdvancedSettings := "AdvancedSettings"
 
 ; special Menu Settings
 DisON := "Disabled1"
@@ -66,17 +65,19 @@ ultrafast := 30
 fast := 100
 med := 130
 
-; Variables Advanced Settings
+; Changable Settings
+SleepAfterEnter := GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
+MsgDurationLFDMatch := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationLFDMatch")
+MsgDurationSkippedIntro := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationSkippedIntro")
+VerboseHistory := GetIniValue(BasicFile, "ChangableSettings",  "VerboseHistory")
+
+; Advanced Settings
+DefaultSleep	:= GetIniValue(BasicFile, AdvancedSettings,  "DefaultSleep")
 LFDLimit		:= GetIniValue(BasicFile, AdvancedSettings,  "LFDLimit")
 fnLimit			:= GetIniValue(BasicFile, AdvancedSettings,  "fnLimit")
-DefaultSleep	:= GetIniValue(BasicFile, AdvancedSettings,  "DefaultSleep")
 TimeOutRemoteTest := GetIniValue(BasicFile, AdvancedSettings,  "TimeOutRemoteTest")
-SleepAfterEnter := GetIniValue(BasicFile, AdvancedSettings,  "SleepAfterEnter")
 RemoteBuffer 	:= GetIniValue(BasicFile, AdvancedSettings,  "RemoteBuffer")
 WaitForXModulSec := GetIniValue(BasicFile, AdvancedSettings,  "WaitForXModulSec")
-MsgDurationLFDMatch := GetIniValue(BasicFile, AdvancedSettings,  "MsgDurationLFDMatch")
-MsgSkippedIntro := GetIniValue(BasicFile, AdvancedSettings,  "MsgSkippedIntro")
-VerboseHistory := GetIniValue(BasicFile, AdvancedSettings,  "VerboseHistory")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea

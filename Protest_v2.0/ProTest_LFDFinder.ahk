@@ -11,9 +11,13 @@ global ProjectFile
 CreateLFDArrays()
 
 ; (2) Check existing LFDs in TempFile
-LFDFound := CheckExistingLFDs()
-if (LFDFound = true)
-	return 
+c_CheckTempFileFirst := GetIniValue(ProjectFile, "LFDFinderMenu", "c_CheckTempFileFirst", 1)
+if (c_CheckTempFileFirst = 1)
+	{
+	LFDFound := CheckExistingLFDs()
+	if (LFDFound = true)
+		return
+	}
 
 ; (3) Get Search Criteria (F3 Menu)
 global e_CheckAgain := GetIniValue(ProjectFile, "LFDFinderMenu", "e_CheckAgain", 10)
@@ -34,12 +38,23 @@ SaveToHistory("LFD-Suche Loop: " . A_Index)
 ; (4a) Create Array for Current LFD
 CreateMultiplePreloadArray(CurrentLFD)
 
-; (4b) Check Missing Preloads
-MultiplePreloads := CheckingLFDValues(CurrentLFD)
-if (MultiplePreloads = "")
-	NeedRemotePreloads := false
+; (4b) Checking LFD Values
+LFDFound := ComparePreloadArrays(CurrentLFD, true)
+if (LFDFound = true)
+	{
+	ShowMatchLFDMessage()
+	SaveToHistory("ENDE LFD-Suche - Match mit " . CurrentLFD)
+	return 
+	}
 else
-	NeedRemotePreloads := true
+	{
+	; (4b) Check Missing Preloads
+	MultiplePreloads := CheckingLFDValues(CurrentLFD)
+	if (MultiplePreloads = "")
+		NeedRemotePreloads := false
+	else
+		NeedRemotePreloads := true
+	}
 
 ; No Missing Preloads in TempFile (+ Already Checked Existing LFD's)
 if (NeedRemotePreloads = false)
@@ -76,18 +91,6 @@ if (NeedRemotePreloads = true)
 	L_ReadMultiplePreloads()
 	} ; ende if
 	
-; Checking LFD Values
-CreateMultiplePreloadArray(CurrentLFD)
-LFDFound := ComparePreloadArrays(CurrentLFD)
-
-if (LFDFound = true)
-	{
-	ShowMatchLFDMessage()
-	SaveToHistory("ENDE LFD-Suche - Match mit " . CurrentLFD)
-	return 
-	}
-else
-	Continue
 } ; ende Loop
 } ; Ende LFDFinderRoutine
 
@@ -193,7 +196,7 @@ ListLines, ON
 }
 
 
-ComparePreloadArrays(CurrentLFD){
+ComparePreloadArrays(CurrentLFD, WriteToHistory){
 local 
 global LFDRequestArray, LFDExcludeArray 
 global MultiplePreloadArray
@@ -204,17 +207,22 @@ for Preload, PreloadValue in MultiplePreloadArray
 	RequestedPreloadValue := LFDRequestArray[Preload]
 	if (PreloadValue != RequestedPreloadValue)
 		{
-		SaveToHistory(CurrentLFD . ": No Match for " . Preload, "Wunschwert: " . RequestedPreloadValue, "Gefunden:" . PreloadValue)
+		if (WriteToHistory = true)
+			SaveToHistory(CurrentLFD . ": No Match for " . Preload, "Wunschwert: " . RequestedPreloadValue, "Gefunden:" . PreloadValue)
 		LFDWithNoMatch(CurrentLFD)
 		return false
 		}
 	else
-		SaveToHistory(CurrentLFD . ": Match for " . Preload, "Wunschwert: " . RequestedPreloadValue, "Gefunden:" . PreloadValue)
+		{
+		if (WriteToHistory = true)
+			SaveToHistory(CurrentLFD . ": Match for " . Preload, "Wunschwert: " . RequestedPreloadValue, "Gefunden:" . PreloadValue)
+		}
 	; Exclude Array 
 	ExcludedPreloadValue  := LFDExcludeArray[Preload]
 	If (PreloadValue = ExcludedPreloadValue)
 		{
-		SaveToHistory(CurrentLFD . ": Bad Match for " . Preload, "PreloadValue=" . ExcludedPreloadValue)
+		if (WriteToHistory = true)
+			SaveToHistory(CurrentLFD . ": Bad Match for " . Preload, "PreloadValue=" . ExcludedPreloadValue)
 		LFDWithNoMatch(CurrentLFD)
 		return false
 		}
@@ -275,7 +283,7 @@ if (LFDsInTempFileArray.Count() != 0)
 for i, LFD in LFDsInTempFileArray
 	{
 	CreateMultiplePreloadArray(LFD)
-	LFDFound := ComparePreloadArrays(LFD)
+	LFDFound := ComparePreloadArrays(LFD, false)
 	if (LFDFound = true)
 		{
 		global CurrentLFD := LFD
