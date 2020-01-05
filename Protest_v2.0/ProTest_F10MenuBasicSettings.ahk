@@ -357,11 +357,12 @@ else
 return
 
 11GuiNewProjectFile:
-Gui 11:Destroy
+Gui +LastFound +OwnDialogs +AlwaysOnTop
 InputBox, ProjectName, Projektname , Bitte einen Projektnamen vergeben (z.B. "B152"),, 250, 150
 if (ErrorLevel)
 	{
 	; Inputbox geschlossen/cancel:
+	Gui 11:Destroy
 	Goto F11Routine
 	}
 else
@@ -370,6 +371,7 @@ else
 	if Instr(FileList, ProjectName . "|")
 		{
 		Msgbox, 4096, Ups!, %ProjectFileName%.ini bereits vorhanden!
+		Gui 11:Destroy
 		GoTo 11GuiNewProjectFile
 		}
 	else
