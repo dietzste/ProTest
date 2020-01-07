@@ -22,6 +22,9 @@ BasicFile := ConfigFolder . "\BasicSettings.ini"
 HeartPicture := ConfigFolder . "\Heart.png"
 LibraryFile := ConfigFolder . "\Library.ini"
 
+; Tray Menu
+Menu, Tray, Add , About ProTest, AboutMessage
+
 if !FileExist(ConfigFolder)
 	{
 	Msgbox,4096, Ups!, %ConfigFolder% existiert nicht!
@@ -69,7 +72,6 @@ med := 130
 SleepAfterEnter 	:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
 MsgDurationLFDMatch := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationLFDMatch")
 MsgDurationSkippedIntro := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationSkippedIntro")/1000
-VerboseHistory 		:= GetIniValue(BasicFile, "ChangableSettings",  "VerboseHistory")
 
 ; Advanced Settings
 DefaultSleep	:= GetIniValue(BasicFile, "AdvancedSettings",  "DefaultSleep")
@@ -78,6 +80,7 @@ fnLimit			:= GetIniValue(BasicFile, "AdvancedSettings",  "fnLimit")
 TimeOutRemoteTest := GetIniValue(BasicFile, "AdvancedSettings",  "TimeOutRemoteTest")
 RemoteBuffer 	:= GetIniValue(BasicFile, "AdvancedSettings",  "RemoteBuffer")
 WaitForXModulSec := GetIniValue(BasicFile, "AdvancedSettings",  "WaitForXModulSec")
+VerboseHistory 		:= GetIniValue(BasicFile, "AdvancedSettings",  "VerboseHistory")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea
@@ -134,6 +137,8 @@ else
 	}
 }
 
+return 
+
 ; To-DO
 /*
 */
@@ -176,7 +181,6 @@ Return
 +ESC:: 
 	Suspend
 Return
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;    ADVANCED HOTKEYS    ;;;;;;;;;
