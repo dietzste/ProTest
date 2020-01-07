@@ -264,7 +264,7 @@ SaveToHistory("VERBOSE:", CurrentLFD . " erf" . ue . "llt nicht Kriterien", "Loo
 CheckExistingLFDs(){
 local
 global TempFile
-global LFDsInTempFileArray
+global LFDsInTempFileArray := {}
 ; Create Array: LFDs in TempFile
 LFDListTempFile := GetIniSectionNames(TempFile)
 Loop, Parse, LFDListTempFile, "`n"

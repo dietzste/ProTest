@@ -100,6 +100,7 @@ if (A_IsCompiled = 1)
 if (A_IsCompiled != 1)
 	{
 	AddOns := false
+	;WorkWindow := "Editor"
 	SettingUpFiles("B142.ini")
 	SettingUpCapture2Text()
 	}
@@ -149,6 +150,7 @@ return
 ;;;;; TEST Section ;;;;
 #if WinExist("Notepad++")
 ^t::
+LFDFinderRoutine()
 return 
 #if
 
