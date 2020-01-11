@@ -338,7 +338,15 @@ return
 11GuiEscape:
 Gui 11:Destroy
 if (NoActionButton = "Exit")
-	ExitApp
+	{
+	if (Capture2TextStarted = false)
+		ExitApp
+	else
+		{
+		CloseCapture2Text(Captur2TextPID)
+		ExitApp
+		}
+	}
 else 
 	Exit
 return

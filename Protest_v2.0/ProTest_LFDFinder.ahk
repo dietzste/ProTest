@@ -5,13 +5,24 @@
 LFDFinderRoutine(){
 local
 global ae
+global LFDFinderMenu
 global ProjectFile
+global HopelessLFDArray := {}
 
 ; (1) Create Arrays - Request/Exclude-Array
 CreateLFDArrays()
 
-; (2) Check existing LFDs in TempFile
-c_CheckTempFileFirst := GetIniValue(ProjectFile, "LFDFinderMenu", "c_CheckTempFileFirst", 1)
+; (2) Get Search Criteria (F3 Menu)
+global e_CheckAgain := GetIniValue(ProjectFile, LFDFinderMenu, "e_CheckAgain", 10)
+global e_AbortSearch := GetIniValue(ProjectFile, LFDFinderMenu, "e_AbortSearch", 20)
+global c_CheckAgain := GetIniValue(ProjectFile, LFDFinderMenu, "c_CheckAgain", 1)
+global c_AbortSearch := GetIniValue(ProjectFile, LFDFinderMenu, "c_AbortSearch", 1)
+global CurrentLFD := GetIniValue(ProjectFile, LFDFinderMenu, "cb_StartLFD")
+static NeedRemotePreloads := false
+static LFDWasEntered := false
+
+; (3) Check existing LFDs in TempFile
+global c_CheckTempFileFirst := GetIniValue(ProjectFile, "LFDFinderMenu", "c_CheckTempFileFirst", 1)
 if (c_CheckTempFileFirst = 1)
 	{
 	LFDFound := CheckExistingLFDs()
@@ -19,21 +30,16 @@ if (c_CheckTempFileFirst = 1)
 		return
 	}
 
-; (3) Get Search Criteria (F3 Menu)
-global e_CheckAgain := GetIniValue(ProjectFile, "LFDFinderMenu", "e_CheckAgain", 10)
-global e_AbortSearch := GetIniValue(ProjectFile, "LFDFinderMenu", "e_AbortSearch", 20)
-global c_CheckAgain := GetIniValue(ProjectFile, "LFDFinderMenu", "c_CheckAgain", 1)
-global c_AbortSearch := GetIniValue(ProjectFile, "LFDFinderMenu", "c_AbortSearch", 1)
-global CurrentLFD := GetIniValue(ProjectFile, "LFDFinderMenu", "cb_StartLFD")
-static NeedRemotePreloads := false
-static LFDWasEntered := false
+;;;;;;;;;;;;;;
+;;;; LOOP ;;;;
+;;;;;;;;;;;;;;
 
 ; (4) Start Loop
 SaveToHistory("START LFD-Suche LFD: " . CurrentLFD)
 loop {
 ; Current State
 global LFDCount := A_Index - 1
-SaveToHistory("LFD-Suche Loop: " . A_Index)
+SaveToHistory(A_Index . ". LFD")
 
 ; (4a) Create Array for Current LFD
 CreateMultiplePreloadArray(CurrentLFD)
@@ -44,16 +50,31 @@ if (LFDFound = true)
 	{
 	ShowMatchLFDMessage()
 	SaveToHistory("ENDE LFD-Suche - Match mit " . CurrentLFD)
-	return 
+	if (LFDWasEntered = true)
+		return
+	else
+		{
+		Send, {Enter}
+		L_WaitUntilPreloadsLoaded()
+		return 
+		}
 	}
 else
 	{
 	; (4b) Check Missing Preloads
-	MultiplePreloads := CheckingLFDValues(CurrentLFD)
-	if (MultiplePreloads = "")
+	; Check Hopeless LFDs
+	if (HopelessLFDArray[CurrentLFD] = "Hopeless")
+		{
 		NeedRemotePreloads := false
+		}
 	else
-		NeedRemotePreloads := true
+		{
+		MultiplePreloads := CheckingLFDValues(CurrentLFD)
+		if (MultiplePreloads = "")
+			NeedRemotePreloads := false
+		else
+			NeedRemotePreloads := true
+		}
 	}
 
 ; No Missing Preloads in TempFile (+ Already Checked Existing LFD's)
@@ -96,6 +117,24 @@ if (NeedRemotePreloads = true)
 
 ;;; LFD MATCH WINDOW ;;;  
 
+ShowMatchLFDMessage(){
+local
+global CurrentLFD
+global TimeOutMsgLFDMatch
+global MatchWindowName := "Match mit " . CurrentLFD 
+Gosub LFDMatchWindow
+if (TimeOutMsgLFDMatch > 0)
+	{
+	Sleep, TimeOut, %TimeOutMsgLFDMatch%
+	WinWaitClose, %MatchWindowName%
+	}
+else
+	{
+	WinWaitActive, %MatchWindowName%
+	WinWaitClose, %MatchWindowName%
+	}
+}
+
 LFDMatchWindow:
 Gui, 33:+AlwaysOnTop ToolWindow 
 Gui, 33:Add, Picture, Center x50 y10 w40 h-1, % HeartPicture
@@ -110,24 +149,9 @@ return
 Gui 33:Destroy
 return 
 
-ShowMatchLFDMessage(){
-local
-global CurrentLFD
-global MsgDurationLFDMatch
-global MatchWindowName := "Match mit " . CurrentLFD 
-Gosub LFDMatchWindow
-if (MsgDurationLFDMatch > 0)
-	{
-	Sleep, MsgDurationLFDMatch
-	Gui 33:Destroy
-	WinWaitClose, %MatchWindowName%
-	}
-else
-	{
-	WinWaitActive, %MatchWindowName%
-	WinWaitClose, %MatchWindowName%
-	}
-}
+TimeOut:
+Gui 33:Destroy
+return 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -150,8 +174,10 @@ if (Preload != "ERROR")
 	PreloadExclude := GetIniValue(ProjectFile, LFDFinderMenu, "e_LFD_PLE" . A_Index, "-")
 	if (PreloadRequest != PreloadExclude)
 		{
-		LFDRequestArray[Preload] := PreloadRequest
-		LFDExcludeArray[Preload] := PreloadExclude
+		; OrderedPreload
+		OrderedPreload := A_Index . Preload
+		LFDRequestArray[OrderedPreload] := PreloadRequest
+		LFDExcludeArray[OrderedPreload] := PreloadExclude
 		}
 	else
 		{
@@ -185,10 +211,11 @@ global TempFile
 global LFDRequestArray
 global MultiplePreloadArray := {}
 ListLines, OFF
-for Preload, v in LFDRequestArray
+for OrderedPreload, v in LFDRequestArray
 	{
+	Preload := Substr(OrderedPreload, 2)
 	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload, "Missing")
-	MultiplePreloadArray[Preload] := PreloadValue
+	MultiplePreloadArray[OrderedPreload] := PreloadValue
 	}
 NPreloads := MultiplePreloadArray.Count()
 SaveToHistory("VERBOSE:", "MultiplePreloadArray erstellt n=" . NPreloads, CurrentLFD)
@@ -199,32 +226,52 @@ ListLines, ON
 ComparePreloadArrays(CurrentLFD, WriteToHistory){
 local 
 global LFDRequestArray, LFDExcludeArray 
+global HopelessLFDArray
 global MultiplePreloadArray
 SaveToHistory("VERBOSE:", "Compare PreloadArrays")
-for Preload, PreloadValue in MultiplePreloadArray
+if (HopelessLFDArray[CurrentLFD] = "Hopeless")
+	return false
+for OrderedPreload, PreloadValue in MultiplePreloadArray
 	{
-	; Request Array 
-	RequestedPreloadValue := LFDRequestArray[Preload]
-	if (PreloadValue != RequestedPreloadValue)
+	Preload := Substr(OrderedPreload, 2)
+	; Request Array
+	RequestedPreloadValue := LFDRequestArray[OrderedPreload]
+	if (RequestedPreloadValue != "-")
+		{
+		if (PreloadValue != RequestedPreloadValue)
+			{
+			if (WriteToHistory = true)
+				SaveToHistory(CurrentLFD . ": No Match for " . Preload, "Wunschwert: " . RequestedPreloadValue, "Gefunden:" . PreloadValue)
+			LFDWithNoMatch(CurrentLFD)
+			if (PreloadValue != "Missing")
+				{
+				HopelessLFDArray[CurrentLFD] := "Hopeless"
+				SaveToHistory("VERBOSE:", CurrentLFD . " Joined Hopeless LFD Club")
+				}
+			return false
+			}
+		else
+			{
+			if (WriteToHistory = true)
+				SaveToHistory(CurrentLFD . ": Match for " . Preload, "Wunschwert: " . RequestedPreloadValue, "Gefunden:" . PreloadValue)
+			Continue
+			}
+		}
+	; Exclude Array 
+	ExcludedPreloadValue  := LFDExcludeArray[OrderedPreload]
+	If (PreloadValue = ExcludedPreloadValue)
 		{
 		if (WriteToHistory = true)
-			SaveToHistory(CurrentLFD . ": No Match for " . Preload, "Wunschwert: " . RequestedPreloadValue, "Gefunden:" . PreloadValue)
+			SaveToHistory(CurrentLFD . ": Bad Match!", Preload . " = " . ExcludedPreloadValue . " (Ausschlusswert)")
 		LFDWithNoMatch(CurrentLFD)
+		HopelessLFDArray[A_Index] := CurrentLFD
 		return false
 		}
 	else
 		{
 		if (WriteToHistory = true)
-			SaveToHistory(CurrentLFD . ": Match for " . Preload, "Wunschwert: " . RequestedPreloadValue, "Gefunden:" . PreloadValue)
-		}
-	; Exclude Array 
-	ExcludedPreloadValue  := LFDExcludeArray[Preload]
-	If (PreloadValue = ExcludedPreloadValue)
-		{
-		if (WriteToHistory = true)
-			SaveToHistory(CurrentLFD . ": Bad Match for " . Preload, "PreloadValue=" . ExcludedPreloadValue)
-		LFDWithNoMatch(CurrentLFD)
-		return false
+			SaveToHistory(CurrentLFD . ": Good Match!", Preload . " = " . ExcludedPreloadValue . " (Nicht Ausschlusswert)")
+		Continue
 		}
 	} ; ende for-loop
 return true  
@@ -265,6 +312,7 @@ CheckExistingLFDs(){
 local
 global TempFile
 global LFDsInTempFileArray := {}
+global LFDCount := 1
 ; Create Array: LFDs in TempFile
 LFDListTempFile := GetIniSectionNames(TempFile)
 Loop, Parse, LFDListTempFile, "`n"
@@ -273,26 +321,27 @@ Loop, Parse, LFDListTempFile, "`n"
 		{
 		; Bsp. LFD_71100001 / Push LFD to Array
 		LFD := Substr(A_LoopField, 5)
-		LFDsInTempFileArray[A_Index] := LFD
+		LFDsInTempFileArray[LFD] := A_Index
 		}
 	} ; ende loop
 
 ; Check LFD's
 if (LFDsInTempFileArray.Count() != 0)
 	SaveToHistory("Durchsuche existierende LFDs")
-for i, LFD in LFDsInTempFileArray
+for LFD, i in LFDsInTempFileArray
 	{
 	CreateMultiplePreloadArray(LFD)
 	LFDFound := ComparePreloadArrays(LFD, false)
 	if (LFDFound = true)
 		{
 		global CurrentLFD := LFD
+		ShowMatchLFDMessage()
 		EnterLFD(CurrentLFD)
 		L_WaitUntilPreloadsLoaded()
-		ShowMatchLFDMessage()
 		SaveToHistory("Passende LFD im TempFile: " . CurrentLFD)
 		return true
 		} ; ende if
+		
 	} ; ende for loop
 return false
 } ; ende function

@@ -100,6 +100,7 @@ Send, %GeschlechtZPReverse%{Enter}
 
 EnterDateOfBirth(fnOCR){
 local 
+global TempFile
 global fast, med, ue, ae, DefaultSleep
 global e_BirthDay, e_BirthMonth, e_BirthYear
 global e_Input1, e_Input2, e_Input3
