@@ -3,11 +3,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ^d::
-;SendDate()
+SendDate()
 return
 
 F1::
-If (AddOns = false)
+If (AOx = false)
 	AddOnComment := "(AddOn) "
 else
 	AddOnComment := ""
@@ -51,7 +51,7 @@ Gui, 12:Add, CheckBox, x20 y74 w170  h20 vc_DeletePreloadList, % PreloadListName
 Gui, 12:Add, Button,   x10 y105 w50 h25 g12GuiBack, Zur%ue%ck
 Gui, 12:Add, Button, x135 y105 w60 h25 Default g12GuiExit, Beenden
 Gui, 12:Show, Autosize Center, %GuiF12%
-if (AddOns = false)
+if (AOx = false)
 	{
 	Control, Disable ,, %HistoryFileName%, %GuiF12%
 	Control, Disable ,, %PreloadListName%, %GuiF12%

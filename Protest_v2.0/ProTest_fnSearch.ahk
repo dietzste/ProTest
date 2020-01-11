@@ -4,7 +4,7 @@
 
 fnSearch(fnOCR, Index){
 local
-global Addons
+global AOx
 global ae, oe, ue, fast, fnSearchIsOver
 global ProjectFile, TempFile
 global r_AdvancedON
@@ -28,7 +28,7 @@ if (fnOCR = "")
 			TriedAnywaySkip := true
 			return fnSearchIsOver := false
 			}
-		if (r_AdvancedON = 1 And Addons = true AND GetIniValue(ProjectFile, "AdvancedSearchMenu", "c_XModul", 1) = 1)
+		if (r_AdvancedON = 1 And AOx = true AND GetIniValue(ProjectFile, "AdvancedSearchMenu", "c_XModul", 1) = 1)
 			{
 			SaveToHistory("Clear-Button vorhanden? (Hinweis XModul)")
 			if (TriedXModulSkip = false)
@@ -72,7 +72,7 @@ if (Index >= 1)
 			IfMsgBox, Yes
 				{
 				SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchf" . ue . "hren? JA")
-				Send, {f6}
+				Send, {F6}
 				}
 			else
 				{

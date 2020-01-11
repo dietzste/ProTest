@@ -24,7 +24,7 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		Sleep, fast
 		Send, %e_Beginning%
 		SaveToHistory("Starten mit: " . e_Beginning)
-		sleep, fast
+		sleep, med
 		}
 	if (c_SendDate = 1)
 		{
@@ -145,7 +145,7 @@ return
 
 SaveToHistory(Info, params*){
 local
-global HistoryFile, AddOns
+global HistoryFile, AOx
 global CreateHistory, VerboseHistory
 ;ListLines Off
 TimeStemp := A_DDD . A_Space . A_DD . "." A_MMM . A_Space . A_Hour . ":" . A_Min . ":" . A_Sec 
@@ -162,7 +162,7 @@ else if (params.MaxIndex() = 2)
 else if (params.MaxIndex() = 3)	
 	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . " - " . params[3] . ")"
 
-if (AddOns = true AND %CreateHistory% = true)
+if (AOx = true AND %CreateHistory% = true)
 	{
 	; Verbose-Kommentare (nicht) mit speichern
 	if (%VerboseHistory% = true)

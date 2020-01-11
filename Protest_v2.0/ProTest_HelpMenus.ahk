@@ -57,7 +57,7 @@ return
 GetHelpText(Window, Byref HelpText){
 local
 global ae, ue, oe, sz
-global AddOns
+global AOx
 global x_ADDToStartfnX, x_ADDToStartfnY
 global GuiF2, GuiF3, GuiF4, GuiF8, GuiF10
 global ProjectFile, BasicFile, LibraryFile
@@ -92,7 +92,7 @@ Helptext = %2GuiHelpText%
 return 
 }
 
-if (AddOns = true)
+if (AOx = true)
 {
 F3AutoEditZusatz =
 (
@@ -133,7 +133,7 @@ Helptext = %3GuiHelpText%
 return 
 }
 
-if (AddOns = false)
+if (AOx = false)
 	F4XModulZusatz = AddOn: X-Pr%ue%fmodul %ue%berspringen
 else
 	F4XModulZusatz =

@@ -4,7 +4,6 @@
 
 #Warn
 #NoEnv
-SetBatchLines -1
 ListLines Off
 
 SetTitleMatchMode, 2
@@ -21,9 +20,6 @@ ConfigFolder := A_Workingdir . "\Config"
 BasicFile := ConfigFolder . "\BasicSettings.ini"
 HeartPicture := ConfigFolder . "\Heart.png"
 LibraryFile := ConfigFolder . "\Library.ini"
-
-; Tray Menu
-Menu, Tray, Add , About ProTest, AboutMessage
 
 if !FileExist(ConfigFolder)
 	{
@@ -93,16 +89,19 @@ x_ADDToStartfnX 	:= GetIniValue(BasicFile, "PositionParameterF10", "x_ADDToStart
 x_ADDToStartfnY 	:= GetIniValue(BasicFile, "PositionParameterF10", "x_ADDToStartfnY")
 ListLines On
 
+; Tray Menu
+Menu, Tray, Add , About ProTest, AboutMessage
+
 if (A_IsCompiled = 1)
 	{
-	AddOns := false
+	AOx := false
 	Capture2TextStarted := false
 	Goto F11Routine
 	}
 if (A_IsCompiled != 1)
 	{
-	AddOns := false
-	;WorkWindow := "Editor"
+	AOx := false
+	WorkWindow := "Editor"
 	SettingUpFiles("B142.ini")
 	SettingUpCapture2Text()
 	Send, {F10}
@@ -238,7 +237,7 @@ Return
 #Include Protest_F10MenuBasicSettings.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;    ADDONS    ;;;;;;;;;
+;;;;;;;    AddOns    ;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;#Include Protest_AddOns.ahk
