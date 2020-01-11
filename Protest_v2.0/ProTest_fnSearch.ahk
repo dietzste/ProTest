@@ -72,7 +72,7 @@ if (Index >= 1)
 			IfMsgBox, Yes
 				{
 				SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchf" . ue . "hren? JA")
-				Send, {f6}
+				Send, {F6}
 				}
 			else
 				{

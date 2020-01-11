@@ -5,7 +5,6 @@
 
 #Warn
 #NoEnv
-SetBatchLines -1
 
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen

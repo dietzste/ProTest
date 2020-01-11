@@ -4,7 +4,6 @@
 
 #Warn
 #NoEnv
-SetBatchLines -1
 ListLines Off
 
 SetTitleMatchMode, 2
@@ -102,7 +101,7 @@ if (A_IsCompiled = 1)
 if (A_IsCompiled != 1)
 	{
 	AddOns := false
-	;WorkWindow := "Editor"
+	WorkWindow := "Editor"
 	SettingUpFiles("B142.ini")
 	SettingUpCapture2Text()
 	Send, {F10}

@@ -24,7 +24,7 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		Sleep, fast
 		Send, %e_Beginning%
 		SaveToHistory("Starten mit: " . e_Beginning)
-		sleep, fast
+		sleep, med
 		}
 	if (c_SendDate = 1)
 		{
