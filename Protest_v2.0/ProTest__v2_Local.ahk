@@ -74,13 +74,14 @@ MsgDurationLFDMatch := GetIniValue(BasicFile, "ChangableSettings",  "MsgDuration
 MsgDurationSkippedIntro := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationSkippedIntro")/1000
 
 ; Advanced Settings
-DefaultSleep	:= GetIniValue(BasicFile, "AdvancedSettings",  "DefaultSleep")
-LFDLimit		:= GetIniValue(BasicFile, "AdvancedSettings",  "LFDLimit")
-fnLimit			:= GetIniValue(BasicFile, "AdvancedSettings",  "fnLimit")
+DefaultSleep	  := GetIniValue(BasicFile, "AdvancedSettings",  "DefaultSleep")
+LFDLimit		  := GetIniValue(BasicFile, "AdvancedSettings",  "LFDLimit")
+fnLimit			  := GetIniValue(BasicFile, "AdvancedSettings",  "fnLimit")
 TimeOutRemoteTest := GetIniValue(BasicFile, "AdvancedSettings",  "TimeOutRemoteTest")
-RemoteBuffer 	:= GetIniValue(BasicFile, "AdvancedSettings",  "RemoteBuffer")
-WaitForXModulSec := GetIniValue(BasicFile, "AdvancedSettings",  "WaitForXModulSec")
-VerboseHistory 		:= GetIniValue(BasicFile, "AdvancedSettings",  "VerboseHistory")
+RemoteBuffer 	  := GetIniValue(BasicFile, "AdvancedSettings",  "RemoteBuffer")
+WaitForXModulSec  := GetIniValue(BasicFile, "AdvancedSettings",  "WaitForXModulSec")
+CreateHistory	  := GetIniValue(BasicFile, "AdvancedSettings",  "CreateHistory")
+VerboseHistory 	  := GetIniValue(BasicFile, "AdvancedSettings",  "VerboseHistory")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea

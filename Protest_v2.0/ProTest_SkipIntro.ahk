@@ -108,9 +108,9 @@ global MultiplePreloadArray
 
 ; Create BirthdayArray
 MultiplePreloadArray := []
-MultiplePreloadArray[e_BirthDay] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthDay, "Missing")
+MultiplePreloadArray[e_BirthDay]   := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthDay, "Missing")
 MultiplePreloadArray[e_BirthMonth] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthMonth, "Missing")
-MultiplePreloadArray[e_BirthYear] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthYear, "Missing")
+MultiplePreloadArray[e_BirthYear]  := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthYear, "Missing")
 
 ; Get PreloadValues
 L_ReadMultiplePreloads(e_BirthDay, e_BirthMonth, e_BirthYear)
@@ -149,6 +149,7 @@ if (BirthDay = 0 OR BirthMonth = 0 or BirthYear = 0)
 	}
 SetKeyDelay, med
 Send, %Order1%{Enter}%Order2%{Enter}%Order3%{Enter}
+SaveToHistory(fnOCR,  " = " . Order1 . "/" . Order2 . "/" . Order3 , "Intro")
 SetKeyDelay, fast
 Sleep, DefaultSleep
 }
