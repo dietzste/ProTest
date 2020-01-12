@@ -2,13 +2,12 @@
 ;;;;;;;;;      INI FUNCTIONS      ;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-GetIniValue(File, Section, params*){
+GetIniValue(File, Section, key, params*){
 local 
 global TempFile
 ListLines Off
-key := params[1]
-if (params.MaxIndex() = 2)
-	IniRead, Value, %File%, %Section%, %key%, % params[2]
+if (params.MaxIndex() = 1)
+	IniRead, Value, %File%, %Section%, %key%, % params[1]
 else
 	IniRead, Value, %File%, %Section%, %key%
 Value := RegExReplace( RegExReplace( Value, "^.+\K.(?<=;).+" ), "\s+$" )
