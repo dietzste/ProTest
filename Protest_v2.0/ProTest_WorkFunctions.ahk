@@ -28,7 +28,7 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		}
 	if (c_SendDate = 1)
 		{
-		SaveToHistory("Datum eingaben")
+		SaveToHistory("Datum eingeben")
 		SendDate()
 		}
 	if (r_LFD1 = 1)
@@ -145,8 +145,8 @@ return
 
 SaveToHistory(Info, params*){
 local
-global AddOns
-global HistoryFile, VerboseHistory
+global HistoryFile, AddOns
+global CreateHistory, VerboseHistory
 ListLines Off
 TimeStemp := A_DDD . A_Space . A_DD . "." A_MMM . A_Space . A_Hour . ":" . A_Min . ":" . A_Sec 
 if (Strlen(Info) <= 4)
@@ -162,16 +162,12 @@ else if (params.MaxIndex() = 2)
 else if (params.MaxIndex() = 3)	
 	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . " - " . params[3] . ")"
 
-if (VerboseHistory = true)
+if (AddOns = true AND CreateHistory = true)
 	{
-	; Verbose-Kommentare mit speichern
-	if (AddOns = true)
+	; Verbose-Kommentare (nicht) mit speichern
+	if (VerboseHistory = true)
 		FileAppend, %SendHistory%`n, %HistoryFile%
-	}
-else if (Info != "VERBOSE:")
-	{
-	; Verbose-Kommentare nicht speichern
-	if (AddOns = true)
+	else if (Info != "VERBOSE:")
 		FileAppend, %SendHistory%`n, %HistoryFile%
 	}
 ListLines On
