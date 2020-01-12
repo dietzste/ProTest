@@ -265,7 +265,10 @@ global CurrentDetection
 global MultiplePreloadArray
 
 ; Checking Existing LFD-Values
-MultiplePreloads := CheckingLFDValues(CurrentLFD)
+if (params.MaxIndex() = 3)
+	MultiplePreloads := CheckingLFDValues(CurrentLFD, "Birthdate")
+else
+	MultiplePreloads := CheckingLFDValues(CurrentLFD)
 if (MultiplePreloads = "")
 	return	
 	
@@ -302,14 +305,23 @@ Loop, Parse, MultiplePreloads, "|"
 	} ; end outer loop
 }
 
-CheckingLFDValues(CurrentLFD){
+CheckingLFDValues(CurrentLFD, params*){
 local
 global TempFile
 global MultiplePreloadArray
 NMissingPreloads := 0
 MultiplePreloads := ""
-for Preload, PreloadValue in MultiplePreloadArray
+if (params.MaxIndex() = 1)
+	Mode := "Birthdate"
+else
+	Mode := "LFDSearch"
+
+for OrderedPreload, PreloadValue in MultiplePreloadArray
 	{
+	if (Mode = "Birthdate")
+		Preload := OrderedPreload
+	else
+		Preload := SubStr(OrderedPreload, 2)
 	if (PreloadValue = "Missing")
 		{
 		++NMissingPreloads

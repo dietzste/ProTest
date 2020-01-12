@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ^d::
-SendDate()
+;SendDate()
 return
 
 F1::
@@ -72,7 +72,10 @@ If (c_DeleteHistoryFile = 1)
 	FileDelete, %HistoryFile%
 If (c_DeletePreloadList = 1)
 	FileDelete, %PreloadListPath%
+CloseCapture2Text(Captur2TextPID)
+return
 
+CloseCapture2Text(Captur2TextPID){
 Process, Exist , %Captur2TextPID%
 if (ErrorLevel = Captur2TextPID)
 	{
@@ -81,4 +84,4 @@ if (ErrorLevel = Captur2TextPID)
 	}
 Gui 12:Destroy
 ExitApp
-return
+}

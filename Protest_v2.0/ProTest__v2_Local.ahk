@@ -70,8 +70,8 @@ med := 130
 
 ; Changable Settings
 SleepAfterEnter 	:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
-MsgDurationLFDMatch := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationLFDMatch")
-MsgDurationSkippedIntro := GetIniValue(BasicFile, "ChangableSettings",  "MsgDurationSkippedIntro")/1000
+TimeOutMsgLFDMatch := GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgLFDMatch")
+TimeOutMsgSkippedIntro := GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgSkippedIntro")/1000
 
 ; Advanced Settings
 DefaultSleep	  := GetIniValue(BasicFile, "AdvancedSettings",  "DefaultSleep")
@@ -96,6 +96,7 @@ ListLines On
 if (A_IsCompiled = 1)
 	{
 	AddOns := false
+	Capture2TextStarted := false
 	Goto F11Routine
 	}
 if (A_IsCompiled != 1)
@@ -104,6 +105,9 @@ if (A_IsCompiled != 1)
 	;WorkWindow := "Editor"
 	SettingUpFiles("B142.ini")
 	SettingUpCapture2Text()
+	Send, {F10}
+	WinWaitActive, %GuiF10%
+	WinClose, %GuiF10%
 	}
 
 SettingUpCapture2Text(){
@@ -112,6 +116,7 @@ global ConfigFolder
 global Capture2TextWorkDir :=  A_Workingdir . "\Capture2Text"
 global Capture2TextAppDataFolder := A_AppData . "\Capture2Text"
 global Capture2TextIniFileAppDataPath := Capture2TextAppDataFolder . "\Capture2Text.ini"
+global Capture2TextStarted
 
 if !FileExist(Capture2TextWorkDir)
 	{
@@ -131,6 +136,7 @@ if (ErrorLevel = 0) ; Capture2Text not running
 	{
 	Run, Capture2Text.exe , %Capture2TextWorkDir% ,, PID
 	global Captur2TextPID := PID
+	Capture2TextStarted := true
 	}
 else
 	{
@@ -151,8 +157,6 @@ return
 ;;;;; TEST Section ;;;;
 #if WinExist("Notepad++")
 ^t::
-LFDFinderRoutine()
-return 
 #if
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -189,13 +193,13 @@ Return
 ;;;;;;;    ADVANCED HOTKEYS    ;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#Include Protest_AdvancedHotkeys.ahk
+#Include ProTest_AdvancedHotkeys.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;   REMOTE CONNECTION    ;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#Include Protest_RemoteConnection.ahk
+#Include ProTest_RemoteConnection.ahk
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;;;   OCR   ;;;;;;

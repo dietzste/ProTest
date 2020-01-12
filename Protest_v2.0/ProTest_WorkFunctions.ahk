@@ -7,7 +7,7 @@ local
 global ue, fast, med, CurrentLFD
 global WorkWindow, HistoryFileName, ProjectFile
 global DefaultSleep, SleepAfterEnter
-global MsgDurationSkippedIntro
+global TimeOutMsgSkippedIntro
 global r_Main1, r_Main2, r_Main3
 global r_LFD1, r_LFD2, cb_UseLFD
 global c_Beginning, e_Beginning, c_SendDate, c_SkipLastPart
@@ -73,8 +73,8 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 			
 		Sleep, SleepAfterEnter
 		} Until (IntroIsOver = true)
-		if (MsgDurationSkippedIntro > 0)
-			MsgBox, 4096, Intro %ue%bersprungen! , Intro %ue%bersprungen! (No match for fn: "%fnOCR%"), %MsgDurationSkippedIntro%
+		if (TimeOutMsgSkippedIntro > 0)
+			MsgBox, 4096, Intro %ue%bersprungen! , Intro %ue%bersprungen! (No match for fn: "%fnOCR%"), %TimeOutMsgSkippedIntro%
 		SaveToHistory("INTRO OVER")
 		}
 	}
@@ -147,7 +147,7 @@ SaveToHistory(Info, params*){
 local
 global HistoryFile, AddOns
 global CreateHistory, VerboseHistory
-ListLines Off
+;ListLines Off
 TimeStemp := A_DDD . A_Space . A_DD . "." A_MMM . A_Space . A_Hour . ":" . A_Min . ":" . A_Sec 
 if (Strlen(Info) <= 4)
 	Spacing := A_Tab
@@ -162,15 +162,15 @@ else if (params.MaxIndex() = 2)
 else if (params.MaxIndex() = 3)	
 	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . " - " . params[3] . ")"
 
-if (AddOns = true AND CreateHistory = true)
+if (AddOns = true AND %CreateHistory% = true)
 	{
 	; Verbose-Kommentare (nicht) mit speichern
-	if (VerboseHistory = true)
+	if (%VerboseHistory% = true)
 		FileAppend, %SendHistory%`n, %HistoryFile%
 	else if (Info != "VERBOSE:")
 		FileAppend, %SendHistory%`n, %HistoryFile%
 	}
-ListLines On
+;ListLines On
 }
 
 CheckWorkWindow(){
@@ -295,7 +295,7 @@ global LFDLimit
 ; Setting Up InPut Box
 InputBoxText := "Bitte eine LFD eingeben!"
 InptBoxTitle := "LFD-Angabe fehlt!" 
-InputBoxDefault := GetIniValue(ProjectFile, QuickSetupMenu, "e_UseLFD", A_Space)
+InputBoxDefault := GetIniValue(ProjectFile, QuickSetupMenu, "cb_UseLFD", A_Space)
 
 ; Show Input Box
 InputboxDialog:

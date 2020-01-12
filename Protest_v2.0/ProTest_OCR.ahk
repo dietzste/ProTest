@@ -3,6 +3,7 @@ local
 global Capture2TextIniFileAppDataPath, fast, ultrafast
 static OCR
 static OCRFirstWord := true
+static 
 SetKeydelay, ultrafast
 BlockInput, MouseMove 
 Clipboard =
@@ -94,6 +95,8 @@ Click
 OCRMoveMouse(Part, Mode){
 local
 global e_fnStartPosX, e_fnStartPosY, e_fnEndPosX, e_fnEndPosY
+static CoordinatesLoaded
+
 CoordMode, Mouse, Client
 ;; SET SPEED CURSOR ;;
 if (Part = "Test")
