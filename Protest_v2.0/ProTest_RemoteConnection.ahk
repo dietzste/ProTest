@@ -53,7 +53,7 @@ return ExtractedValue
 L_RemoteFeedbackTest(){
 local
 global fast 
-global TempFile, TimeOutTest, RemoteBuffer
+global TempFile, TimeOutRemoteTest, RemoteBuffer
 global RemoteFeed := false
 static Detection
 static StartTime
@@ -71,7 +71,7 @@ TestFeedback:
 Sleep, RemoteBuffer
 Detection := Clipboard
 WaitingForRemote := A_TickCount - TimeRemoteSend
-if (WaitingForRemote < TimeOutTest)
+if (WaitingForRemote < TimeOutRemoteTest)
 	{
 	if Instr(Detection, "<")
 		RemoteFeed := true
@@ -81,7 +81,7 @@ if (WaitingForRemote < TimeOutTest)
 		Goto TestFeedback
 		}
 	}
-else if (WaitingForRemote > TimeOutTest)
+else if (WaitingForRemote > TimeOutRemoteTest)
 	RemoteFeed := false
 	
 ;;;;;  WAITING OVER  ;;;;;;;;;
@@ -265,7 +265,7 @@ global CurrentDetection
 global MultiplePreloadArray
 
 ; Checking Existing LFD-Values
-MultiplePreloads := CheckingLFDValues(NMissingPreloads)
+MultiplePreloads := CheckingLFDValues(CurrentLFD)
 if (MultiplePreloads = "")
 	return	
 	
@@ -302,12 +302,12 @@ Loop, Parse, MultiplePreloads, "|"
 	} ; end outer loop
 }
 
-CheckingLFDValues(Byref NMissingPreloads){
+CheckingLFDValues(CurrentLFD){
 local
-global TempFile, CurrentLFD
+global TempFile
 global MultiplePreloadArray
-MultiplePreloads := ""
 NMissingPreloads := 0
+MultiplePreloads := ""
 for Preload, PreloadValue in MultiplePreloadArray
 	{
 	if (PreloadValue = "Missing")

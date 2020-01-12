@@ -32,7 +32,7 @@ e_LFD_PLE%A_Index% := GetIniValue(ProjectFile, LFDFinderMenu, "e_LFD_PLE" . A_In
 } ; ende loop
 
 ; Other 
-3GuiControlArray := ["c_CheckAgain", "c_AbortSearch", "e_AbortSearch", "cb_StartLFD", "e_CheckAgain"]
+3GuiControlArray := ["c_CheckAgain", "c_AbortSearch", "e_AbortSearch", "cb_StartLFD", "e_CheckAgain", "c_CheckTempFileFirst"]
 for i, control in 3GuiControlArray
 	{
 	%control% := GetIniValue(ProjectFile, LFDFinderMenu, control)
@@ -83,10 +83,13 @@ Gui, 3:Add, Edit, x75 y240 w30 h18 ve_CheckAgain, %e_CheckAgain%
 Gui, 3:Add, Edit, x75 y262 w30 h18 ve_AbortSearch, %e_AbortSearch%
 Gui, 3:Add, Text, x115 y242 w170 h20 , erfolglosen Suchen erneut fragen
 Gui, 3:Add, Text, x115 y264 w170 h20 , erfolglosen Suchen abbrechen
+Gui, 3:Add, CheckBox, x15 y285 w250 h20 Checked%c_CheckTempFileFirst% vc_CheckTempFileFirst, %A_Tab%%A_Space% Zuerst LFD's im TempFile durchsuchen 
+
 ; LFD Check
-Gui, 3:Add, Text, x15 y295 w60 h20 , Start LFD:
-Gui, 3:Add, ComboBox, x75 y292 w75 h120 Limit%LFDLimit% vcb_StartLFD, % cb_StartLFDList
-Gui, 3:Add, Button, x170 y292 w75 h20 g3GuiShowLFDValues, LFD Werte
+Gui, 3:Add, Text, x15 y315 w60 h20 , Start LFD:
+Gui, 3:Add, ComboBox, x75 y312 w75 h120 Limit%LFDLimit% vcb_StartLFD, % cb_StartLFDList
+Gui, 3:Add, Button, x170 y312 w75 h20 g3GuiShowLFDValues, LFD Werte
+
 ; BUTTONS
 Gui, 3:Add, Button, x08 y350 w60 h25 g3GuiResetControls, Reset
 Gui, 3:Add, Button, x73 y350 w60 h25 g3GuiHelp, Hilfe
@@ -165,7 +168,7 @@ for i, Edit in 3GuiEditArray
 } ; ende for loop
 
 ;Menu Options
-; 3GuiControlArray := ["c_CheckAgain", "c_AbortSearch", "e_AbortSearch", "cb_StartLFD", "e_CheckAgain"]
+; 3GuiControlArray := ["c_CheckAgain", "c_AbortSearch", "e_AbortSearch", "cb_StartLFD", "e_CheckAgain", "c_CheckTempFileFirst"]
 for i, control in 3GuiControlArray
 	{
 	If (%control% = GetIniValue(BasicFile, LFDFinderMenu, control))
