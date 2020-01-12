@@ -1,11 +1,9 @@
 SkipIntro(fnOCR){
 local
-global BasicFile, ProjectFile, TempFile, LibraryFile
-global fast, IntroIsOver, CurrentLFD
+global BasicFile, ProjectFile, LibraryFile
+global fast, IntroIsOver
 global SleepAfterEnter
 global BasicSettingsMenu
-global IntroIsOver 
-global Verbose
 SetKeyDelay, fast
 ; Check in LibraryFile
 fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
@@ -37,6 +35,7 @@ else
 if fnIntroValue is digit
 	{
 	Send, %fnIntroValue%{Enter}
+	Sleep, SleepAfterEnter
 	return 
 	}
 else if (fnIntroValue = "IntroGetSex") 
@@ -91,7 +90,7 @@ if (PreloadName = "ERROR")
 	PreloadName := GetIniValue(BasicFile, BasicSettingsMenu, "e_sex")
 GeschlechtZP := GetIniValue(TempFile, "LFD_" . CurrentLFD , PreloadName)
 if (GeschlechtZP = "ERROR")
-	InputBoxProtest(fnOCR, GeschlechtZP)
+	GeschlechtZP := InputBoxGeschlecht(fnOCR)
 If (GeschlechtZP = 1)
 	GeschlechtZPReverse := 2
 else
@@ -106,7 +105,14 @@ global e_BirthDay, e_BirthMonth, e_BirthYear
 global e_Input1, e_Input2, e_Input3
 global CurrentLFD
 global MultiplePreloadArray
-CreateMultiplePreloadArray("GetDateOfBirth", e_BirthDay, e_BirthMonth, e_BirthYear)
+
+; Create BirthdayArray
+MultiplePreloadArray := []
+MultiplePreloadArray[e_BirthDay] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthDay, "Missing")
+MultiplePreloadArray[e_BirthMonth] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthMonth, "Missing")
+MultiplePreloadArray[e_BirthYear] := GetIniValue(TempFile, "LFD_" . CurrentLFD , e_BirthYear, "Missing")
+
+; Get PreloadValues
 L_ReadMultiplePreloads(e_BirthDay, e_BirthMonth, e_BirthYear)
 for Preload, PreloadValue in MultiplePreloadArray
 	{
@@ -145,4 +151,25 @@ SetKeyDelay, med
 Send, %Order1%{Enter}%Order2%{Enter}%Order3%{Enter}
 SetKeyDelay, fast
 Sleep, DefaultSleep
+}
+
+;;; INPUTBOX 
+
+InputBoxGeschlecht(fnOCR){
+local
+global ue, oe, ae
+
+; Setting Up InPut Box
+InputBoxText := "Geschlechtsangabe f" . ue . "r fn """ . fnOCR . """ ben" . oe . "tigt!`n`n1: m" . ae . "nnlich `n2: weiblich"
+InptBoxTitle := "Geschlechtsangabe fehlt!"
+InputBoxDefault := 2
+
+InputBox, GeschlechtEntered , %InptBoxTitle% , %InputBoxText%,, 300, 200,,,,,%InputBoxDefault%
+if (ErrorLevel = 1) ;Cancel or Closed
+	{
+	MsgBox, 4096, Ende , Durchlauf wurde beendet!
+	Exit
+	}
+else
+	return GeschlechtEntered
 }
