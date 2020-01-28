@@ -35,6 +35,12 @@ for i, control in 2GuiControlArray
 	if (%control% = "ERROR")
 		%control% := GetIniValue(BasicFile, QuickSetupMenu, control)
 	}
+
+; Datumseingaben
+e_Day := GetIniValue(ProjectFile, QuickSetupMenu, "e_Day", A_DD)
+e_Month := GetIniValue(ProjectFile, QuickSetupMenu, "e_Month", A_MM )
+e_Year := GetIniValue(ProjectFile, QuickSetupMenu, "e_Year", A_YYYY )
+
 ; Untermenüs (de-)aktivieren
 if (r_Main1 = 1)
 	{
@@ -65,8 +71,11 @@ Gui, 2:Add, Groupbox, x10 y40 w293 h228 cNavy %IntroDis%, Intro
 ; 1. Beginning
 Gui, 2:Add, Groupbox, x17 y60 w280 h69 %IntroDis% cBlack, Anfang
 Gui, 2:Add, CheckBox, x32 y75 w70  h20 %IntroDis% Checked%c_Beginning% vc_Beginning, Starten mit:
-Gui, 2:Add, CheckBox, x32 y97 w160 h20 %IntroDis% Checked%c_SendDate%  vc_SendDate, aktuelles Datum eingeben
 Gui, 2:Add, Edit,    x112 y75 w160 h20 %IntroDis% ve_Beginning, %e_Beginning%
+Gui, 2:Add, CheckBox, x32 y98 w100 h20 %IntroDis% Checked%c_SendDate%  vc_SendDate, Datum eingeben
+Gui, 2:Add, Edit,    x137 y99 w20 h20 %IntroDis% ve_Day, %e_Day%
+Gui, 2:Add, Edit,    x162 y99 w20 h20 %IntroDis% ve_Month, %e_Month%
+Gui, 2:Add, Edit,    x187 y99 w35 h20 %IntroDis% ve_Year, %e_Year%
 ; 2. LFD 
 Gui, 2:Add, Groupbox, x17 y124 w280 h90 cBlack %IntroDis%, LFD Eingabe
 Gui, 2:Add, Radio, x32 y140 w40  h20 %IntroDis% Checked%r_LFD1% vr_LFD1 g2GuiShowButton, LFD:
@@ -158,6 +167,10 @@ for i, control in 2GuiControlArray
 	else
 		SaveIniValue(ProjectFile, QuickSetupMenu, control, %control%)
 	}
+; Datumseingaben speichern
+SaveIniValue(ProjectFile, QuickSetupMenu, "e_Day", e_Day)
+SaveIniValue(ProjectFile, QuickSetupMenu, "e_Month", e_Month)
+SaveIniValue(ProjectFile, QuickSetupMenu, "e_Year", e_Year)
 return
 
 2GuiGo:
