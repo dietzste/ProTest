@@ -9,7 +9,7 @@ ListLines Off
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen
 ; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte Übereinstimmung
+; 3 = exakte ï¿½bereinstimmung
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Folder/File Management ;;;
@@ -29,7 +29,7 @@ if !FileExist(ConfigFolder)
 
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
-; Name Menüs
+; Name Menï¿½s
 GuiF1  := "Überblick Hotkeys"
 GuiF2  := "Quick Setup Menu"
 GuiF3  := "LFD Finder Menu"
@@ -40,7 +40,7 @@ GuiF9  := "Remote Feedback Test"
 GuiF10 := "Einstellungen"
 GuiF12 := "Protest beenden?"
 
-; ini section names 
+; ini section names
 QuickSetupMenu := "QuickSetupMenu"
 LFDFinderMenu := "LFDFinderMenu"
 AdvancedSearchMenu := "AdvancedSearchMenu"
@@ -51,9 +51,9 @@ BasicSettingsMenu := "BasicSettingsMenu"
 DisON := "Disabled1"
 DisOFF := "Disabled0"
 
-;Sonderzeichen Workaround 
+;Sonderzeichen Workaround
 ue := "ü"
-ae := "ä" 
+ae := "ä"
 oe := "ö"
 sz := "ß"
 
@@ -85,7 +85,7 @@ ScreenWidth := MonitorCoordRight
 ScreenHeight := MonitorCoordBottom
 StandardWidth := 1920
 StandardHeight := 1080
-x_ADDToStartfnX 	:= GetIniValue(BasicFile, "PositionParameterF10", "x_ADDToStartfnX") 
+x_ADDToStartfnX 	:= GetIniValue(BasicFile, "PositionParameterF10", "x_ADDToStartfnX")
 x_ADDToStartfnY 	:= GetIniValue(BasicFile, "PositionParameterF10", "x_ADDToStartfnY")
 ListLines On
 
@@ -129,7 +129,7 @@ if !FileExist(Capture2TextAppDataFolder)
 ; Setting up Ini-File
 if !FileExist(Capture2TextIniFileAppDataPath)
 	FileCopy, %ConfigFolder%\Capture2Text.ini, %Capture2TextIniFileAppDataPath%
-	
+
 Process, Exist , Capture2Text.exe
 if (ErrorLevel = 0) ; Capture2Text not running
 	{
@@ -144,7 +144,7 @@ else
 	}
 }
 
-return 
+return
 
 ; To-DO
 /*
@@ -172,7 +172,7 @@ if (A_IsCompiled != 1)
 	Reload
 	}
 return
-#if  
+#if
 
 +F5::
 	SaveToHistory("RELOAD")
@@ -184,7 +184,7 @@ F6::
 	SaveToHistory("PAUSE")
 Return
 
-+ESC:: 
++ESC::
 	Suspend
 Return
 
