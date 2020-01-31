@@ -160,7 +160,7 @@ UpcomingFnName := GetIniValue(ProjectFile,AdvancedSearchMenu, "e_fnN" . A_Index)
 If (UpcomingFnName = fnOCR)
 	{
 	UpcomingFnValue := GetIniValue(ProjectFile, AdvancedSearchMenu, "e_fnV" . A_Index)
-	if (UpcomingFnValue != "" AND %UpcomingFnValue% != "ERROR" )
+	if (UpcomingFnValue != "" AND UpcomingFnValue != "ERROR" )
 		{
 		SaveToHistory(fnOCR, "MATCH mit Upcoming-fn, Value = " . UpcomingFnValue)
 		EnterfnValue(fnOCR, UpcomingFnValue, Index)
