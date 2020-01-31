@@ -58,7 +58,14 @@ else if (fnIntroValue = "IntroSexReversed")
 	}
 else 
 	{
-	EnterPreloadValue(fnOCR, fnIntroValue)
+	if Instr(fnIntroValue, "{")
+		{
+		; enter literally
+		Send, %fnIntroValue%{Enter}
+		Sleep, SleepAfterEnter
+		}
+	else
+		EnterPreloadValue(fnOCR, fnIntroValue)
 	return
 	}
 } ; ende SkipIntro function
