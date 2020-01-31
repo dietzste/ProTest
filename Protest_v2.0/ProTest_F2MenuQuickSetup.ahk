@@ -73,9 +73,9 @@ Gui, 2:Add, Groupbox, x17 y60 w280 h69 %IntroDis% cBlack, Anfang
 Gui, 2:Add, CheckBox, x32 y75 w70  h20 %IntroDis% Checked%c_Beginning% vc_Beginning, Starten mit:
 Gui, 2:Add, Edit,    x112 y75 w160 h20 %IntroDis% ve_Beginning, %e_Beginning%
 Gui, 2:Add, CheckBox, x32 y98 w100 h20 %IntroDis% Checked%c_SendDate%  vc_SendDate, Datum eingeben
-Gui, 2:Add, Edit,    x137 y99 w20 h20 %IntroDis% ve_Day, %e_Day%
-Gui, 2:Add, Edit,    x162 y99 w20 h20 %IntroDis% ve_Month, %e_Month%
-Gui, 2:Add, Edit,    x187 y99 w35 h20 %IntroDis% ve_Year, %e_Year%
+Gui, 2:Add, Edit,    x137 y99 w20 h20 %IntroDis% Center ve_Day, %e_Day%
+Gui, 2:Add, Edit,    x162 y99 w20 h20 %IntroDis% Center ve_Month, %e_Month%
+Gui, 2:Add, Edit,    x187 y99 w35 h20 %IntroDis% Center ve_Year, %e_Year%
 ; 2. LFD 
 Gui, 2:Add, Groupbox, x17 y124 w280 h90 cBlack %IntroDis%, LFD Eingabe
 Gui, 2:Add, Radio, x32 y140 w40  h20 %IntroDis% Checked%r_LFD1% vr_LFD1 g2GuiShowButton, LFD:
@@ -178,8 +178,9 @@ return
 Gui 2:Submit, NoHide
 if (r_Main1 = 1 or r_Main3 = 1) and (c_Beginning = 1 or c_SendDate = 1) and (c_SkipLastPart = 1) and (r_LFD3 = 1)
 	{
-	Msgbox, 4096, Ups! , Sorry, diese Kombination funktioniert nicht!
-	return 
+	Msgbox, 4132, Sicher? , Bist du sicher, dass du keine LFD eingeben möchtest?
+	IfMsgBox, No
+		return 
 	}
 else if (r_Main3 = 1 AND (r_LFD1 = 1 or r_LFD2 = 1) AND c_SkipLastPart = 0)
 	{

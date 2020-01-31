@@ -41,17 +41,23 @@ for i, control in 10GuiOCRPositions
 	If (%control% = "ERROR")
 		%control% := GetIniValue(BasicFile, BasicSettingsMenu, control, 0)
 	}
+
 	
 ; Change Button
 if (10GuiChange = false)
 	{
 	BasicSettingsDis := DisON
+	PRELoadsDis := DisON
 	ChangeButtonName := ae . "ndern"
 	GoButtonDis	:= DisOFF
 	PositionsDis := DisON
 	}
 else
-	{ 
+	{
+	if (GetIniValue(ProjectFile, "ProjectFiles", "StudyWithLFDs") = "true")
+		PRELoadsDis := DisOFF
+	else
+		PRELoadsDis := DisON
 	BasicSettingsDis := DisOFF
 	ChangeButtonName := "Speichern"
 	GoButtonDis	:= DisON
@@ -109,17 +115,17 @@ Gui, 10:Add, Button, x130 y180 w50 h20 g10GuiShowWindow, Show
 ; Eingabe des Geburtsdatum
 Gui, 10:Add, Groupbox, x10 y215 w260 h148 cNavy, Geburtsdatum/Geschlecht
 Gui, 10:Add, Text, x20 y240  w60  h20 , Reihenfolge:
-Gui, 10:Add, Edit, x100 y237  w50  h20 Center %BasicSettingsDis% ve_Input1, % e_Input1
-Gui, 10:Add, Edit, x153 y237  w50  h20 Center %BasicSettingsDis% ve_Input2, % e_Input2
-Gui, 10:Add, Edit, x206 y237  w50  h20 Center %BasicSettingsDis% ve_Input3, % e_Input3
+Gui, 10:Add, Edit, x100 y237  w50  h20 Center %PRELoadsDis% ve_Input1, % e_Input1
+Gui, 10:Add, Edit, x153 y237  w50  h20 Center %PRELoadsDis% ve_Input2, % e_Input2
+Gui, 10:Add, Edit, x206 y237  w50  h20 Center %PRELoadsDis% ve_Input3, % e_Input3
 Gui, 10:Add, Text, x58 y265  w90  h20 , Tag:
 Gui, 10:Add, Text, x49 y288  w90  h20 , Monat:
 Gui, 10:Add, Text, x58 y312  w90  h20 , Jahr:
-Gui, 10:Add, Edit, x100 y263  w103  h20 Center %BasicSettingsDis% ve_BirthDay, % e_BirthDay
-Gui, 10:Add, Edit, x100 y286  w103  h20 Center %BasicSettingsDis% ve_BirthMonth, % e_BirthMonth
-Gui, 10:Add, Edit, x100 y310  w103  h20 Center %BasicSettingsDis% ve_BirthYear, % e_BirthYear
+Gui, 10:Add, Edit, x100 y263  w103  h20 Center %PRELoadsDis% ve_BirthDay, % e_BirthDay
+Gui, 10:Add, Edit, x100 y286  w103  h20 Center %PRELoadsDis% ve_BirthMonth, % e_BirthMonth
+Gui, 10:Add, Edit, x100 y310  w103  h20 Center %PRELoadsDis% ve_BirthYear, % e_BirthYear
 Gui, 10:Add, Text, x26 y335  w90  h20 , Geschlecht:
-Gui, 10:Add, Edit, x100 y333  w103  h20 Center %BasicSettingsDis% ve_sex, % e_sex
+Gui, 10:Add, Edit, x100 y333  w103  h20 Center %PRELoadsDis% ve_sex, % e_sex
 ; Buttons
 Gui, 10:Add, Button,   x10  y370 w55  h25 g10GuiResetControls, Reset
 Gui, 10:Add, Button,   x70  y370 w70  h25 g10GuiChangeButton , % ChangeButtonName 
@@ -326,7 +332,7 @@ return
 F11Routine:
 F11MenuName := "Projektdatei ausw" . ae . "hlen..."
 FileList := ""
-ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp"]
+ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp", "PreloadDetails"]
 IniLoop:
 Loop, Files, *.ini, R
 	{
@@ -458,7 +464,8 @@ if (A_IsCompiled = 1)
 	}
 
 ; StudyWithLFD
-SaveIniValue(ProjectFile, "ProjectFiles", "StudyWithLFDs", "true")
+if (GetIniValue(ProjectFile, "ProjectFiles", "StudyWithLFDs") = "Error")
+	SaveIniValue(ProjectFile, "ProjectFiles", "StudyWithLFDs", "true")
 
 ; CurrentLFD 
 CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", A_Space)
