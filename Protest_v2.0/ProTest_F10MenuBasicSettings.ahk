@@ -175,7 +175,8 @@ CheckCapture2TextIsRunning()
 CheckWorkWindow()
 SaveScaleFactor()
 Gui, 10:Submit, NoHide
-Gosub CalculatePositions
+if (c_dependent = 1)
+	Gosub CalculatePositions
 WinActivate, %WorkWindow%
 WinWaitActive, %WorkWindow%
 TestOCR := OCR("Test", 1)
@@ -249,9 +250,19 @@ for i, control in 10GuiOCRPositions
 	else
 		SaveIniValue(ProjectFile, BasicSettingsMenu, control, %control%)
 	}
-	
+if (c_dependent = 0)
+	SaveLengthForwardCapture()
 SaveScaleFactor()
 return
+
+; save Forward Text Line Capture
+SaveLengthForwardCapture(){
+local
+global Capture2TextIniFileAppDataPath
+global e_fnEndPosX, e_fnStartPosX
+ForwardLength := e_fnEndPosX - e_fnStartPosX
+IniWrite, %ForwardLength%, %Capture2TextIniFileAppDataPath%, ForwardTextLineCapture, Length
+}
 
 ; save e_scale
 SaveScaleFactor(){
@@ -286,8 +297,16 @@ CoordMode, Pixel, Client
 SysGet, CaptionHeight, 4
 TestPosX := e_fnStartPosX
 TestPosY := e_fnStartPosY + CaptionHeight
-TestWidth := x_ADDToStartfnX
-TestHeight := x_ADDToStartfnY
+if (c_dependent = 1)
+	{
+	TestWidth := x_ADDToStartfnX
+	TestHeight := x_ADDToStartfnY
+	}
+else
+	{
+	TestWidth := e_fnEndPosX - e_fnStartPosX
+	TestHeight := e_fnEndPosY - e_fnStartPosY
+	}
 
 ;NoTitle := ""
 Gui 1:Destroy
@@ -358,6 +377,7 @@ if (IniFileInList != "")
 	ProjectFileName := IniFileInList
 	SettingUpFiles(ProjectFileName)
 	SettingUpCapture2Text()
+	Gui 10:Destroy
 	Send {F10}
 	}
 else
@@ -436,6 +456,14 @@ if (A_IsCompiled = 1)
 	SaveToHistory("Temp File: ", TempFileName)
 	SaveToHistory("History File: ", HistoryFileName)
 	}
+
+; StudyWithLFD
+SaveIniValue(ProjectFile, "ProjectFiles", "StudyWithLFDs", "true")
+
+; CurrentLFD 
+CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", A_Space)
+DeleteIniValue(ProjectFile, "ProjectFiles", "CurrentLFD")
+
 Gui 11:Destroy
 ListLines On
 }	
