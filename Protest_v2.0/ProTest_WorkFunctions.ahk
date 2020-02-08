@@ -12,6 +12,7 @@ global r_Main1, r_Main2, r_Main3
 global r_LFD1, r_LFD2, cb_UseLFD
 global c_Beginning, e_Beginning, c_SendDate, c_SkipLastPart
 global e_Day, e_Month, e_Year
+global StudyWithLFDs := GetIniValue(ProjectFile, "QuickSetupMenu", "c_StudyWithLFDs",1)
 static XModulSkipped
 CheckWorkWindow()
 ListLines Off
@@ -59,7 +60,7 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		ListLines On
 		Sleep, DefaultSleep
 		CheckCapture2TextIsRunning()
-		if (CurrentLFD = "")
+		if (CurrentLFD = "" and StudyWithLFDs = 1)
 			CurrentLFD := InputBoxLFD()
 		global IntroIsOver := false
 		loop {
@@ -335,4 +336,3 @@ Gui, 20:show, Center Autosize, About ProTest
 WinWaitActive, About ProTest
 WinWaitClose, About ProTest
 return
- 

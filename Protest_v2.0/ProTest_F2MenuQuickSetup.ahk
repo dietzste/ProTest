@@ -28,7 +28,8 @@ if (2GuiReset = true)
 , "e_Stopfn1", "e_Stopfn2", "e_Stopfn3",
 , "dd_SkipButton", 
 , "c_Beginning", "c_SendDate", 
-, "c_SkipLastPart" ]
+, "c_SkipLastPart"
+, "c_StudyWithLFDs" ]
 for i, control in 2GuiControlArray
 	{
 	%control% := GetIniValue(ProjectFile, QuickSetupMenu, control)
@@ -45,20 +46,26 @@ e_Year := GetIniValue(ProjectFile, QuickSetupMenu, "e_Year", A_YYYY )
 if (r_Main1 = 1)
 	{
 	IntroDis := DisOFF
+	IntroDisLFD := DisOFF
 	fnDis := DisON
 	}
 else if (r_Main2 = 1)
 	{	
 	IntroDis := DisON
+	IntroDisLFD := DisON
 	fnDis := DisOFF
 	}
 else if (r_Main3 = 1)
 	{
 	IntroDis := DisOFF
+	IntroDisLFD := DisOFF
 	fnDis := DisOFF
 	}
 
 LFDList := CreateLFDList("F2")
+
+if (c_StudyWithLFDs = 0)
+	IntroDisLFD := DisON
 
 ;;;;;; GUI Menü ;;;;;
 ; Hauptauswahl
@@ -77,12 +84,13 @@ Gui, 2:Add, Edit,    x137 y99 w20 h20 %IntroDis% Center ve_Day, %e_Day%
 Gui, 2:Add, Edit,    x162 y99 w20 h20 %IntroDis% Center ve_Month, %e_Month%
 Gui, 2:Add, Edit,    x187 y99 w35 h20 %IntroDis% Center ve_Year, %e_Year%
 ; 2. LFD 
-Gui, 2:Add, Groupbox, x17 y124 w280 h90 cBlack %IntroDis%, LFD Eingabe
-Gui, 2:Add, Radio, x32 y140 w40  h20 %IntroDis% Checked%r_LFD1% vr_LFD1 g2GuiShowButton, LFD:
-Gui, 2:Add, Radio, x32 y162 w140 h20 %IntroDis% Checked%r_LFD2% vr_LFD2 gOpenF3, Suche mit LFD-Finder
-Gui, 2:Add, Radio, x32 y184 w140  h20 %IntroDis% Checked%r_LFD3% vr_LFD3 g2GuiShowButton, keine Eingabe
-Gui, 2:Add, ComboBox, x77 y140 w75 h100 %IntroDis% Limit%LFDLimit%  vcb_UseLFD, % LFDList
-Gui, 2:Add, Button, x170 y140 w75 h20 %IntroDis% g2GuiShowLFDValues, LFD Werte
+Gui, 2:Add, Groupbox, x17 y124 w280 h90 cBlack %IntroDisLFD%, LFD Eingabe
+Gui, 2:Add, Radio, x32 y140 w40  h20 %IntroDisLFD% Checked%r_LFD1% vr_LFD1 g2GuiShowButton, LFD:
+Gui, 2:Add, Radio, x32 y162 w140 h20 %IntroDisLFD% Checked%r_LFD2% vr_LFD2 gOpenF3, Suche mit LFD-Finder
+Gui, 2:Add, Radio, x32 y184 w140  h20 %IntroDisLFD% Checked%r_LFD3% vr_LFD3 g2GuiShowButton, keine Eingabe
+Gui, 2:Add, ComboBox, x77 y140 w75 h100 %IntroDisLFD% Limit%LFDLimit%  vcb_UseLFD, % LFDList
+Gui, 2:Add, Button, x170 y140 w75 h20 %IntroDisLFD% g2GuiShowLFDValues, LFD Werte
+Gui, 2:Add, CheckBox, x180 y185 w100  h20 %IntroDis% Checked%c_StudyWithLFDs% vc_StudyWithLFDs g2GuiLFDsAvailable, LFDs vorhanden
 ; 3. Last Part 
 Gui, 2:Add, Groupbox, x17 y210 w280 h50 %IntroDis% cBlack , Haupt-Intro
 Gui, 2:Add, CheckBox, x32 y230 w84  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, %ue%berspringen!
@@ -100,10 +108,12 @@ Gui, 2:Add, Radio, x170 y352 w35 h15 %fnDis% Checked%r_AdvancedOFF% vr_AdvancedO
 ; Abschluss
 Gui, 2:Add, Button, x10 y390 w50 h25 g2GuiHelp, Hilfe
 Gui, 2:Add, Button, x70 y390 w50 h25 g2GuiResetControls, Reset
-Gui, 2:Add, Button, x223 y390 w80 h25 g2GuiGO Default, Okidoki
+Gui, 2:Add, Button, x223 y390 w80 h25 g2GuiGO Default, Ok
 Gui, 2:Show, x850 y480 Autosize Center, %GuiF2%
 if (r_LFD3 = 1 OR r_LFD2 = 1) 
-	Control, Hide ,, LFD Werte, %GuiF2% 
+	Control, Hide ,, LFD Werte, %GuiF2%
+if (r_LFD1 = 1 or r_LFD2 = 1)
+	Control, Hide ,, LFDs vorhanden , %GuiF2%
 return
 
 2GuiClose:
@@ -127,12 +137,30 @@ return
 ShowSelectedLFDValues("cb_UseLFD")
 return
 
+2GuiLFDsAvailable:
+Gui 2:Submit, NoHide
+GoSub 2GuiSaveInput
+Gui 2:Destroy
+Goto 2GuiSetControls	
+return 
+
 2GuiShowButton:
 Gui 2:Submit, NoHide
-if (r_LFD3 = 1 OR r_LFD2 = 1) 
-	Control, Hide ,, LFD Werte, %GuiF2% 
-else
+if (r_LFD1 = 1)
+	{
 	Control, Show ,, LFD Werte, %GuiF2%
+	Control, Hide ,, LFDs vorhanden , %GuiF2%
+	}
+if (r_LFD2 = 1)
+	{
+	Control, Hide ,, LFD Werte, %GuiF2%
+	Control, Hide ,, LFDs vorhanden , %GuiF2%
+	}
+if (r_LFD3 = 1)
+	{
+	Control, Hide ,, LFD Werte, %GuiF2%
+	Control, Show ,, LFDs vorhanden , %GuiF2%
+	}
 return 
 
 2GuiResetControls:
@@ -178,7 +206,8 @@ return
 Gui 2:Submit, NoHide
 if (r_Main1 = 1 or r_Main3 = 1) and (c_Beginning = 1 or c_SendDate = 1) and (c_SkipLastPart = 1) and (r_LFD3 = 1)
 	{
-	Msgbox, 4096, Ups! , Sorry, diese Kombination funktioniert nicht!
+	if (c_StudyWithLFDs = 1)
+		Msgbox, 4096, Ups! , Sorry, diese Kombination funktioniert nicht!
 	return 
 	}
 else if (r_Main3 = 1 AND (r_LFD1 = 1 or r_LFD2 = 1) AND c_SkipLastPart = 0)
