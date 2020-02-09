@@ -11,6 +11,7 @@ global TimeOutMsgSkippedIntro
 global r_Main1, r_Main2, r_Main3
 global r_LFD1, r_LFD2, cb_UseLFD
 global c_Beginning, e_Beginning, c_SendDate, c_SkipLastPart
+global e_Day, e_Month, e_Year
 static XModulSkipped
 CheckWorkWindow()
 ListLines Off
@@ -28,8 +29,11 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		}
 	if (c_SendDate = 1)
 		{
-		SaveToHistory("Datum eingeben")
-		SendDate()
+		;SendDate()
+		SetKeyDelay, med
+		Send, %e_Day%{Enter}%e_Month%{Enter}%e_Year%{Enter}
+		SetKeyDelay, fast
+		SaveToHistory("Datum eingeben: " . e_Day . "." . e_Month . "." . e_Year)
 		}
 	if (r_LFD1 = 1)
 		{

@@ -24,7 +24,7 @@ F12		= ProTest beenden
 Men%ue%s:
 F2		= %GuiF2%
 F3		= %GuiF3%
-F4		= %GuiF4% 
+F4		= %GuiF4%
 F7		= %AddOnComment%%GuiF7%
 F8		= %GuiF8%
 F10		= %GuiF10%
