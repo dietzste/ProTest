@@ -129,12 +129,12 @@ PreloadUpdateValue := e_PLU%A_Index%
 IF (Preload != "") and (PreloadCheckBox = 1)   ; Checkbox ausgewählt
 	{
 	; Convert if necessary
-	Conversion := GetIniValue(BasicFile, "Converter", Preload)
+	Conversion := GetIniValue(PreloadDetailsFile, "Converter", Preload)
 	if (Conversion != "ERROR")
 		Preload := Conversion
 	; Details abrufen
 	If (c_DetailsOnly = 1) ; nur Details
-		MsgBox,4096,%Preload%, % GetIniSection(LibraryFile, Preload)
+		MsgBox,4096,%Preload%, % GetIniSection(PreloadDetailsFile , Preload)
 	else
 		{
 		; schauen ob Preload in Liste

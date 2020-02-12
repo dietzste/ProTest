@@ -326,7 +326,7 @@ return
 F11Routine:
 F11MenuName := "Projektdatei ausw" . ae . "hlen..."
 FileList := ""
-ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp"]
+ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp", "PreloadDetails"]
 IniLoop:
 Loop, Files, *.ini, R
 	{
@@ -456,6 +456,11 @@ if (A_IsCompiled = 1)
 	SaveToHistory("Temp File: ", TempFileName)
 	SaveToHistory("History File: ", HistoryFileName)
 	}
+
+; CurrentLFD 
+global CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", A_Space)
+DeleteIniValue(ProjectFile, "ProjectFiles", "CurrentLFD")
+
 Gui 11:Destroy
 ListLines On
 }	
