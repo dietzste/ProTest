@@ -18,6 +18,7 @@ SetTitleMatchMode, 2
 ;;; Setting Up ProTest ;;;
 ConfigFolder := A_Workingdir . "\Config"
 BasicFile := ConfigFolder . "\BasicSettings.ini"
+PreloadDetailsFile := ConfigFolder . "\PreloadDetails.ini"
 HeartPicture := ConfigFolder . "\Heart.png"
 LibraryFile := ConfigFolder . "\Library.ini"
 
@@ -65,9 +66,9 @@ fast := 100
 med := 130
 
 ; Changable Settings
-SleepAfterEnter 	:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
-TimeOutMsgLFDMatch := GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgLFDMatch")
-TimeOutMsgSkippedIntro := GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgSkippedIntro")/1000
+SleepAfterEnter 		:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
+TimeOutMsgLFDMatch 		:= GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgLFDMatch")
+TimeOutMsgSkippedIntro 	:= GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgSkippedIntro")/1000
 
 ; Advanced Settings
 DefaultSleep	  := GetIniValue(BasicFile, "AdvancedSettings",  "DefaultSleep")
@@ -101,6 +102,7 @@ if (A_IsCompiled = 1)
 if (A_IsCompiled != 1)
 	{
 	AOx := false
+	;WorkWindow := "TeamViewer"
 	WorkWindow := "Editor"
 	SettingUpFiles("B142.ini")
 	SettingUpCapture2Text()
@@ -156,6 +158,7 @@ return
 ;;;;; TEST Section ;;;;
 #if WinExist("Notepad++")
 ^t::
+return 
 #if
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -176,6 +179,8 @@ return
 
 +F5::
 	SaveToHistory("RELOAD")
+	if (CurrentLFD != "")
+		SaveIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", CurrentLFD)
 	Reload
 return
 
