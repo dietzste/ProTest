@@ -177,7 +177,7 @@ if (Window = GuiF10)
 10GuiHelpText =
 (
 fn Start/End	= Positionen der fn
-Scale		= ScaleFactor (Default: 3.0)
+Scale		= ScaleFactor (Default: 4.0)
 
 Der Button 'Show' zeigt den (ungef%ae%hren) Bereich
 an, in der die Texterkennung sucht. Der Button 
@@ -187,6 +187,10 @@ Checkbox 'abh%ae%ngig' = Anhand der Position
 fn Start werden die Parameter fn End bestimmt:
 fn End X = fn Start X + %x_ADDToStartfnX%
 fn End Y = fn Start Y + %x_ADDToStartfnY%
+
+Einstellungen dauerhaft speichern:
+Button 'Speichern' und die Shift-Taste gleichzeitig 
+dr%ue%cken. Und anschlie%sz%ende Message-Box best%ae%tigen. 
 
 )
 Helptext = %10GuiHelpText%
