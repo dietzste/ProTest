@@ -11,7 +11,7 @@ else
 return
 
 F10Routine:
-
+PermanentSave := ""
 10GuiReset := false
 10GuiChange := false
 
@@ -27,7 +27,7 @@ if (10GuiReset = true)
 , "c_dependent", "e_scale"
 , "e_Input1", "e_Input2", "e_Input3"
 , "e_BirthDay", "e_BirthMonth", "e_BirthYear"
-, "e_sex", "e_scale"]
+, "e_sex" ]
 for i, control in 10GuiControlArray
 	{
 	%control% := GetIniValue(ProjectFile, BasicSettingsMenu, control)
@@ -215,6 +215,7 @@ if (A_GuiControl = ae . "ndern")
 if (A_GuiControl = "Speichern")
 	{
 	10GuiChange := false
+	PermanentSave := GetKeyState("Shift") 
 	Gosub 10GuiSaveInput
 	}
 Gui 10:Destroy
@@ -248,7 +249,7 @@ for i, control in 10GuiControlArray
 	else
 		SaveIniValue(ProjectFile, BasicSettingsMenu, control, %control%)
 	}
-;10GuiOCRPositions := ["e_StartXPos", "e_fnStartPosY", "e_fnEndPosX", "e_fnEndPosY"]
+;10GuiOCRPositions := ["e_fnStartPosX", "e_fnStartPosY", "e_fnEndPosX", "e_fnEndPosY"]
 for i, control in 10GuiOCRPositions
 	{
 	If (%control% = 0)
@@ -259,6 +260,23 @@ for i, control in 10GuiOCRPositions
 if (c_dependent = 0)
 	SaveLengthForwardCapture()
 SaveScaleFactor()
+
+; Permanent Speichern
+if (PermanentSave = 1)
+	{
+	Msgbox, 4132, Dauerhaft Speichern?, Soll die aktuelle OCR-Konfiguration dauerhaft gespeichert werden? 
+	IfMsgBox, Yes
+		{
+		;10GuiOCRPositions := ["e_fnStartPosX", "e_fnStartPosY", "e_fnEndPosX", "e_fnEndPosY"]
+		for i, control in 10GuiOCRPositions
+			{
+			SaveIniValue(BasicFile, BasicSettingsMenu, control, %control%)
+			}
+		SaveIniValue(BasicFile, BasicSettingsMenu, "c_dependent", c_dependent)
+		SaveIniValue(BasicFile, BasicSettingsMenu, "e_scale", e_scale)
+		}
+	PermanentSave := 0
+	}
 return
 
 ; save Forward Text Line Capture
@@ -412,6 +430,7 @@ else
 		{
 		SettingUpFiles(ProjectFileName)
 		SettingUpCapture2Text()
+		Gui 10:Destroy
 		Send {F10}
 		}
 	}
