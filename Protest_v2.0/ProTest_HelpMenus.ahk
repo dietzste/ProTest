@@ -74,6 +74,10 @@ die fn-Suche.
 Auswahl 'Suche mit LFD-Finder' %oe%ffnet F3-Men%ue%,
 'Erweiterte Optionen' (Ein) %oe%fnnet das F4-Men%ue%. 
 
+Falls die aktuelle Erhebung ohne LFDs arbeitet: Bei
+Auswahl 'Keine Eingabe' die Checkbox 'LFDs vorhanden'
+abw%ae%hlen.
+
 Stop-fn(s): 
 Eingaben k%oe%nnen einstellig oder mehrstellig sein (z.B. 3).
 
