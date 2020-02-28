@@ -11,7 +11,7 @@ else
 return
 
 F10Routine:
-
+PermanentSave := ""
 10GuiReset := false
 10GuiChange := false
 
@@ -430,6 +430,7 @@ else
 		{
 		SettingUpFiles(ProjectFileName)
 		SettingUpCapture2Text()
+		Gui 10:Destroy
 		Send {F10}
 		}
 	}
