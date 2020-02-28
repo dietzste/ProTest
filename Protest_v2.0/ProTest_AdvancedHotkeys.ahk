@@ -12,7 +12,7 @@ If (AOx = false)
 else
 	AddOnComment := ""
 
-MsgBox, 4096 , F1 - %GuiF1%,
+MsgBox, 4096 , F1 - %GuiF1% (Version: %ProTestVersion%), 
 (
 Basic Hotkeys:
 F6		= Vorgang pausieren/fortfahren

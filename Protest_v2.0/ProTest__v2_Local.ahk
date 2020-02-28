@@ -16,11 +16,20 @@ SetTitleMatchMode, 2
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Setting Up ProTest ;;;
-ConfigFolder := A_Workingdir . "\Config"
+ConfigFolder := A_ScriptDir . "\Config"
 BasicFile := ConfigFolder . "\BasicSettings.ini"
 PreloadDetailsFile := ConfigFolder . "\PreloadDetails.ini"
 HeartPicture := ConfigFolder . "\Heart.png"
 LibraryFile := ConfigFolder . "\Library.ini"
+
+; Version
+ProTestVersion := GetIniValue(BasicFile, "ProTestVersion", "Version")
+if (ProTestVersion = "ERROR")
+	{
+	; get Version from FileName
+	VersionStart := Instr(A_ScriptName, "_v") + 2
+	ProTestVersion := Substr(A_ScriptName,VersionStart, 3)
+	}
 
 if !FileExist(ConfigFolder)
 	{
