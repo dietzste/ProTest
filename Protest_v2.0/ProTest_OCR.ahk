@@ -100,7 +100,7 @@ static CoordinatesLoaded
 CoordMode, Mouse, Client
 ;; SET SPEED CURSOR ;;
 if (Part = "Test")
-	SpeedCursor := 25
+	SpeedCursor := 15
 else
 	SpeedCursor := 0
 
