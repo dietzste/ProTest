@@ -182,7 +182,14 @@ CheckWorkWindow()
 SaveScaleFactor()
 Gui, 10:Submit, NoHide
 if (c_dependent = 1)
+	{
 	Gosub CalculatePositions
+	; Adapt e_fnEnd X/Y
+	e_fnEndPosX := e_fnStartPosX + x_ADDToStartfnX
+	e_fnEndPosY := e_fnStartPosY + x_ADDToStartfnY
+	GuiControl,, Edit5 , %e_fnEndPosX%
+	GuiControl,, Edit6 , %e_fnEndPosY%
+	}
 WinActivate, %WorkWindow%
 WinWaitActive, %WorkWindow%
 TestOCR := OCR("Test", 1)
@@ -192,14 +199,7 @@ WinWaitActive, %GuiF10%
 WinGetPos , XPOS, YPOS, Width ,  Height , %GuiF10%
 MouseMove, Width / 2, Height / 2, 0
 if (TestOCR != "")
-	{
 	MsgBox, 4096, Test OCR, %TestOCR%
-	if (c_dependent = 1)
-		{
-		StartCoordinates := "StartX:" . e_fnStartPosX  " StartY:" e_fnStartPosY . " Scale:" . e_scale
-		SaveToHistory(TestOCR . " OCR" , StartCoordinates, "dependent")
-		}
-	}
 else
 	MsgBox, 4096, Test OCR, OCR Failed.
 return	
@@ -325,6 +325,11 @@ if (c_dependent = 1)
 	{
 	TestWidth := x_ADDToStartfnX
 	TestHeight := x_ADDToStartfnY
+	e_fnEndPosX := e_fnStartPosX + x_ADDToStartfnX
+	e_fnEndPosY := e_fnStartPosY + x_ADDToStartfnY
+	; Adapt e_fnEnd X/Y
+	GuiControl,, Edit5 , %e_fnEndPosX%
+	GuiControl,, Edit6 , %e_fnEndPosY%
 	}
 else
 	{
