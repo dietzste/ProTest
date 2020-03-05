@@ -7,7 +7,7 @@ local
 global AOx
 global ae, oe, ue, fast, fnSearchIsOver
 global ProjectFile, TempFile
-global r_AdvancedON
+global r_AdvancedON, UpcomingFnIndex
 global SleepAfterEnter
 global SameFnCount, TriedAnywaySkip, TriedXModulSkip
 static LastfnOCR
@@ -91,7 +91,7 @@ LastfnOCR := fnOCR
 CheckStopFn(fnOCR, Index)
 
 ; MATCH with Upcoming Fn?
-if (r_AdvancedON = 1)
+if (r_AdvancedON = 1 AND UpcomingFnIndex != 0)
 	{
 	MatchUpcomingFn := CheckUpcomingFn(fnOCR, Index)
 	if (MatchUpcomingFn = true)
@@ -155,7 +155,8 @@ local
 global r_AdvancedON
 global AdvancedSearchMenu
 global ProjectFile
-loop, 5 {  
+global UpcomingFnIndex
+loop, %UpcomingFnIndex% {
 UpcomingFnName := GetIniValue(ProjectFile,AdvancedSearchMenu, "e_fnN" . A_Index)
 If (UpcomingFnName = fnOCR)
 	{
@@ -167,7 +168,7 @@ If (UpcomingFnName = fnOCR)
 		return true
 		}
 	}	
-} ; ende loop  
+} ; ende loop
 return false
 } ; ende function	
 
