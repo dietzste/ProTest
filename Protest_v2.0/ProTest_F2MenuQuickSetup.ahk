@@ -217,7 +217,7 @@ else if (r_Main3 = 1 AND (r_LFD1 = 1 or r_LFD2 = 1) AND c_SkipLastPart = 0)
 	Msgbox, 4096, Ups! , Sorry, diese Kombination funktioniert nicht!
 	return 
 	}
-if (r_LFD1 = 1 AND cb_UseLFD = "")
+if (r_LFD1 = 1 AND cb_UseLFD = "" and (r_Main1 = 1 or r_Main3 = 1))
 	{
 	Msgbox, 4096, Ups! , Keine LFD eingeben!
 	return
