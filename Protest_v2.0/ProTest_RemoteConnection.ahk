@@ -109,6 +109,19 @@ else if (RemoteFeed = false)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+L_RestartQ(){
+local
+global CurrentDetection
+SendValue := ">Restart!"
+SaveToHistory(SendValue)
+WaitForRemoteFeedback(SendValue)
+CheckWorkWindow()
+Detection := CurrentDetection
+SaveToHistory(Detection)
+if (Detection = "<Restart!")
+	return true
+}
+
 L_WaitUntilPreloadsLoaded(){
 local
 global CurrentDetection
