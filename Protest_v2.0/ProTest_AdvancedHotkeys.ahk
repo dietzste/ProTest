@@ -42,6 +42,10 @@ F9::
 L_RemoteFeedbackTest()
 return
 
+^r::
+L_RestartQ()
+return 
+
 F12::
 Gui, 12: +AlwaysOnTop ToolWindow
 Gui, 12:Add, Groupbox, x10 y10 w185 h90 cnavy, L%oe%schen
