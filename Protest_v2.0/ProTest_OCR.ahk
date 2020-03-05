@@ -56,6 +56,7 @@ if (OCR != "")
 		}
 	else 
 		{
+		AutoCorrection := false
 		if (Part != "Intro")
 			{
 			if Instr(Part, "!") 
@@ -63,8 +64,22 @@ if (OCR != "")
 			else
 				SaveToHistory(OCR, "(OCR)")
 			}
+		if (Part = "Test")
+			{
+			; 6 = a Korrektur
+			if Substr(OCR, OCRLength) = "6"
+				{
+				AutoCorrection := true
+				OCRVariation := Substr(OCR, 1, (OCRLength-1))
+				OCRVariation := OCRVariation . "a"
+				OCRRemark := "Erkannt wurde " . OCR . ". In der Library wird auch nach " . OCRVariation . " gesucht (AutoKorrektur)."
+				}
+			}
 		ListLines, On
-		return OCR
+		if (AutoCorrection = false)
+			return OCR
+		else
+			return OCRRemark
 		}
 	}
 else
@@ -124,7 +139,7 @@ MouseMove, %PositionX%, %PositionY% , %SpeedCursor%
 ;;; OCR CLEAN UP FUNCTION ;;;
 OCRCleanUp(OCR, Part){
 local
-OCR := StrReplace(OCR, "\?", "7") ; ? = 7 
+OCR := StrReplace(OCR, "?", "7") ; ? = 7 
 OCR := RegExReplace(OCR, "\W") ; keine special Charakters
 OCR := StrReplace(OCR, "_")
 AlphaMatch := 0
@@ -141,4 +156,42 @@ Loop, Parse, OCR
 if (AlphaMatch > 1)
 	OCR := SubStr(OCR, 1 , --SecondAlphaPosition)
 return OCR
+}
+
+AutoCorrection(fnOCR, Section, ByRef fnValue){
+local
+global LibraryFile
+fnOCRLength := Strlen(fnOCR)
+
+; Remove6th
+if (fnOCRLength = 6)
+	{
+	fnOCR6th := Substr(fnOCR, 6)
+	if fnOCR6th is alpha
+		{
+		fnOCR5 := SubStr(fnOCR, 1, 5)
+		fnValue := GetIniValue(LibraryFile, Section, fnOCR5)
+		SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR5)
+		if (fnValue != "ERROR")
+			{
+			SaveToHistory(fnOCR5, "=" . fnValue, Section)
+			return fnOCR5
+			}
+		}
+	}
+
+; 6 = a Korrektur
+if Substr(fnOCR, fnOCRLength) = "6"
+	{
+	fnOCR6a := Substr(fnOCR, 1, (fnOCRLength-1))
+	fnOCR6a := fnOCR6a . "a"
+	fnValue := GetIniValue(LibraryFile, Section, fnOCR6a)
+	SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR6a)
+	if (fnValue != "ERROR")
+		{
+		SaveToHistory(fnOCR6a, "=" . fnValue, Section)
+		return fnValue
+		}
+	}
+return fnOCR
 }
