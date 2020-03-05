@@ -113,9 +113,9 @@ if (A_IsCompiled = 1)
 if (A_IsCompiled != 1)
 	{
 	AOx := false
-	;WorkWindow := "TeamViewer"
-	WorkWindow := "Editor"
-	SettingUpFiles("B142.ini")
+	WorkWindow := "TeamViewer"
+	;WorkWindow := "Editor"
+	SettingUpFiles("B151.ini")
 	SettingUpCapture2Text()
 	Send, {F10}
 	WinWaitActive, %GuiF10%
