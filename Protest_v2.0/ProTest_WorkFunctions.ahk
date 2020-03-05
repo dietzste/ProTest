@@ -12,6 +12,7 @@ global r_Main1, r_Main2, r_Main3
 global r_LFD1, r_LFD2, cb_UseLFD
 global c_Beginning, e_Beginning, c_SendDate, c_SkipLastPart
 global e_Day, e_Month, e_Year
+global r_AdvancedON
 global StudyWithLFDs := GetIniValue(ProjectFile, "QuickSetupMenu", "c_StudyWithLFDs",1)
 static XModulSkipped
 CheckWorkWindow()
@@ -93,6 +94,16 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	global TriedXModulSkip := false 
 	global fnSearchIsOver := false
 	XModulSkipped := false
+	; detect Number of Entries F4 Menu
+	global UpcomingFnIndex := 0
+	if (r_AdvancedON = 1)
+		{
+		loop, 5 {
+		UpcomingFnName := GetIniValue(ProjectFile,"AdvancedSearchMenu", "e_fnN" . A_Index)
+		if (UpcomingFnName != "ERROR")
+			UpcomingFnIndex := A_Index
+		} ; ende loop
+		} ; ende if
 	loop {
 	fnOCR := OCR("fn-Suche", A_Index)
 	Index := A_Index - 1
