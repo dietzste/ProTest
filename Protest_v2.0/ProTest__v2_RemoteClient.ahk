@@ -102,6 +102,8 @@ else if InStr(Detection, ">EnterNextLFD")
 	Result := R_EnterNextLFD()
 else if InStr(Detection, ">GetNextLFD")
 	Result := R_GetNextLFD(Detection)
+else if InStr(Detection, ">Restart")
+	Result := R_Restart()
 return DetectionBack . "=" . Result
 }
 
@@ -192,6 +194,21 @@ if (RemoteSimulation = false)
 	return Result := SkipXModul(WaitForXModulSec)
 else
 	return Result := "Simulation"
+}
+
+R_Restart(){
+local
+global NipoFenster
+if !WinActive(NipoFenster)
+	WinActivate, %NipoFenster% 
+WinMenuSelectItem, %NipoFenster%, , Actions, Restart...
+WinWaitActive, ahk_class #32770
+ControlClick, &Ja, A,,,, NA
+Sleep, 50
+if (IsButtonVisible("Start") = true)
+	return "true"
+else
+	return "false"
 }
 
 R_LoadPreloadList(){
@@ -375,6 +392,7 @@ return
 ;;;;  TEST AREA ;;;;;;;
 
 ^r::
+R_Restart()
 return 
 
 SaveRemoteHistory(params*){
