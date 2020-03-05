@@ -9,23 +9,16 @@ SetKeyDelay, fast
 fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
 If (fnIntroValue = "ERROR")
 	{
-	if (Strlen(fnOCR) = 6)
-		{
-		fnOCR := (SubStr(fnOCR, 1, 5))
-		SaveToHistory("VERBOSE:", "Probiere " . fnOCR)
-		fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
-		If (fnIntroValue = "ERROR")
-			{
-			IntroIsOver := true
-			return
-			}
-		else
-			SaveToHistory(fnOCR, "=" . fnIntroValue, "Intro")
-		}
-	else
+	Result := AutoCorrection(fnOCR, "fnIntro")
+	if (Result = fnOCR) 
 		{
 		IntroIsOver := true
 		return
+		}
+	else
+		{
+		fnIntroValue := Result
+		SaveToHistory(fnOCR, "=" . fnIntroValue, "Intro")
 		}
 	}
 else
