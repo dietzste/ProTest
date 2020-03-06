@@ -70,7 +70,7 @@ oe := "ö"
 sz := "ß"
 
 ; Work Variables
-WorkWindow := "TeamViewer"
+WorkWindow := "ahk_class TV_CClientWindowClass"
 CurrentLFD 	:= ""
 ultrafast := 30
 fast := 100
