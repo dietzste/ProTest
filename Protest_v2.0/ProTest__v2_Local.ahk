@@ -102,7 +102,10 @@ x_ADDToStartfnY 	:= GetIniValue(BasicFile, "PositionParameterF10", "x_ADDToStart
 ListLines On
 
 ; Tray Menu
+Menu, Tray, Insert
 Menu, Tray, Add , About ProTest, AboutMessage
+Menu, Tray, Add , Update, UpdateProTest
+
 
 if (A_IsCompiled = 1)
 	{
@@ -273,4 +276,4 @@ Return
 ;;;;;;       Update Script        ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;#Include UpdateScript.ahk
+#Include UpdateScript.ahk
