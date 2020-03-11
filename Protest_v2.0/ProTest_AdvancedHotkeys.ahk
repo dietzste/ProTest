@@ -77,6 +77,8 @@ If (c_DeleteHistoryFile = 1)
 If (c_DeletePreloadList = 1)
 	FileDelete, %PreloadListPath%
 CloseCapture2Text(Captur2TextPID)
+if (A_IsCompiled != 1)
+	DeleteIniValue(BasicFile, "BasicSettings", "x_lastProjectFile")
 return
 
 CloseCapture2Text(Captur2TextPID){

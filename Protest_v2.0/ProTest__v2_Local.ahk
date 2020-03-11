@@ -115,7 +115,11 @@ if (A_IsCompiled != 1)
 	AOx := false
 	WorkWindow := "TeamViewer"
 	;WorkWindow := "Editor"
-	SettingUpFiles("B151.ini")
+	Modus := "T"
+	if (Modus = "W")
+		SettingUpFiles("B151.ini")
+	else
+		Goto F11Routine
 	SettingUpCapture2Text()
 	Send, {F10}
 	WinWaitActive, %GuiF10%
