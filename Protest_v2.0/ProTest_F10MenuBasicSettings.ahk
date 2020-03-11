@@ -376,7 +376,11 @@ Loop, Files, *.ini, R
 		if instr(A_LoopFileName, IniFile)
 			Continue IniLoop
 		}
-	FileList .= A_LoopFileName . "|"
+	LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
+	if (LastUsedFile != "Error")
+		FileList .= A_LoopFileName . "||"
+	else
+		FileList .= A_LoopFileName . "|"
 	}
 
 if (A_ThisHotkey = "F10")
@@ -389,7 +393,7 @@ Gui, 11:Add, Groupbox, x10 y5 w180 h100 cNavy, Ini-Projectdateien
 gui, 11:add, listbox, x20 y28 w150 h60 vIniFileInList sort, % FileList
 gui, 11:add, button, x10 y110 w50 g11GuiCancel, % NoActionButton
 gui, 11:add, button, x65 y110 w50 g11GuiNewProjectFile, Neu
-gui, 11:add, button, x135 y110 w55 g11GuiIniDecision, OK
+gui, 11:add, button, x135 y110 w55 Default g11GuiIniDecision, OK
 gui, 11:show, Center Autosize, %F11MenuName%
 return
 
@@ -417,6 +421,7 @@ if (IniFileInList != "")
 	{
 	ProjectFileName := IniFileInList
 	SettingUpFiles(ProjectFileName)
+	SaveIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile", ProjectFileName)
 	SettingUpCapture2Text()
 	Gui 10:Destroy
 	Send {F10}
