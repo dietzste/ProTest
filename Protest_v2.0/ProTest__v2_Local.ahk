@@ -116,6 +116,7 @@ if (A_IsCompiled = 1)
 if (A_IsCompiled != 1)
 	{
 	AOx := false
+	Capture2TextStarted := false
 	WorkWindow := "TeamViewer"
 	;WorkWindow := "Editor"
 	Modus := "T"
@@ -155,13 +156,13 @@ if (ErrorLevel = 0) ; Capture2Text not running
 	{
 	Run, Capture2Text.exe , %Capture2TextWorkDir% ,, PID
 	global Captur2TextPID := PID
-	Capture2TextStarted := true
 	}
 else
 	{
 	; Captur2Text is running, ErrorLevel enthält PID
 	global Captur2TextPID := ErrorLevel
 	}
+Capture2TextStarted := true
 }
 
 return
