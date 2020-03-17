@@ -125,7 +125,8 @@ global MatchWindowName := "Match mit " . CurrentLFD
 Gosub LFDMatchWindow
 if (TimeOutMsgLFDMatch > 0)
 	{
-	Sleep, TimeOut, %TimeOutMsgLFDMatch%
+	Sleep, %TimeOutMsgLFDMatch%
+	GoSub TimeOut
 	WinWaitClose, %MatchWindowName%
 	}
 else
