@@ -350,7 +350,7 @@ if (WrongInput != "")
 	}
 
 ;NoTitle := ""
-Gui 1:Destroy
+Gui  1:Destroy
 Gui, 1: -Caption +AlwaysOnTop +LastFound +Border 
 Gui, 1: Color, 60CFF7
 Gui, 1:show,x%TestPosX% y%TestPosY% w%TestWidth% h%TestHeight%, A_Space
@@ -377,7 +377,7 @@ Loop, Files, *.ini, R
 			Continue IniLoop
 		}
 	LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
-	if (LastUsedFile != "Error")
+	if (LastUsedFile = A_LoopFileName)
 		FileList .= A_LoopFileName . "||"
 	else
 		FileList .= A_LoopFileName . "|"
