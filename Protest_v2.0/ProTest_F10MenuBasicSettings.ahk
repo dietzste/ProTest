@@ -366,6 +366,13 @@ return
 
 F11Routine:
 F11MenuName := "Projektdatei ausw" . ae . "hlen..."
+	
+if WinExist(F11MenuName)
+	{
+	WinActivate, %F11MenuName%
+	Exit
+	}
+
 FileList := ""
 ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp", "PreloadDetails"]
 IniLoop:
@@ -379,7 +386,7 @@ Loop, Files, *.ini, R
 	FileList .= A_LoopFileName . "|"
 	}
 
-if (A_ThisHotkey = "F10")
+if WinExist(GuiF10)
 	NoActionButton := "Back"
 else
 	NoActionButton := "Exit"
@@ -412,6 +419,14 @@ else
 return
 
 11GuiIniDecision:
+; Close Menus
+If WinExist(GuiF10)
+	{
+	Gui 2:Destroy
+	Gui 3:Destroy
+	Gui 4:Destroy
+	Gui 8:Destroy
+	}
 Gui, 11:Submit, NoHide
 if (IniFileInList != "")
 	{
