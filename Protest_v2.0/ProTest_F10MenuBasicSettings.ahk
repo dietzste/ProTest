@@ -96,11 +96,11 @@ Gui, 10:Add, Text, x85 y108  w40  h20  %BasicSettingsDis%, Start
 ; Position fn END 
 Gui, 10:Add, Text, x70 y130  w80  h20 cNavy %PositionsDis%, fn
 Gui, 10:Add, Text, x85 y130  w40  h20 %PositionsDis%, End
-	;; Start X
+	;; End X
 	Gui, 10:Add, Text, x115 y130  w20  h20  %PositionsDis%, X:
 	Gui, 10:Add, Edit, x130 y127  w50  h20 %PositionsDis%  Center 
 	Gui, 10:Add, UpDown,  Range0-400  ve_fnEndPosX, % e_fnEndPosX
-	;; Start Y
+	;; End Y
 	Gui, 10:Add, Text, x190 y130  w20  h20 %PositionsDis%, Y:
 	Gui, 10:Add, Edit, x205 y127  w50  h20 %PositionsDis%  Center 
 	Gui, 10:Add, UpDown,  Range0-400 ve_fnEndPosY, % e_fnEndPosY
@@ -182,7 +182,14 @@ CheckWorkWindow()
 SaveScaleFactor()
 Gui, 10:Submit, NoHide
 if (c_dependent = 1)
+	{
 	Gosub CalculatePositions
+	; Adapt e_fnEnd X/Y
+	e_fnEndPosX := e_fnStartPosX + x_ADDToStartfnX
+	e_fnEndPosY := e_fnStartPosY + x_ADDToStartfnY
+	GuiControl,, Edit5 , %e_fnEndPosX%
+	GuiControl,, Edit6 , %e_fnEndPosY%
+	}
 WinActivate, %WorkWindow%
 WinWaitActive, %WorkWindow%
 TestOCR := OCR("Test", 1)
@@ -192,14 +199,7 @@ WinWaitActive, %GuiF10%
 WinGetPos , XPOS, YPOS, Width ,  Height , %GuiF10%
 MouseMove, Width / 2, Height / 2, 0
 if (TestOCR != "")
-	{
 	MsgBox, 4096, Test OCR, %TestOCR%
-	if (c_dependent = 1)
-		{
-		StartCoordinates := "StartX:" . e_fnStartPosX  " StartY:" e_fnStartPosY . " Scale:" . e_scale
-		SaveToHistory(TestOCR . " OCR" , StartCoordinates, "dependent")
-		}
-	}
 else
 	MsgBox, 4096, Test OCR, OCR Failed.
 return	
@@ -325,11 +325,28 @@ if (c_dependent = 1)
 	{
 	TestWidth := x_ADDToStartfnX
 	TestHeight := x_ADDToStartfnY
+	e_fnEndPosX := e_fnStartPosX + x_ADDToStartfnX
+	e_fnEndPosY := e_fnStartPosY + x_ADDToStartfnY
+	; Adapt e_fnEnd X/Y
+	GuiControl,, Edit5 , %e_fnEndPosX%
+	GuiControl,, Edit6 , %e_fnEndPosY%
 	}
 else
 	{
 	TestWidth := e_fnEndPosX - e_fnStartPosX
 	TestHeight := e_fnEndPosY - e_fnStartPosY
+	}
+
+;check Input e_fnStartPos/ e_fnEndPos
+WrongInput := ""
+if (e_fnStartPosX >= e_fnEndPosX)
+	WrongInput := "X"
+if (e_fnStartPosY >= e_fnEndPosY)
+	WrongInput := "Y"
+if (WrongInput != "")
+	{
+	MsgBox, 4096, Angaben korrigieren!, Der Wert von fn Start %WrongInput% muss kleiner sein als der Wert von fn End %WrongInput%!
+	return
 	}
 
 ;NoTitle := ""
