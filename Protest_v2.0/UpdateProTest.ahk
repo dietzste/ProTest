@@ -223,6 +223,14 @@ Loop, Files, %UpdateFolder%\Config\*.ini
 			SaveToUpdateLog("Neue Datei: " . A_LoopFileName)
 			}
 		}
+	; Force BasicFile.ini to be compared
+	if (A_LoopFileName = "BasicSettings.ini")
+		{
+		if (FilesCount = 0)
+			CompareUpdateFilesArray[++FilesCount] := A_LoopFileName
+		else
+			CompareUpdateFilesArray[FilesCount] := A_LoopFileName
+		}
 	} ; ende Loop
 return CompareUpdateFilesArray.Count()
 }
