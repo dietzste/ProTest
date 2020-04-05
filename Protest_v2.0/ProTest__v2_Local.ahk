@@ -4,6 +4,8 @@
 
 #Warn
 #NoEnv
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+
 ListLines Off
 
 SetTitleMatchMode, 2
@@ -111,9 +113,9 @@ if (A_IsCompiled = 1)
 if (A_IsCompiled != 1)
 	{
 	AOx := false
-	;WorkWindow := "TeamViewer"
-	WorkWindow := "Editor"
-	SettingUpFiles("B142.ini")
+	WorkWindow := "TeamViewer"
+	;WorkWindow := "Editor"
+	SettingUpFiles("B151.ini")
 	SettingUpCapture2Text()
 	Send, {F10}
 	WinWaitActive, %GuiF10%
@@ -123,7 +125,7 @@ if (A_IsCompiled != 1)
 SettingUpCapture2Text(){
 local
 global ConfigFolder
-global Capture2TextWorkDir :=  A_Workingdir . "\Capture2Text"
+global Capture2TextWorkDir :=  A_ScriptDir . "\Capture2Text"
 global Capture2TextAppDataFolder := A_AppData . "\Capture2Text"
 global Capture2TextIniFileAppDataPath := Capture2TextAppDataFolder . "\Capture2Text.ini"
 global Capture2TextStarted
@@ -262,3 +264,9 @@ Return
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_HelpMenus.ahk
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;       Update Script        ;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;#Include UpdateScript.ahk
