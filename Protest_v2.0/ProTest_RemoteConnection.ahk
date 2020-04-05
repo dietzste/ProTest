@@ -52,6 +52,7 @@ return ExtractedValue
 
 L_RemoteFeedbackTest(){
 local
+global oe
 global fast 
 global TempFile, TimeOutRemoteTest, RemoteBuffer
 global RemoteFeed := false
@@ -94,13 +95,13 @@ if (RemoteFeed = true)
 		{
 		SaveToHistory(Detection)
 		ElapsedTime := A_TickCount - StartTime
-		Msgbox, 4096, Positive Feedback! , Remote feedback active :)! (Delay: %ElapsedTime% ms)
+		Msgbox, 4096, Positive Feedback! , Synchronisation der Zwischenablage aktiv! (Delay: %ElapsedTime% ms)
 		return
 		}
 	}
 else if (RemoteFeed = false)
 	{
-	Msgbox, 4096, No Feedback!, No Remote feedback :(!
+	Msgbox, 4096, No Feedback!, Kommunikation mit RemoteClient nicht m%oe%glich!
 	SaveToHistory("TIMEOUT", "No Remote Feedback")
 	return 
 	}
