@@ -125,12 +125,13 @@ global MatchWindowName := "Match mit " . CurrentLFD
 Gosub LFDMatchWindow
 if (TimeOutMsgLFDMatch > 0)
 	{
-	Sleep, %TimeOutMsgLFDMatch%
+	SleepMatchWindow(TimeOutMsgLFDMatch)
 	GoSub TimeOut
 	WinWaitClose, %MatchWindowName%
 	}
 else
 	{
+	Msgbox Hello 2!
 	WinWaitActive, %MatchWindowName%
 	WinWaitClose, %MatchWindowName%
 	}
@@ -148,11 +149,24 @@ return
 33GuiEscape:
 33GuiOK:
 Gui 33:Destroy
-return 
+BreakFlag := true
+return
 
 TimeOut:
 Gui 33:Destroy
 return 
+
+SleepMatchWindow(TimeOutMsgLFDMatch){
+global BreakFlag := false
+TimeLoops := Round(TimeOutMsgLFDMatch/100) 
+Loop, %TimeLoops% {
+Sleep, 200
+if (BreakFlag = true)
+	break
+}
+}
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -260,19 +274,25 @@ for OrderedPreload, PreloadValue in MultiplePreloadArray
 		}
 	; Exclude Array 
 	ExcludedPreloadValue  := LFDExcludeArray[OrderedPreload]
+	SaveToHistory("VERBOSE:", ExcludedPreloadValue . " !!ExcludedPreloadValue " . PreloadValue . " !!PreloadValue")
 	If (PreloadValue = ExcludedPreloadValue)
 		{
 		if (WriteToHistory = true)
 			SaveToHistory(CurrentLFD . ": Bad Match!", Preload . " = " . ExcludedPreloadValue . " (Ausschlusswert)")
 		LFDWithNoMatch(CurrentLFD)
-		HopelessLFDArray[A_Index] := CurrentLFD
+		HopelessLFDArray[CurrentLFD] := "Hopeless"
 		return false
 		}
 	else
 		{
-		if (WriteToHistory = true)
-			SaveToHistory(CurrentLFD . ": Good Match!", Preload . " = " . ExcludedPreloadValue . " (Nicht Ausschlusswert)")
-		Continue
+		if (PreloadValue != "Missing")
+			{
+			if (WriteToHistory = true)
+				SaveToHistory(CurrentLFD . ": Good Match!", Preload . " = " . ExcludedPreloadValue . " (Nicht Ausschlusswert)")
+			Continue
+			}
+		else
+			return false
 		}
 	} ; ende for-loop
 return true  
@@ -336,10 +356,10 @@ for LFD, i in LFDsInTempFileArray
 	if (LFDFound = true)
 		{
 		global CurrentLFD := LFD
+		SaveToHistory("Passende LFD im TempFile: " . CurrentLFD)
 		ShowMatchLFDMessage()
 		EnterLFD(CurrentLFD)
 		L_WaitUntilPreloadsLoaded()
-		SaveToHistory("Passende LFD im TempFile: " . CurrentLFD)
 		return true
 		} ; ende if
 		
