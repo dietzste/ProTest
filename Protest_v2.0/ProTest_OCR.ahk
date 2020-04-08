@@ -173,7 +173,10 @@ if (fnOCRLength = 6)
 		fnValue := GetIniValue(LibraryFile, Section, fnOCR5)
 		SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR5)
 		if (fnValue != "ERROR")
+			{
+			SaveToHistory(fnOCR5, "=" . fnValue, Section)
 			return fnValue
+			}
 		}
 	}
 
@@ -185,7 +188,10 @@ if Substr(fnOCR, fnOCRLength) = "6"
 	fnValue := GetIniValue(LibraryFile, Section, fnOCR6a)
 	SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR6a)
 	if (fnValue != "ERROR")
+		{
+		SaveToHistory(fnOCR6a, "=" . fnValue, Section)
 		return fnValue
+		}
 	}
 
 return fnOCR

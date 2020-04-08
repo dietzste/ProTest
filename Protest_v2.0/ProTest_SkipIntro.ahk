@@ -18,7 +18,6 @@ If (fnIntroValue = "ERROR")
 	else
 		{
 		fnIntroValue := Result
-		SaveToHistory(fnOCR, "=" . fnIntroValue, "Intro")
 		}
 	}
 else
