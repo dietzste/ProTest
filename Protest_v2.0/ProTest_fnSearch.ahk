@@ -184,12 +184,12 @@ If (fnNagValue != "ERROR")
 	}
 else
 	{
-	Result := AutoCorrection(fnOCR, "fnNag")
+	c_fnOCR := AutoCorrection(fnOCR, "fnNag", fnValue)
 	if (Result = fnOCR)
 		return false
 	else
 		{
-		fnNagValue := Result
+		fnNagValue := fnValue
 		EnterfnValue(fnOCR, fnNagValue, Index)
 		return true
 		}
