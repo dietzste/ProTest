@@ -158,7 +158,7 @@ if (AlphaMatch > 1)
 return OCR
 }
 
-AutoCorrection(fnOCR, Section){
+AutoCorrection(fnOCR, Section, ByRef fnValue){
 local
 global LibraryFile
 fnOCRLength := Strlen(fnOCR)
@@ -173,7 +173,10 @@ if (fnOCRLength = 6)
 		fnValue := GetIniValue(LibraryFile, Section, fnOCR5)
 		SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR5)
 		if (fnValue != "ERROR")
-			return fnValue
+			{
+			SaveToHistory(fnOCR5, "=" . fnValue, Section)
+			return fnOCR5
+			}
 		}
 	}
 
@@ -185,8 +188,10 @@ if Substr(fnOCR, fnOCRLength) = "6"
 	fnValue := GetIniValue(LibraryFile, Section, fnOCR6a)
 	SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR6a)
 	if (fnValue != "ERROR")
+		{
+		SaveToHistory(fnOCR6a, "=" . fnValue, Section)
 		return fnValue
+		}
 	}
-
 return fnOCR
 }
