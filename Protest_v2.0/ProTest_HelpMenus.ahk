@@ -2,27 +2,27 @@
 ;;;;;;     Hilfe-Texte Menues      ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#if WinExist(GuiF2)
+#if WinExist(GuiF2) and WinActive(GuiF2)
 F1::
 Goto 2GuiHelp
 #if
 
-#if WinExist(GuiF3)
+#if WinExist(GuiF3) and WinActive(GuiF3)
 F1::
 Goto 3GuiHelp
 #if
 
-#if WinExist(GuiF4)
+#if WinExist(GuiF4) and WinActive(GuiF4)
 F1::
 Goto 4GuiHelp
 #if
 
-#if WinExist(GuiF8)
+#if WinExist(GuiF8) and WinActive(GuiF8)
 F1::
 Goto 8GuiHelp
 #if
 
-#if WinExist(GuiF10)
+#if WinExist(GuiF10) and WinActive(GuiF10)
 F1::
 Goto 10GuiHelp
 #if
