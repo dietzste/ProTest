@@ -95,13 +95,13 @@ if (RemoteFeed = true)
 		{
 		SaveToHistory(Detection)
 		ElapsedTime := A_TickCount - StartTime
-		Msgbox, 4096, Positive Feedback! , Synchronisation der Zwischenablage aktiv! (Delay: %ElapsedTime% ms)
+		Msgbox, 4096, RemoteClient aktiv!, Synchronisation der Zwischenablage aktiv! (Delay: %ElapsedTime% ms)
 		return
 		}
 	}
 else if (RemoteFeed = false)
 	{
-	Msgbox, 4096, No Feedback!, Kommunikation mit RemoteClient nicht m%oe%glich!
+	Msgbox, 4096, Ups!, Keine Verbindung zum RemoteClient!
 	SaveToHistory("TIMEOUT", "No Remote Feedback")
 	return 
 	}
