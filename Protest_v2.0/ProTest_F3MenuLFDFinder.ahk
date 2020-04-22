@@ -81,8 +81,8 @@ Gui, 3:Add, Text, x35 y242 w30 h20 , nach
 Gui, 3:Add, Text, x35 y264 w40 h20 , nach
 Gui, 3:Add, Edit, x75 y240 w30 h18 ve_CheckAgain, %e_CheckAgain%
 Gui, 3:Add, Edit, x75 y262 w30 h18 ve_AbortSearch, %e_AbortSearch%
-Gui, 3:Add, Text, x115 y242 w170 h20 , erfolglosen Suchen erneut fragen
-Gui, 3:Add, Text, x115 y264 w170 h20 , erfolglosen Suchen abbrechen
+Gui, 3:Add, Text, x115 y242 w175 h20 , erfolglosen Abrufen erneut fragen
+Gui, 3:Add, Text, x115 y264 w175 h20 , erfolglosen Abrufen abbrechen
 Gui, 3:Add, CheckBox, x15 y285 w250 h20 Checked%c_CheckTempFileFirst% vc_CheckTempFileFirst, %A_Tab%%A_Space% Zuerst LFD's im TempFile durchsuchen 
 
 ; LFD Check
