@@ -4,6 +4,7 @@
 
 #Warn
 #NoEnv
+#SingleInstance Ignore
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ListLines Off
