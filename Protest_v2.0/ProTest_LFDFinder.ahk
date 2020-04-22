@@ -27,7 +27,13 @@ if (c_CheckTempFileFirst = 1)
 	{
 	LFDFound := CheckExistingLFDs()
 	if (LFDFound = true)
+		{
+		SaveToHistory("Passende LFD im TempFile: " . CurrentLFD)
+		ShowMatchLFDMessage()
+		EnterLFD(CurrentLFD)
+		L_WaitUntilPreloadsLoaded()
 		return
+		}
 	}
 
 ;;;;;;;;;;;;;;
@@ -334,13 +340,13 @@ local
 global TempFile
 global LFDsInTempFileArray := {}
 global LFDCount := 1
-; Create Array: LFDs in TempFile
+; get LFD-sections from TempFile
 LFDListTempFile := GetIniSectionNames(TempFile)
 Loop, Parse, LFDListTempFile, "`n"
 	{
 	if Instr(A_LoopField, "LFD_")
 		{
-		; Bsp. LFD_71100001 / Push LFD to Array
+		; Bsp. LFD_71100001
 		LFD := Substr(A_LoopField, 5)
 		LFDsInTempFileArray[LFD] := A_Index
 		}
@@ -356,13 +362,8 @@ for LFD, i in LFDsInTempFileArray
 	if (LFDFound = true)
 		{
 		global CurrentLFD := LFD
-		SaveToHistory("Passende LFD im TempFile: " . CurrentLFD)
-		ShowMatchLFDMessage()
-		EnterLFD(CurrentLFD)
-		L_WaitUntilPreloadsLoaded()
 		return true
 		} ; ende if
-		
 	} ; ende for loop
 return false
 } ; ende function
