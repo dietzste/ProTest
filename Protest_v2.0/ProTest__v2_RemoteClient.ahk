@@ -5,6 +5,7 @@
 
 #Warn
 #NoEnv
+#SingleInstance Ignore
 
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen
@@ -55,8 +56,8 @@ else
 		Goto DetectionMode
 		}
 	}
-return 
-return 
+return
+return
 
 Sighting(Detection){
 local
@@ -66,8 +67,6 @@ SaveRemoteHistory("VERBOSE:", "Function Sighting: " . Detection)
 SendingBack := FindProcedure(Detection)
 Clipboard := SendingBack
 ClipWait, 1
-if Instr(SendingBack, "<CloseRemoteProTest")
-	ExitApp
 if !Instr(SendingBack, "<PreloadList")
 	{
 	SaveRemoteHistory(SendingBack)
@@ -82,9 +81,7 @@ global RemoteSimulation
 DetectionBack := StrReplace(Detection, ">" , "<")
 if InStr(Detection, ">Test")
 	return DetectionBack
-else if Instr(Detection, ">CloseRemoteProTest")
-	return DetectionBack
-else if  InStr(Detection, ">LoadingPreloads")
+else if InStr(Detection, ">LoadingPreloads")
 	return R_WaitUntilPreloadsLoaded()
 else if InStr(Detection, ">SkipXModul")
 	Result := R_SkipXModul(Detection)
@@ -191,7 +188,12 @@ global RemoteSimulation
 SaveRemoteHistory("VERBOSE:", "Function SkipXModul")
 WaitForXModulSec := Substr(Detection, 13) 
 if (RemoteSimulation = false)
-	return Result := SkipXModul(WaitForXModulSec)
+	{
+	if (SkipXModul(WaitForXModulSec) = true)
+		return "true"
+	else 
+		return "false"
+	}
 else
 	return Result := "Simulation"
 }
@@ -204,7 +206,7 @@ if !WinActive(NipoFenster)
 WinMenuSelectItem, %NipoFenster%, , Actions, Restart...
 WinWaitActive, ahk_class #32770
 ControlClick, &Ja, A,,,, NA
-Sleep, 50
+Sleep, 200
 if (IsButtonVisible("Start") = true)
 	return "true"
 else
@@ -265,10 +267,11 @@ global RemoteSimulation
 SaveRemoteHistory("VERBOSE:", "Function UpdatePreload")
 Preload := ExtractPreload("Preload", Detection)
 ChangeTo := ExtractPreload("ChangeTo", Detection) 
-if (RemoteSimulation = false)
-	PreloadValue := UpdatePreload(Preload, ChangeTo)
-else
+if (RemoteSimulation = true)
 	PreloadValue :=  -1
+else
+	PreloadValue := UpdatePreload(Preload, ChangeTo)
+	
 return PreloadValue 
 }
 
@@ -331,12 +334,19 @@ F12::
 	SaveRemoteHistory("EXIT APP")
 	if (DeleteHistory = true)
 		FileDelete, %RemoteHistoryFile%
+	Msgbox, 4096, Beenden , RemoteClient wird beendet!
 	ExitApp
 return
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;    ADVANCED HOTKEYS    ;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+#if WinActive(NipoFenster)
+^r::
+R_Restart()
+return
+#if
 
 +F10::
 Gui 1:Destroy
@@ -383,17 +393,11 @@ SaveRemoteHistory("VerboseHistory", VerboseHistory)
 Gui 1:Destroy
 return 
 
-;#Include ProTest_RemoteAddon.ahk
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;  Basic WORK FUNCTIONS  ;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;  TEST AREA ;;;;;;;
-
-^r::
-R_Restart()
-return 
 
 SaveRemoteHistory(params*){
 local 
@@ -648,7 +652,7 @@ XModulWindow := "X-Modul"
 Send {Enter}
 WinWaitActive, %XModulWindow%,, WaitForXModulSec
 if ErrorLevel
-    return false
+	return false
 else
 	{
 	Sleep, fast
@@ -658,21 +662,21 @@ else
 	WinWaitActive, %XModulWindowFrage%,, 2
 	if ErrorLevel
 		return false
-	else 
+	else
 		ControlClick, Abbruch, %XModulWindowFrage%,,,, NA
 	Sleep, fast
 	XModulWindowNachFrage := "Nachfrage"
 	WinWaitActive, %XModulWindowNachFrage%,, 2
 	if ErrorLevel
 		return false
-	else 
+	else
 		ControlClick, Abbrechen, %XModulWindowNachFrage%,,,, NA
 	Sleep, fast
 	XModulWindowBestätigung := "Bestätigung"
 	WinWaitActive, %XModulWindowBestätigung%,, 2
 	if ErrorLevel
 		return false
-	else 
+	else
 		ControlClick, Ja, %XModulWindowBestätigung%,,,, NA
 	Sleep, fast
 	WinWaitActive, %XModulWindowNachFrage%,, 2
@@ -725,7 +729,6 @@ if (IsButtonVisible("verweigert") = true)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 #PERSISTENT
 Winset, AlwaysOnTop, Off, %NipoFenster%
 
@@ -740,7 +743,7 @@ Button3 &Nonresp &Dial Dial &2 &Clear &Back &Volume...
 Button9 &Help
 Button10 &Dont know
 Button11 &Menu
-Button12 &Next 
+Button12 &Next
 Button13 &Prev
 Button14 verweigert
 Button14 ZP verweigert Antwort auf diese Frage
