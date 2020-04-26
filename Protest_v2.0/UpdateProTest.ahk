@@ -13,13 +13,20 @@ ae := "ä"
 oe := "ö"
 sz := "ß"
 
-OverWriteKeysAnywayArray := { 1: "Version"
+OverwriteKeysAnywayArray := { 1: "Version"
 , 2: "x_ADDToStartfnX"
 , 3: "x_ADDToStartfnY"
 , 4: "TimeOutMsgLFDMatch"
 , 5: "TimeOutMsgSkippedIntro"
 , 6: "TimeOutRemoteTest"
 , 7: "290102"}
+
+OverwriteValuesArray  := { 1: "IntroGetSex"
+, 2: "IntroSexReversed"
+, 3: "IntroGetDateOfBirth"
+, 4: "p73170yPRE"
+, 5: "name_apPRE"}
+
 
 ; FileManagement
 ConfigFolder := A_ScriptDir . "\Config"
@@ -71,7 +78,7 @@ else
 		{
 		; 1. AbbruchKriterium 
 		Msgbox, 4096, Update , ProTest ist auf dem neusten Stand! (Version: %CurrentVersion%)
-		SaveToUpdateLog("ProTest ist auf dem neusten Stand (" . LatestVersion . ")")
+		;SaveToUpdateLog("ProTest ist auf dem neusten Stand (" . LatestVersion . ")")
 		RunProTest(ProTestProgram)
 		ExitApp
 		}
@@ -250,7 +257,8 @@ CompareIniSections(OldFile, NewFile){
 local
 global UpdateTimeStemp
 global ChangedSectionArray
-global OverWriteKeysAnywayArray
+global OverwriteKeysAnywayArray
+global OverwriteValuesArray 
 OldSectionList := GetIniSectionNames(Oldfile)
 NewSectionList := GetIniSectionNames(Newfile)
 ChangedSectionArray := []
@@ -259,7 +267,7 @@ Loop, Parse, NewSectionList , "`n"
 	{
 	; Compare Sections
 	CurrentSection := A_LoopField
-	NewEntry := false
+	NewKeyEntry := false
 	; Abschnitt vorhanden?
 	if !Instr(OldSectionList, CurrentSection)
 		{
@@ -291,44 +299,62 @@ Loop, Parse, NewSectionList , "`n"
 					{
 					; Unterschiedliche Eintragungen
 					CurrentNewKey := Substr(CurrentLine, 1, Instr(CurrentLine, "=")-1)
-					IniRead, OldValue, %OldFile%, %CurrentSection%, %CurrentNewKey%
-					IniRead, NewValue, %NewFile%, %CurrentSection%, %CurrentNewKey%
+					IniRead, OldCompleteValue, %OldFile%, %CurrentSection%, %CurrentNewKey%
+					IniRead, NewCompleteValue, %NewFile%, %CurrentSection%, %CurrentNewKey%
 					; Vergleich mit altem File
-					if (OldValue = "ERROR")
+					if (OldCompleteValue = "ERROR")
 						{
-						; new key
-						if (NewEntry = false)
-							{							
+						; Neuer Key
+						if (NewKeyEntry = false)
+							{
+							; ersten neuen Eintrag mit Abstand einfügen
 							SaveIniValue(OldFile, CurrentSection, "`n;;; Update " . UpdateTimeStemp . "`nUpdate", "Update")
 							ChangedSectionArray[SectionIndex] := CurrentSection
-							NewEntry := true 
+							NewKeyEntry := true 
 							}
-						IniWrite, %NewValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
-						SaveToUpdateLog("NEU: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewValue)
+						; weiterer neuer Key
+						IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
+						SaveToUpdateLog("NEU: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewCompleteValue)
 						}
 					else
 						{
-						; Changed key
-						if (GetIniValue(OldFile, CurrentSection, CurrentNewKey) = GetIniValue(NewFile, CurrentSection, CurrentNewKey))
+						; Veränderter Eingabewert
+						NewValue := GetIniValue(NewFile, CurrentSection, CurrentNewKey)
+						OldValue := GetIniValue(OldFile, CurrentSection, CurrentNewKey)
+						if (OldValue = NewValue)
 							{
-							CleanOldValue  := RegExReplace(OldValue , "\s")
-							CleanNewValue  := RegExReplace(NewValue , "\s")
-							if (CleanOldValue = CleanNewValue)
-								IniWrite, %NewValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
+							; Eingabewerte sind prinzipiell gleich
+							CleanOldCompleteValue  := RegExReplace(OldCompleteValue , "\s")
+							CleanNewCompleteValue  := RegExReplace(NewCompleteValue , "\s")
+							; Kommentare (bis auf Leerzeichen) gleich? Falls ja, Neuen Wert einfügen
+							if (CleanOldCompleteValue = CleanNewCompleteValue)
+								IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
 							Continue
 							}
 						else
 							{
-							For i, Key in OverWriteKeysAnywayArray
+							; Eingabewerte sind nicht gleich, Eingabewerte ändern falls...
+							; a) Key in OverwriteKeysAnywayArray
+							For i, ChangeKey in OverwriteKeysAnywayArray
 								{
-								if (Key = CurrentNewKey)
+								if (ChangeKey = CurrentNewKey)
 									{
 									;Change Key Value
-									NewValue := NewValue . " `; (Update " . UpdateTimeStemp . ")" 
-									IniWrite, %NewValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
-									SaveToUpdateLog("Geändert: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewValue)
+									NewCompleteValue := NewCompleteValue . " `; (Update " . UpdateTimeStemp . ")" 
+									IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
+									SaveToUpdateLog("Geändert: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewCompleteValue)
 									}
-								} ; ende for
+								}
+							; b) geänderte Eingabewerte
+							For i, ChangeValue in OverwriteValuesArray  
+								{
+								if (OldValue = ChangeValue)
+									{
+									NewCompleteValue := A_Space . StrReplace(OldCompleteValue, OldValue , NewValue) ; . " `; (Update " . UpdateTimeStemp . ")" 
+									IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
+									SaveToUpdateLog("Geändert: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewValue . " (vorher: " . OldValue . ")")
+									}
+								} ; ende for loop
 							} ; ende else
 						} ; ende else
 					} ; ende if
@@ -351,9 +377,9 @@ Loop, Parse, NewSectionKeys , "`n"
 	{
 	CurrentLine := A_LoopField
 	CurrentNewKey := Substr(CurrentLine, 1, Instr(CurrentLine, "=")-1)
-	IniRead, CurrentNewValue, %NewFile%, %Section%, %CurrentNewKey%
-	IniWrite, %CurrentNewValue%, %OldFile%, %Section%, %CurrentNewKey% 
-	SaveToUpdateLog("Neuer Abschnitt: [" . Section . "] " . CurrentNewKey . " = " . CurrentNewValue)
+	IniRead, CurrentNewCompleteValue, %NewFile%, %Section%, %CurrentNewKey%
+	IniWrite, %CurrentNewCompleteValue%, %OldFile%, %Section%, %CurrentNewKey% 
+	SaveToUpdateLog("Neuer Abschnitt: [" . Section . "] " . CurrentNewKey . " = " . CurrentNewCompleteValue)
 	} ; ende loop
 } ; ende function
 
