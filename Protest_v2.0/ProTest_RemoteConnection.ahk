@@ -226,36 +226,17 @@ Result := RemoteExtraction(SendValue, Detection)
 return Result
 }
 
-L_EnterNextLFD(){
-local
-global CurrentDetection
-SendValue := ">EnterNextLFD"
-SaveToHistory(SendValue)
-WaitForRemoteFeedback(SendValue)
-CheckWorkWindow()
-Detection := CurrentDetection
-SaveToHistory(Detection)
-EnteredLFD := RemoteExtraction(SendValue, Detection)
-if (EnteredLFD != "Error")
-	return EnteredLFD
-else
-	{
-	Msgbox, 4096, Ups!, Das Auslesen der LFD schlug fehl. LFD-Suche wird beendet.
-	Exit
-	}
-}
-
 L_GetNextLFD(NClickBackButton){
 local
 global CurrentDetection
 SendValue := ">GetNextLFD." . NClickBackButton
 SendValueClean := StrReplace(SendValue, "." . NClickBackButton)
-SaveToHistory(SendValueClean)
+SaveToHistory("VERBOSE:", SendValueClean)
 WaitForRemoteFeedback(SendValue)
 CheckWorkWindow()
 Detection := CurrentDetection
 DetectionClean := StrReplace(Detection, "." . NClickBackButton)
-SaveToHistory(DetectionClean)
+SaveToHistory("VERBOSE:", DetectionClean)
 NextLFD := RemoteExtraction(SendValue, Detection)
 if (NextLFD != "Error")
 	return NextLFD
@@ -264,6 +245,20 @@ else
 	Msgbox, 4096, Ups!, Das Auslesen der LFD schlug fehl. LFD-Suche wird beendet.
 	Exit
 	}
+}
+
+L_ExcludeHopelessLFDs(HopelessLFDString){
+local
+global CurrentDetection
+if (HopelessLFDString = "")
+	SendValue := ">ExcludeHopelessLFDs"
+else
+	SendValue := ">ExcludeHopelessLFDs=" . HopelessLFDString
+SaveToHistory("VERBOSE:", SendValue)
+WaitForRemoteFeedback(SendValue)
+CheckWorkWindow()
+Detection := CurrentDetection
+SaveToHistory("VERBOSE:", Detection)
 }
 
 L_TryClickingButton(Button, Count){
@@ -282,29 +277,31 @@ Result := RemoteExtraction(SendValue, Detection)
 return Result
 }
 
-L_ReadMultiplePreloads(params*){
+L_ReadMultiplePreloads(CurrentLFD, PreloadString, PreTested:=true){
 local
-global TempFile, CurrentLFD
+global TempFile
 global CurrentDetection
-global MultiplePreloadArray
+global MissingPreloadString := ""
 
-; Checking Existing LFD-Values
-if (params.MaxIndex() = 3)
-	MultiplePreloads := CheckingLFDValues(CurrentLFD, "Birthdate")
+; (1) PreTested?
+if (PreTested = true)
+	MissingPreloadString := PreloadString
 else
-	MultiplePreloads := CheckingLFDValues(CurrentLFD)
-if (MultiplePreloads = "")
-	return	
+	{
+	MissingPreloadString := CheckingLFDValues(CurrentLFD, PreloadString)
+	if (MissingPreloadString = "")
+		return
+	}
 	
-; Sending MultiplePreloads / Waiting / Return 
-SendValue := ">MPL(" . MultiplePreloads . ")"
-SaveToHistory(SendValue)
+; Sending MissingPreloadString / Waiting / Return 
+SendValue := ">MPL(" . MissingPreloadString . ")"
+SaveToHistory("VERBOSE:", SendValue)
 WaitForRemoteFeedback(SendValue)
 Detection := CurrentDetection
-SaveToHistory(Detection)
+SaveToHistory("VERBOSE:", Detection)
 MultiplePreloadValues := RemoteExtraction(SendValue, Detection)
 ; Beispiel: 18|9|1990
-Loop, Parse, MultiplePreloads, "|"
+Loop, Parse, MissingPreloadString, "|"
 	{
 	PreloadIndex := A_Index
 	Preload := A_LoopField
@@ -314,10 +311,7 @@ Loop, Parse, MultiplePreloads, "|"
 			{
 			PreloadValue := A_LoopField
 			if (PreloadValue != "false")
-				{
-				MultiplePreloadArray[Preload] := PreloadValue
 				SaveIniValue(TempFile, "LFD_" . CurrentLFD, Preload, PreloadValue) 
-				}
 			else
 				{
 				Msgbox, 4096, Ups!, Preload "%Preload%" war nicht vorhanden. LFD-Suche wird beendet.
@@ -329,30 +323,24 @@ Loop, Parse, MultiplePreloads, "|"
 	} ; end outer loop
 }
 
-CheckingLFDValues(CurrentLFD, params*){
+CheckingLFDValues(CurrentLFD, PreloadString){
 local
 global TempFile
 global MultiplePreloadArray
 NMissingPreloads := 0
-MultiplePreloads := ""
-if (params.MaxIndex() = 1)
-	Mode := "Birthdate"
-else
-	Mode := "LFDSearch"
+MissingPreloadString := ""
 
-for OrderedPreload, PreloadValue in MultiplePreloadArray
+Loop, Parse, PreloadString , "|"
 	{
-	if (Mode = "Birthdate")
-		Preload := OrderedPreload
-	else
-		Preload := SubStr(OrderedPreload, 2)
+	Preload := A_Loopfield
+	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload, "Missing")
 	if (PreloadValue = "Missing")
 		{
 		++NMissingPreloads
 		if (NMissingPreloads = 1)
-			MultiplePreloads .= Preload
+			MissingPreloadString .= Preload
 		else
-			MultiplePreloads .= "|" . Preload 
+			MissingPreloadString .= "|" . Preload
 		}
 	else
 		SaveToHistory("VERBOSE:", Preload . " bereits vorhanden", "Wert: " . PreloadValue)
@@ -361,5 +349,5 @@ if (NMissingPreloads = 0)
 	SaveToHistory("VERBOSE:", "Alle Preloads in TempFile")
 else
 	SaveToHistory("VERBOSE:", "fehlende Preloadwerte in TempFile:" . NMissingPreloads)
-return MultiplePreloads
+return MissingPreloadString
 }

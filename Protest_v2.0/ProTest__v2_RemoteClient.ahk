@@ -94,40 +94,22 @@ else If InStr(Detection, ">UPL(")
 	Result := R_UpdatePreload(Detection)
 else if InStr(Detection, ">MPL(")
 	Result := R_ReadMuliplePreloads(Detection)
-else if InStr(Detection, ">EnterNextLFD")
-	Result := R_EnterNextLFD()
 else if InStr(Detection, ">GetNextLFD")
 	Result := R_GetNextLFD(Detection)
 else if InStr(Detection, ">Restart")
 	Result := R_Restart()
+else if InStr(Detection, ">ExcludeHopelessLFDs")
+	return Result := R_ExcludeHopelessLFDs(Detection)
 return DetectionBack . "=" . Result
 }
 
-R_EnterNextLFD(){
+R_ExcludeHopelessLFDs(Detection){
 local
-global med, NipoFenster
-global RemoteSimulation
-SaveRemoteHistory("VERBOSE:", "Function EnterNextLFD")
-; Clicking 2x Back 
-If (RemoteSimulation = true)
-	return EnteredLFD := 1234
-else
-	{
-	SaveRemoteHistory("VERBOSE:", "Back Button 2 Times")
-	Loop, 2 {
-	ButtonIsVisible := IsButtonVisible("&Back")
-	if (ButtonIsVisible = true)
-		{
-		ControlClick, &Back, %NipoFenster%,,,, NA
-		Sleep, med
-		}
-	else
-		return "Error"
-	}
-	EnteredLFD := ReadingNextLFD()
-	Send {Enter}{Enter}
-	return EnteredLFD
-	}
+global HopelessLFDString := ""
+SaveRemoteHistory("VERBOSE:", "Function ExcludeHopelessLFDs")
+if Instr(Detection, "=")
+	HopelessLFDString := SubStr(Detection, StrLen(">ExcludeHopelessLFDs="))
+return "<ExcludeHopelessLFDs"
 }
 
 R_GetNextLFD(Detection){
@@ -160,13 +142,23 @@ else
 ReadingNextLFD(){
 local  
 global fast, med, NipoFenster
+global HopelessLFDString
 ; Getting LFD / Enter LFD
+LFDIsHopeless := false
 SetKeyDelay, med
-Send, {BS}{Down}{Enter} 
-ControlClick, &Back, %NipoFenster%,,,, NA
-Sleep, med
-ControlGetText, LFDinEditField, Edit1, %NipoFenster%,,,,NA
-Sleep, med
+; Loop
+Loop {
+	Send, {BS}{Down}{Enter}
+	ControlClick, &Back, %NipoFenster%,,,, NA
+	Sleep, med
+	ControlGetText, LFDinEditField, Edit1, %NipoFenster%,,,,NA
+	Sleep, med
+	if (HopelessLFDString != "")
+		{
+		if Instr(HopelessLFDString, LFDinEditField)
+			LFDIsHopeless = true
+		}
+} Until LFDIsHopeless = false
 Send {Enter}
 SetKeyDelay, fast
 return LFDinEditField
