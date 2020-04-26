@@ -166,6 +166,11 @@ WaitForRemoteFeedback(SendValue)
 Detection := CurrentDetection
 SaveToHistory(Detection)
 PreloadValue := RemoteExtraction(SendValue, Detection)
+if (PreloadValue = "false")
+	{
+	Msgbox, 4096 ,%Preload%, "%Preload%" nicht vorhanden.
+	Exit
+	}
 SaveIniValue(TempFile, "LFD_" . CurrentLFD , Preload, PreloadValue)
 SaveToHistory("VERBOSE:", Preload . "=" .  PreloadValue, "Result L_ReadPreload")
 ; Preloadvalue or "false"
@@ -181,8 +186,13 @@ SaveToHistory(SendValue)
 WaitForRemoteFeedback(SendValue)
 Detection := CurrentDetection
 SaveToHistory(Detection)
-PreloadValue := RemoteExtraction(SendValue, Detection)
-return PreloadValue
+PreloadOriginal := RemoteExtraction(SendValue, Detection)
+if (PreloadOriginal = "false")
+	{
+	Msgbox, 4096 ,%Preload%, "%Preload%" nicht vorhanden.
+	Exit
+	}
+return PreloadOriginal
 }
 
 L_LoadPreloadList(){

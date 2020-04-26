@@ -143,18 +143,12 @@ IF (Preload != "") and (PreloadCheckBox = 1)   ; Checkbox ausgewählt
 		If (PreloadUpdateValue = "-") ; read only
 			{
 			PreloadOriginal := L_ReadPreload(Preload)
-			if (PreloadOriginal = "false")
-				Msgbox, 4096, %Preload%, "%Preload%" gibt es nicht.
-			else
-				MsgBox, 4096 ,%Preload%, %Preload% = %PreloadOriginal%
+			MsgBox, 4096 ,%Preload%, %Preload% = %PreloadOriginal%
 			}
 		else ; read and update
 			{
 			PreloadOriginal := L_UpdatePreload(Preload, PreloadUpdateValue)
-			if (PreloadOriginal = "false")
-				Msgbox, 4096 ,%Preload%, "%Preload%" gibt es nicht.
-			else
-				Msgbox, 4096 ,%Preload%, %Preload% wurde von %PreloadOriginal% auf %PreloadUpdateValue% umgestellt.
+			Msgbox, 4096 ,%Preload%, %Preload% wurde von %PreloadOriginal% auf %PreloadUpdateValue% umgestellt.
 			}
 		}
 	} ;ende if
