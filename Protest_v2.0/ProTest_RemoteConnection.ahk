@@ -113,26 +113,32 @@ L_RestartQ(){
 local
 global CurrentDetection
 SendValue := ">Restart"
-SaveToHistory(SendValue)
+SaveToHistory("VERBOSE:", SendValue)
 WaitForRemoteFeedback(SendValue)
 CheckWorkWindow()
 Detection := CurrentDetection
-SaveToHistory(Detection)
+SaveToHistory("VERBOSE:", Detection)
 if (Detection = "<Restart")
+	{
+	SaveToHistory("VERBOSE:", "Restart Q")
 	return true
+	}
 }
 
 L_WaitUntilPreloadsLoaded(){
 local
 global CurrentDetection
 SendValue := ">LoadingPreloads"
-SaveToHistory(SendValue)
+SaveToHistory("VERBOSE:", SendValue)
 WaitForRemoteFeedback(SendValue)
 CheckWorkWindow()
 Detection := CurrentDetection
-SaveToHistory(Detection)
+SaveToHistory("VERBOSE:", Detection)
 if (Detection = "<LoadingComplete")
+	{
+	SaveToHistory("VERBOSE:", "Preloads geladen")
 	return true
+	}
 }
 
 L_ReadPreload(Preload){
