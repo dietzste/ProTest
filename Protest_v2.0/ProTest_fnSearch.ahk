@@ -240,7 +240,11 @@ else
 	else
 		{
 		; Get PreloadValue and Enter
-		EnterPreloadValue(fnOCR, fnValue)
+		PreloadString := GetValueBetweenBrackets(fnValue)
+		if Instr(PreloadString, "/")
+			EnterMultiplePreloadValues(fnOCR, PreloadString)
+		else
+			EnterPreloadValue(fnOCR, PreloadString)
 		return 
 		}
 	} ; ende else (no digit)
