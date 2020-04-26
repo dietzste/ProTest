@@ -375,6 +375,7 @@ if WinExist(F11MenuName)
 
 FileList := ""
 ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp", "PreloadDetails"]
+LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
 IniLoop:
 Loop, Files, *.ini, R
 	{
@@ -383,7 +384,7 @@ Loop, Files, *.ini, R
 		if instr(A_LoopFileName, IniFile)
 			Continue IniLoop
 		}
-	LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
+	; Priorisiere LastUsedFile, falls vorhanden
 	if (LastUsedFile = A_LoopFileName)
 		FileList .= A_LoopFileName . "||"
 	else
