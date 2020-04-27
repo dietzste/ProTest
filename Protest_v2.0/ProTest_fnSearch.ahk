@@ -185,7 +185,7 @@ If (fnNagValue != "ERROR")
 else
 	{
 	c_fnOCR := AutoCorrection(fnOCR, "fnNag", fnValue)
-	if (Result = fnOCR)
+	if (c_fnOCR = fnOCR)
 		return false
 	else
 		{
