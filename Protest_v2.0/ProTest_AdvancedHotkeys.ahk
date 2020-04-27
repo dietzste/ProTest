@@ -38,13 +38,17 @@ Strg + l 	 	= %AddOnComment%%oe%ffnet LibraryTool
 )
 return
 
+# if WinActive(WorkWindow)
 F9::
 L_RemoteFeedbackTest()
 return
+# if 
 
+# if WinActive(WorkWindow)
 ^r::
 L_RestartQ()
-return 
+return
+# if 
 
 F12::
 Gui, 12: +AlwaysOnTop ToolWindow
