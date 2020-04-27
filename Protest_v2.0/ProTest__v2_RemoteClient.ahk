@@ -157,6 +157,8 @@ Loop {
 		{
 		if Instr(HopelessLFDString, LFDinEditField)
 			LFDIsHopeless = true
+		else
+			LFDIsHopeless := false
 		}
 } Until LFDIsHopeless = false
 Send {Enter}

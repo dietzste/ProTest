@@ -50,6 +50,7 @@ if (c_CheckTempFileFirst = 1)
 		}
 	else
 		{
+		HopelessLFDString := ""
 		if (HopelessLFDArray.Count() != 0)
 			{
 			; Send HopelessLFDs to RemoteClient!
