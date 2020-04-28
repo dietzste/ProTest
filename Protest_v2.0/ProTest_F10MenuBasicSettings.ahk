@@ -350,7 +350,7 @@ if (WrongInput != "")
 	}
 
 ;NoTitle := ""
-Gui 1:Destroy
+Gui  1:Destroy
 Gui, 1: -Caption +AlwaysOnTop +LastFound +Border 
 Gui, 1: Color, 60CFF7
 Gui, 1:show,x%TestPosX% y%TestPosY% w%TestWidth% h%TestHeight%, A_Space
@@ -375,6 +375,7 @@ if WinExist(F11MenuName)
 
 FileList := ""
 ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp", "PreloadDetails"]
+LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
 IniLoop:
 Loop, Files, *.ini, R
 	{
@@ -383,7 +384,11 @@ Loop, Files, *.ini, R
 		if instr(A_LoopFileName, IniFile)
 			Continue IniLoop
 		}
-	FileList .= A_LoopFileName . "|"
+	; Priorisiere LastUsedFile, falls vorhanden
+	if (LastUsedFile = A_LoopFileName)
+		FileList .= A_LoopFileName . "||"
+	else
+		FileList .= A_LoopFileName . "|"
 	}
 
 if WinExist(GuiF10)
@@ -396,7 +401,7 @@ Gui, 11:Add, Groupbox, x10 y5 w180 h100 cNavy, Ini-Projectdateien
 gui, 11:add, listbox, x20 y28 w150 h60 vIniFileInList sort, % FileList
 gui, 11:add, button, x10 y110 w50 g11GuiCancel, % NoActionButton
 gui, 11:add, button, x65 y110 w50 g11GuiNewProjectFile, Neu
-gui, 11:add, button, x135 y110 w55 g11GuiIniDecision, OK
+gui, 11:add, button, x135 y110 w55 Default g11GuiIniDecision, OK
 gui, 11:show, Center Autosize, %F11MenuName%
 return
 
@@ -432,6 +437,8 @@ if (IniFileInList != "")
 	{
 	ProjectFileName := IniFileInList
 	SettingUpFiles(ProjectFileName)
+	if (A_UserName != "Mensch")
+		SaveIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile", ProjectFileName)
 	SettingUpCapture2Text()
 	Gui 10:Destroy
 	Send {F10}
