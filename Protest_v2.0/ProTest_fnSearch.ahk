@@ -119,7 +119,7 @@ if (dd_SkipButton = 1)
 	{
 	Send, {PgUp}
 	if (fnOCR != "")
-		SaveToHistory(fnOCR, "Klicke verweigert")
+		SaveToHistory(fnOCR, "[verweigert]")
 	}
 else
 	{
@@ -163,8 +163,7 @@ If (UpcomingFnName = fnOCR)
 	UpcomingFnValue := GetIniValue(ProjectFile, AdvancedSearchMenu, "e_fnV" . A_Index)
 	if (UpcomingFnValue != "" AND UpcomingFnValue != "ERROR" )
 		{
-		SaveToHistory(fnOCR, "MATCH mit Upcoming-fn, Value = " . UpcomingFnValue)
-		EnterfnValue(fnOCR, UpcomingFnValue, Index)
+		EnterfnValue(fnOCR, UpcomingFnValue, "F4 Menu",  Index)
 		return true
 		}
 	}	
@@ -178,79 +177,21 @@ global LibraryFile
 fnNagValue := GetIniValue(LibraryFile, "fnNag", fnOCR)
 If (fnNagValue != "ERROR")
 	{ 
-	SaveToHistory(fnOCR, "MATCH mit NagFn, Value=" . fnNagValue)
-	EnterfnValue(fnOCR, fnNagValue, Index)
+	EnterfnValue(fnOCR, fnNagValue, "fnNag", Index)
 	return true
 	}
 else
 	{
 	c_fnOCR := AutoCorrection(fnOCR, "fnNag", fnValue)
-	if (Result = fnOCR)
+	if (c_fnOCR = fnOCR)
 		return false
 	else
 		{
 		fnNagValue := fnValue
-		EnterfnValue(fnOCR, fnNagValue, Index)
+		EnterfnValue(fnOCR, fnNagValue, "fnNag", Index)
 		return true
 		}
 	}
-}
-
-EnterfnValue(fnOCR, fnValue, Index){
-local
-global ue, SleepAfterEnter
-SaveToHistory("VERBOSE:", fnOCR . " EnterfnValue: " fnValue)
-if fnValue is digit
-	{
-	Send, %fnValue%{Enter}
-	Sleep, SleepAfterEnter
-	SaveToHistory(fnOCR, "= " . fnValue)
-	return
-	}
-else
-	{
-	if (fnValue = "Ende")
-		{
-		Msgbox, 4096, Durchlauf beendet!, Ende des Interviews (fn: %fnOCR%)! Es wurden %Index% Fragen %ue%bersprungen.
-		Exit
-		}
-	if (fnValue = "Stop")
-		{
-		Msgbox, 4096, Durchlauf gestoppt!,Durchlauf wurde gestoppt (fn: %fnOCR%)! Es wurden %Index% Fragen %ue%bersprungen.
-		Exit
-		}
-	else if (fnValue = "{Enter}")
-		{
-		Send, {Enter}
-		Sleep, SleepAfterEnter
-		return
-		}
-	else if (InStr(fnValue, "["))
-		{
-		ButtonName := ExtractButtonName(fnValue)
-		Result := L_TryClickingButton(ButtonName, 1)
-		If (Result = true) 
-			return
-		else
-			{
-			Msgbox, 4096, Durchlauf beendet..., ...da der f%ue%r fn "%fnOCR%" vorgesehene Button ("%ButtonName%") nicht vorhanden ist!
-			Exit
-			}
-		}
-	else
-		{
-		; Get PreloadValue and Enter
-		EnterPreloadValue(fnOCR, fnValue)
-		return 
-		}
-	} ; ende else (no digit)
-}
-
-ExtractButtonName(fnValue){
-local
-StringGetPos, ClosedBracket, fnValue, ]
-ButtonNameLength := ClosedBracket - 1
-return SubStr(fnValue, 2 , ButtonNameLength)
 }
 
 TrySkipXModul(){

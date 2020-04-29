@@ -112,6 +112,27 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	}
 }
 
+SkipIntro(fnOCR){
+local
+global LibraryFile
+global fast, IntroIsOver
+; Check in LibraryFile
+fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
+If (fnIntroValue = "ERROR")
+	{
+	c_fnOCR := AutoCorrection(fnOCR, "fnIntro", fnIntroValue)
+	if (c_fnOCR = fnOCR) 
+		{
+		IntroIsOver := true
+		return
+		}
+	else
+		fnOCR := c_fnOCR
+	}
+; Eingaben abrufen
+EnterfnValue(fnOCR, fnIntroValue, "Intro") 
+} ; ende SkipIntro function
+
 EnterLFD(LFD){
 local
 global fast, med
@@ -122,7 +143,6 @@ sleep, fast
 Send, {Enter}
 SetKeyDelay, fast
 }
-
 
 OCRIsEmpty(){
 local 
@@ -173,8 +193,13 @@ if (params.MaxIndex() = "")
 	SendHistory := TimeStemp . A_Space . Info
 else if (params.MaxIndex() = 1)
 	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1]
-else if (params.MaxIndex() = 2)	
-	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . ")"
+else if (params.MaxIndex() = 2)
+	{
+	if (params[2] = "")
+		SendHistory := TimeStemp . A_Space . Info . Spacing . params[1]
+	else
+		SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . ")"
+	}
 else if (params.MaxIndex() = 3)	
 	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . " - " . params[3] . ")"
 

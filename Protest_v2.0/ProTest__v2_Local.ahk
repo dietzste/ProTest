@@ -258,7 +258,7 @@ Return
 ;;;;;;;;; PROTEST MAIN FUNCTIONS ;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#Include Protest_SkipIntro.ahk
+#Include Protest_EnterValues.ahk
 #Include Protest_FnSearch.ahk
 #Include Protest_WorkFunctions.ahk
 
