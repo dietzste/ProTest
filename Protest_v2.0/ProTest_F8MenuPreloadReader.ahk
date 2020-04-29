@@ -59,7 +59,7 @@ Gui, 8:Add, CheckBox, x30 y217 	w150 h20 vc_DetailsOnly g8GuiOnlyDetails, nur Pr
 ; BUTTONS
 Gui, 8:Add, Button,   x30  y162 w50  h25 g8GuiHelp , Hilfe
 Gui, 8:Add, Button,   x85  y162 w50  h25 g8GuiResetControls, Reset
-Gui, 8:Add, Button,   x178 y162 w80 h25 Default g8GuiPreloads , Okidoki
+Gui, 8:Add, Button,   x178 y162 w80 h25 Default g8GuiPreloads , Ok
 Gui, 8:Show, x850 y480 Autosize Center, %GuiF8%
 Return
 
@@ -143,18 +143,12 @@ IF (Preload != "") and (PreloadCheckBox = 1)   ; Checkbox ausgewählt
 		If (PreloadUpdateValue = "-") ; read only
 			{
 			PreloadOriginal := L_ReadPreload(Preload)
-			if (PreloadOriginal = "false")
-				Msgbox, 4096, %Preload%, "%Preload%" gibt es nicht.
-			else
-				MsgBox, 4096 ,%Preload%, %Preload% = %PreloadOriginal%
+			MsgBox, 4096 ,%Preload%, %Preload% = %PreloadOriginal%
 			}
 		else ; read and update
 			{
 			PreloadOriginal := L_UpdatePreload(Preload, PreloadUpdateValue)
-			if (PreloadOriginal = "false")
-				Msgbox, 4096 ,%Preload%, "%Preload%" gibt es nicht.
-			else
-				Msgbox, 4096 ,%Preload%, %Preload% wurde von %PreloadOriginal% auf %PreloadUpdateValue% umgestellt.
+			Msgbox, 4096 ,%Preload%, %Preload% wurde von %PreloadOriginal% auf %PreloadUpdateValue% umgestellt.
 			}
 		}
 	} ;ende if
