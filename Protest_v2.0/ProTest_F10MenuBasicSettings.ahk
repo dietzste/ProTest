@@ -11,6 +11,7 @@ else
 return
 
 F10Routine:
+OCRFailedCount := 0
 PermanentSave := ""
 10GuiReset := false
 10GuiChange := false
@@ -22,19 +23,12 @@ if (10GuiReset = true)
 	10GuiReset := false
 	10GuiChange := false
 	}
-	
-10GuiControlArray := [
-, "c_dependent", "e_scale"
-, "e_Input1", "e_Input2", "e_Input3"
-, "e_BirthDay", "e_BirthMonth", "e_BirthYear"
-, "e_sex" ]
-for i, control in 10GuiControlArray
-	{
-	%control% := GetIniValue(ProjectFile, BasicSettingsMenu, control)
-	If (%control% = "ERROR")
-		%control% := GetIniValue(BasicFile, BasicSettingsMenu, control)
-	}
-10GuiOCRPositions := ["e_fnStartPosX", "e_fnStartPosY", "e_fnEndPosX", "e_fnEndPosY"]
+
+e_scaleBasic 	:= GetIniValue(BasicFile, BasicSettingsMenu, "e_scale")
+e_scale 		:= GetIniValue(ProjectFile, BasicSettingsMenu, "e_scale", e_scaleBasic)
+CreateHistory := GetIniValue(BasicFile, BasicSettingsMenu, "c_History")
+
+10GuiOCRPositions := ["e_fnStartPosX", "e_fnStartPosY", "e_width", "e_height"]
 for i, control in 10GuiOCRPositions
 	{
 	%control% := GetIniValue(ProjectFile, BasicSettingsMenu, control)
@@ -42,35 +36,22 @@ for i, control in 10GuiOCRPositions
 		%control% := GetIniValue(BasicFile, BasicSettingsMenu, control, 0)
 	}
 
-	
 ; Change Button
 if (10GuiChange = false)
 	{
 	BasicSettingsDis := DisON
-	PRELoadsDis := DisON
-	ChangeButtonName := ae . "ndern"
+	ChangeButtonName := "ändern"
 	GoButtonDis	:= DisOFF
-	PositionsDis := DisON
 	}
 else
 	{
-	if (GetIniValue(ProjectFile, "QuickSetupMenu", "c_StudyWithLFDs", 1) = 1)
-		PRELoadsDis := DisOFF
-	else
-		PRELoadsDis := DisON
 	BasicSettingsDis := DisOFF
 	ChangeButtonName := "Speichern"
 	GoButtonDis	:= DisON
-	if (c_dependent = 1)
-		PositionsDis := DisON
-	if (c_dependent = 0)
-		PositionsDis := DisOFF
 	}
 
 ; CACLCULATE POSITIONS
-if (c_dependent = 1)
-	Gosub CalculatePositions
-
+AdjustPositions()
 
 Gui, 10:+AlwaysOnTop
 ; INI Files
@@ -79,57 +60,41 @@ Gui, 10:Add, Text, x20 y32  w92  h20 , Project File:
 Gui, 10:Add, Edit, x85 	y29  w90  h20 Disabled, % GetIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile")
 Gui, 10:Add, Text, x20 y54  w92  h20 , Library File:
 Gui, 10:Add, Edit, x85 	y51  w90  h20 Disabled , Library.ini
-Gui, 10:Add, Button, x205  y27 w50  h20 g10GuiChangeBasicFile, %ae%ndern
+Gui, 10:Add, Button, x205  y27 w50  h20 g10GuiChangeBasicFile, ändern
 ; OCR Konfiguration
 Gui, 10:Add, Groupbox, x10 y85 w260 h125 cNavy, OCR Konfiguration
 ;;; Position fn Start
-Gui, 10:Add, Text, x70 y108  w80  h20 cNavy %BasicSettingsDis%, fn
-Gui, 10:Add, Text, x85 y108  w40  h20  %BasicSettingsDis%, Start
 	;; Start X 
-	Gui, 10:Add, Text, x115 y108  w20  h20 %BasicSettingsDis%, X:
-	Gui, 10:Add, Edit, x130 y105  w50  h20 %BasicSettingsDis% Center 
+	Gui, 10:Add, Text, x45 y108  w35  h20 %BasicSettingsDis%, Pos X:
+	Gui, 10:Add, Edit, x85 y105  w50  h20 %BasicSettingsDis% Center 
 	Gui, 10:Add, UpDown,  Range0-400  ve_fnStartPosX , % e_fnStartPosX
 	;; Start Y
-	Gui, 10:Add, Text, x190 y108  w20  h20 %BasicSettingsDis%, Y:
+	Gui, 10:Add, Text, x45 y130  w50  h20 %BasicSettingsDis%, Pos Y:
+	Gui, 10:Add, Edit, x85 y127  w50  h20 %BasicSettingsDis% Center 
+	Gui, 10:Add, UpDown,  Range0-400  ve_fnStartPosY, % e_fnStartPosY
+; Position Länge/Breite 
+	;; End Länge
+	Gui, 10:Add, Text, x165 y108  w30  h20 %BasicSettingsDis%, Länge:
 	Gui, 10:Add, Edit, x205 y105  w50  h20 %BasicSettingsDis%  Center
-	Gui, 10:Add, UpDown,  Range0-400  ve_fnStartPosY , % e_fnStartPosY
-; Position fn END 
-Gui, 10:Add, Text, x70 y130  w80  h20 cNavy %PositionsDis%, fn
-Gui, 10:Add, Text, x85 y130  w40  h20 %PositionsDis%, End
-	;; End X
-	Gui, 10:Add, Text, x115 y130  w20  h20  %PositionsDis%, X:
-	Gui, 10:Add, Edit, x130 y127  w50  h20 %PositionsDis%  Center 
-	Gui, 10:Add, UpDown,  Range0-400  ve_fnEndPosX, % e_fnEndPosX
-	;; End Y
-	Gui, 10:Add, Text, x190 y130  w20  h20 %PositionsDis%, Y:
-	Gui, 10:Add, Edit, x205 y127  w50  h20 %PositionsDis%  Center 
-	Gui, 10:Add, UpDown,  Range0-400 ve_fnEndPosY, % e_fnEndPosY
-; Dependent/Scale
-Gui, 10:Add, CheckBox, x190 y153  w65  h20 Checked%c_dependent% %BasicSettingsDis% vc_dependent g10Guidependent, abh%ae%ngig
-Gui, 10:Add, Text, x85 y155  w50  h20 %PositionsDis%, Scale:
-Gui, 10:Add, Edit, x130 y153  w34  h20 %BasicSettingsDis% Center ve_scale, % e_scale 
+	Gui, 10:Add, UpDown,  Range0-400  ve_width, % e_width
+	;; End Breite
+	Gui, 10:Add, Text, x165 y130  w30  h20 %BasicSettingsDis%, Breite:
+	Gui, 10:Add, Edit, x205 y127  w50  h20 %BasicSettingsDis%  Center 
+	Gui, 10:Add, UpDown,  Range0-400 ve_height, % e_height
+; Scale factor
+Gui, 10:Add, Text, x20 y155  w60  h20 %BasicSettingsDis%, Scale factor:
+Gui, 10:Add, Edit, x85 y153  w34  h20 %BasicSettingsDis% Center ve_scale, % e_scale 
 ; Buttons Test/Show/Hilfe
-Gui, 10:Add, Button, x205 y180 w50 h20 g10GuiTestOCR, Test
-Gui, 10:Add, Button, x20 y180 w60 h20 g10GuiHelp, Hilfe
-Gui, 10:Add, Button, x130 y180 w50 h20 g10GuiShowWindow, Show
-; Eingabe des Geburtsdatum
-Gui, 10:Add, Groupbox, x10 y215 w260 h148 cNavy, Geburtsdatum/Geschlecht
-Gui, 10:Add, Text, x20 y240  w60  h20 , Reihenfolge:
-Gui, 10:Add, Edit, x100 y237  w50  h20 Center %PRELoadsDis% ve_Input1, % e_Input1
-Gui, 10:Add, Edit, x153 y237  w50  h20 Center %PRELoadsDis% ve_Input2, % e_Input2
-Gui, 10:Add, Edit, x206 y237  w50  h20 Center %PRELoadsDis% ve_Input3, % e_Input3
-Gui, 10:Add, Text, x58 y265  w90  h20 , Tag:
-Gui, 10:Add, Text, x49 y288  w90  h20 , Monat:
-Gui, 10:Add, Text, x58 y312  w90  h20 , Jahr:
-Gui, 10:Add, Edit, x100 y263  w103  h20 Center %PRELoadsDis% ve_BirthDay, % e_BirthDay
-Gui, 10:Add, Edit, x100 y286  w103  h20 Center %PRELoadsDis% ve_BirthMonth, % e_BirthMonth
-Gui, 10:Add, Edit, x100 y310  w103  h20 Center %PRELoadsDis% ve_BirthYear, % e_BirthYear
-Gui, 10:Add, Text, x26 y335  w90  h20 , Geschlecht:
-Gui, 10:Add, Edit, x100 y333  w103  h20 Center %PRELoadsDis% ve_sex, % e_sex
+Gui, 10:Add, Button, x20 y180 w50 h20 g10GuiTestOCR, Test
+Gui, 10:Add, Button, x75 y180 w50 h20 %BasicSettingsDis% g10GuiShowWindow, Show
+Gui, 10:Add, Button, x195 y180 w60 h20 g10GuiHelp, Hilfe
+; History
+Gui, 10:Add, Groupbox, x10 y215 w260 h55 cNavy, History Einstellungen
+Gui, 10:Add, CheckBox, x20 y238 w130 h20 Checked%CreateHistory% %BasicSettingsDis% vCreateHistory, History erzeugen
 ; Buttons
-Gui, 10:Add, Button,   x10  y370 w55  h25 g10GuiResetControls, Reset
-Gui, 10:Add, Button,   x70  y370 w70  h25 g10GuiChangeButton , % ChangeButtonName 
-Gui, 10:Add, Button,   x190 y370 w80 h25 Default g10Go %GoButtonDis%, OK
+Gui, 10:Add, Button,   x10  y280 w55  h25 g10GuiResetControls, Reset
+Gui, 10:Add, Button,   x70  y280 w70  h25 g10GuiChangeButton , % ChangeButtonName 
+Gui, 10:Add, Button,   x190 y280 w80 h25 Default g10Go %GoButtonDis%, OK
 Gui, 10:Show, x850 y480 Autosize Center, %GuiF10%
 Return
 
@@ -148,27 +113,19 @@ Gui 1:Destroy
 ListLines On
 return 
 
+10GuiChangeBasicFile:
+Gosub 10GuiSaveInput
+GoSub F11Routine
+return 
+
 10GuiResetControls:
-MsgBox, 4132, Reset? , %GuiF10% zur%ue%cksetzen? (Setzt Koordinaten auf 0)
+MsgBox, 4132, Reset? , %GuiF10% zurücksetzen? (Setzt Koordinaten auf Standardeinstellung)
 IfMsgBox, YES
 	{
 	Gui 10:Destroy
 	10GuiReset := true
 	Goto 10GuiSetControls
 	}
-return 
-
-10Guidependent:
-Gui, 10:Submit, NoHide
-if (c_dependent = 1)
-	{
-	Msgbox, 4132, Sicher?, Sollen die Angaben von 'fn End' und 'Button Start' auf Basis `nvon 'fn Start' neu berechnet werden?
-	IfMsgBox, NO
-		Exit
-	}
-GoSub 10GuiSaveInput
-Gui 10:Destroy
-GoSub 10GuiSetControls
 return 
 
 10GuiHelp:
@@ -179,38 +136,34 @@ return
 Gui 1:Destroy
 CheckCapture2TextIsRunning()
 CheckWorkWindow()
-SaveScaleFactor()
 Gui, 10:Submit, NoHide
-if (c_dependent = 1)
-	{
-	Gosub CalculatePositions
-	; Adapt e_fnEnd X/Y
-	e_fnEndPosX := e_fnStartPosX + x_ADDToStartfnX
-	e_fnEndPosY := e_fnStartPosY + x_ADDToStartfnY
-	GuiControl,, Edit5 , %e_fnEndPosX%
-	GuiControl,, Edit6 , %e_fnEndPosY%
-	}
-WinActivate, %WorkWindow%
-WinWaitActive, %WorkWindow%
-TestOCR := OCR("Test", 1)
+AdjustPositions()
+SaveScaleFactor()
+TestOCR := OCR("Test", 0)
 Sleep, 500
-WinActivate %GuiF10%
-WinWaitActive, %GuiF10%
 WinGetPos , XPOS, YPOS, Width ,  Height , %GuiF10%
 MouseMove, Width / 2, Height / 2, 0
 if (TestOCR != "")
-	MsgBox, 4096, Test OCR, %TestOCR%
+	{
+	; Calculate Show area
+	ShowArea := e_width*e_height
+	if (ShowArea < 400)
+		MsgBox, 4096, Test OCR, %TestOCR% `n`nTipp: Die Fläche darf auch größer sein.
+	else
+		MsgBox, 4096, Test OCR, %TestOCR%
+	}
 else
-	MsgBox, 4096, Test OCR, OCR Failed.
-return	
-
-10GuiChangeBasicFile:
-Gosub 10GuiSaveInput
-GoSub F11Routine
-return 
+	{
+	++OCRFailedCount
+	if (OCRFailedCount = 1)
+		MsgBox, 4096, Test OCR, OCR Failed.
+	else
+		MsgBox, 4096, Test OCR, OCR Failed. `n`nTipp: Überprüfe die TeamViewer-Einstellungen
+	}
+return
 
 10GuiChangeButton:
-if (A_GuiControl = ae . "ndern")
+if (A_GuiControl = "ändern")
 	10GuiChange := true
 if (A_GuiControl = "Speichern")
 	{
@@ -222,150 +175,127 @@ Gui 10:Destroy
 Goto 10GuiSetControls
 return 
 
+; Save Input
 10GuiSaveInput:
 Gui, 10:Submit, NoHide
-CompleteArray := []
-; Check Input Tag, Monat, Jahr 
-loop 3 {
-Inputvar := "e_Input" . A_Index
-if !(%Inputvar% = "Tag" or %Inputvar% = "Monat" or %Inputvar% = "Jahr")
-	{
-	Msgbox,4096, Ups!, Eingabe nicht "Tag", "Monat" oder "Jahr"!
-	Exit
-	}
-CompleteArray[%Inputvar%] := A_Index
-}
-if (CompleteArray.Count() != 3)
-	{
-	Msgbox,4096, Ups!, In der Reihenfolge fehlt "Tag", "Monat" oder "Jahr"!
-	Exit
-	}
-	
-; Save Input
-for i, control in 10GuiControlArray
-	{
-	If (%control% = GetIniValue(BasicFile, BasicSettingsMenu, control))
-		DeleteIniValue(ProjectFile, BasicSettingsMenu, control)
-	else
-		SaveIniValue(ProjectFile, BasicSettingsMenu, control, %control%)
-	}
-;10GuiOCRPositions := ["e_fnStartPosX", "e_fnStartPosY", "e_fnEndPosX", "e_fnEndPosY"]
-for i, control in 10GuiOCRPositions
-	{
-	If (%control% = 0)
-		DeleteIniValue(ProjectFile, BasicSettingsMenu, control)
-	else
-		SaveIniValue(ProjectFile, BasicSettingsMenu, control, %control%)
-	}
-if (c_dependent = 0)
-	SaveLengthForwardCapture()
 SaveScaleFactor()
-
-; Permanent Speichern
 if (PermanentSave = 1)
 	{
 	Msgbox, 4132, Dauerhaft Speichern?, Soll die aktuelle OCR-Konfiguration dauerhaft gespeichert werden? 
-	IfMsgBox, Yes
-		{
-		;10GuiOCRPositions := ["e_fnStartPosX", "e_fnStartPosY", "e_fnEndPosX", "e_fnEndPosY"]
-		for i, control in 10GuiOCRPositions
-			{
-			SaveIniValue(BasicFile, BasicSettingsMenu, control, %control%)
-			}
-		SaveIniValue(BasicFile, BasicSettingsMenu, "c_dependent", c_dependent)
-		SaveIniValue(BasicFile, BasicSettingsMenu, "e_scale", e_scale)
-		}
-	PermanentSave := 0
+	IfMsgBox, YES
+		PermanentSave = 1
+	else
+		PermanentSave = 0
+	}
+
+SaveIniValue(ProjectFile, BasicSettingsMenu, "e_scale", e_scale)
+SaveIniValue(BasicFile, BasicSettingsMenu, "c_History", CreateHistory)
+if (PermanentSave = 1)
+	SaveIniValue(BasicFile, BasicSettingsMenu, "e_scale", e_scale)
+
+for i, control in 10GuiOCRPositions
+	{
+	SaveIniValue(ProjectFile, BasicSettingsMenu, control, %control%)
+	if (PermanentSave = 1)
+		SaveIniValue(BasicFile, BasicSettingsMenu, control, %control%)
 	}
 return
-
-; save Forward Text Line Capture
-SaveLengthForwardCapture(){
-local
-global Capture2TextIniFileAppDataPath
-global e_fnEndPosX, e_fnStartPosX
-ForwardLength := e_fnEndPosX - e_fnStartPosX
-IniWrite, %ForwardLength%, %Capture2TextIniFileAppDataPath%, ForwardTextLineCapture, Length
-}
 
 ; save e_scale
 SaveScaleFactor(){
 local
 global Capture2TextIniFileAppDataPath, e_scale
-ListLines, OFF
 if (e_scale < 0.71 Or e_scale > 5.0)
 	{
 	MsgBox, 4096, Scale Angabe korrigieren, Die Wert muss zwischen 0.71 und 5 liegen! (Default: 3.5)
-	ListLines, ON
 	Exit
 	}
 else
 	{
 	e_scale := StrReplace(e_scale, ",", ".")
-	IniWrite, %e_scale%, %Capture2TextIniFileAppDataPath%, OCR, ScaleFactor
+	SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "ScaleFactor", e_scale)
 	}
-ListLines, ON
 }
 
-; CACLCULATE POSITIONS
-CalculatePositions:
-e_fnEndPosX := e_fnStartPosX + x_ADDToStartfnX
-e_fnEndPosY := e_fnStartPosY + x_ADDToStartfnY
-return
-
 10GuiShowWindow:
-ListLines, OFF
 Gui, 10:Submit, NoHide
 CheckWorkWindow()
-CoordMode, Pixel, Client
-SysGet, CaptionHeight, 4
-TestPosX := e_fnStartPosX
-TestPosY := e_fnStartPosY + CaptionHeight
-if (c_dependent = 1)
-	{
-	TestWidth := x_ADDToStartfnX
-	TestHeight := x_ADDToStartfnY
-	e_fnEndPosX := e_fnStartPosX + x_ADDToStartfnX
-	e_fnEndPosY := e_fnStartPosY + x_ADDToStartfnY
-	; Adapt e_fnEnd X/Y
-	GuiControl,, Edit5 , %e_fnEndPosX%
-	GuiControl,, Edit6 , %e_fnEndPosY%
-	}
-else
-	{
-	TestWidth := e_fnEndPosX - e_fnStartPosX
-	TestHeight := e_fnEndPosY - e_fnStartPosY
-	}
-
-;check Input e_fnStartPos/ e_fnEndPos
-WrongInput := ""
-if (e_fnStartPosX >= e_fnEndPosX)
-	WrongInput := "X"
-if (e_fnStartPosY >= e_fnEndPosY)
-	WrongInput := "Y"
-if (WrongInput != "")
-	{
-	MsgBox, 4096, Angaben korrigieren!, Der Wert von fn Start %WrongInput% muss kleiner sein als der Wert von fn End %WrongInput%!
-	return
-	}
-
-;NoTitle := ""
+AdjustPositions()
+WinGetPos , XPOS, YPOS,,, %WorkWindow%
+TestPosX	:= e_fnStartPosX + XPOS
+TestPosY	:= e_fnStartPosY + YPOS
+TestWidth	:= 0.75 * e_width
+TestHeight	:= 0.75 * e_height
+ShowWindowName := "ShowOCRWindow"
 Gui  1:Destroy
-Gui, 1: -Caption +AlwaysOnTop +LastFound +Border 
+; LastFound -> for WinSet
+Gui, 1: -Caption +AlwaysOnTop +LastFound -Border +Owner ; kein Effekt: -SysMenu
 Gui, 1: Color, 60CFF7
-Gui, 1:show,x%TestPosX% y%TestPosY% w%TestWidth% h%TestHeight%, A_Space
-WinSet, Transparent, 120, A
-ListLines, ON
+Gui, 1:show,x%TestPosX% y%TestPosY% w%TestWidth% h%TestHeight%, % ShowWindowName
+WinSet, Transparent, 120, %ShowWindowName%
+WinActivate, %WorkWindow%
+return
+
+#if WinExist("ShowOCRWindow")
+~x::
+WinActivate, %WorkWindow%
+CoordMode, Mouse , Window
+MouseGetPos , MousePosX, MousePosY
+Gui  1:Destroy
+Gui, 10:Default
+GuiControl,, e_fnStartPosX , %MousePosX%
+GuiControl,, e_fnStartPosY , %MousePosY%
+Goto 10GuiShowWindow
 return 
 
+~Escape::
+Gui  1:Destroy
 return 
+
+~Left::
+Gui  1:Destroy
+Gui, 10:Default
+GuiControl,, e_width , % e_width-10
+Goto 10GuiShowWindow
+return
+
+~Right::
+Gui  1:Destroy
+Gui, 10:Default
+GuiControl,, e_width , % e_width+10
+Goto 10GuiShowWindow
+return
+
+~Up::
+Gui  1:Destroy
+Gui, 10:Default
+GuiControl,, e_height , % e_height-10
+Goto 10GuiShowWindow
+return
+
+~Down::
+Gui  1:Destroy
+Gui, 10:Default
+GuiControl,, e_height , % e_height+10
+Goto 10GuiShowWindow
+return
+#if 
+
+
+; CACLCULATE POSITIONS
+AdjustPositions(){
+global e_width, e_height
+global e_fnStartPosX, e_fnStartPosY
+global e_fnEndPosX := e_fnStartPosX + e_width
+global e_fnEndPosY := e_fnStartPosY + e_height
+}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;   (F11) Choose INI FILE   ;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 F11Routine:
-F11MenuName := "Projektdatei ausw" . ae . "hlen..."
+F11MenuName := "Projektdatei auswählen..."
 	
 if WinExist(F11MenuName)
 	{
@@ -444,7 +374,7 @@ if (IniFileInList != "")
 	Send {F10}
 	}
 else
-	Msgbox, 4096, Ups!, Kein File ausgew%ae%hlt!
+	Msgbox, 4096, Ups!, Kein File ausgewählt!
 return
 
 11GuiNewProjectFile:
@@ -477,7 +407,7 @@ return
 
 SettingUpFiles(ProjectFileName){
 local
-; Project
+global BasicFile
 global PreloadList
 global ProjectName := StrReplace(ProjectFileName, ".ini")
 ListLines Off
@@ -514,12 +444,9 @@ SaveIniValue(ProjectFile, "ProjectFiles", "e_TempFile", TempFileName)
 SaveIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile", ProjectFileName)
 
 ; Save To History
+global CreateHistory := GetIniValue(BasicFile, "BasicSettingsMenu",  "c_History")
 if (A_IsCompiled = 1)
-	{
-	SaveToHistory("Project File: ", ProjectFileName)
-	SaveToHistory("Temp File: ", TempFileName)
-	SaveToHistory("History File: ", HistoryFileName)
-	}
+	SaveToHistory("### Project File: ", ProjectFileName . " ###")
 
 ; CurrentLFD 
 global CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", A_Space)
