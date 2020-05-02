@@ -9,8 +9,6 @@ return
 ClipChanged(Type){
 local
 global CurrentDetection := ""
-global RemoteBuffer, RemoteFeed
-global RemoteFeed := false
 If (Type = 1)
 	{
 	if InStr(Clipboard, "<")
@@ -28,7 +26,7 @@ If (Type = 1)
 
 WaitForRemoteFeedback(SendValue){
 local
-global RemoteBuffer, TempFile
+global RemoteBuffer
 Clipboard = 
 Clipboard := SendValue
 ClipWait, 1
@@ -53,14 +51,14 @@ return ExtractedValue
 L_RemoteFeedbackTest(){
 local
 global fast 
-global TempFile, TimeOutRemoteTest, RemoteBuffer
+global TimeOutRemoteTest, RemoteBuffer
 global RemoteFeed := false
 static Detection
 static StartTime
 StartTime := A_TickCount
 ListLines Off
 SendValue := ">Test"
-SaveToHistory(SendValue)
+SaveToHistory("VERBOSE:", SendValue)
 CheckWorkWindow()
 Clipboard := SendValue
 ClipWait, 1
@@ -92,55 +90,53 @@ if (RemoteFeed = true)
 	{
 	if (Detection = "<Test")
 		{
-		SaveToHistory(Detection)
+		SaveToHistory("VERBOSE:", Detection)
 		ElapsedTime := A_TickCount - StartTime
-		Msgbox, 4096, Positive Feedback! , Remote feedback active :)! (Delay: %ElapsedTime% ms)
+		Msgbox, 4096, RemoteClient aktiv!, Synchronisation der Zwischenablage aktiv! (Delay: %ElapsedTime% ms)
+		SaveToHistory("F9: RemoteClient aktiv (Delay: " . ElapsedTime . " ms)")
 		return
 		}
 	}
 else if (RemoteFeed = false)
 	{
-	Msgbox, 4096, No Feedback!, No Remote feedback :(!
-	SaveToHistory("TIMEOUT", "No Remote Feedback")
+	Msgbox, 4096, Ups!, Keine Verbindung zum RemoteClient!
+	SaveToHistory("F9: RemoteClient nicht aktiv (Timeout)")
 	return 
 	}
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-L_RestartQ(){
+SendWait(SendValue, CheckWorkWindow){
 local
 global CurrentDetection
-SendValue := ">Restart"
-SaveToHistory(SendValue)
+SaveToHistory("VERBOSE:", SendValue)
 WaitForRemoteFeedback(SendValue)
-CheckWorkWindow()
+if (CheckWorkWindow = true)
+	CheckWorkWindow()
 Detection := CurrentDetection
-SaveToHistory(Detection)
-if (Detection = "<Restart")
-	return true
+SaveToHistory("VERBOSE:", Detection)
+return Detection
+}
+
+L_RestartQ(){
+local
+SendWait(">Restart", true)
 }
 
 L_WaitUntilPreloadsLoaded(){
 local
-global CurrentDetection
-SendValue := ">LoadingPreloads"
-SaveToHistory(SendValue)
-WaitForRemoteFeedback(SendValue)
-CheckWorkWindow()
-Detection := CurrentDetection
-SaveToHistory(Detection)
-if (Detection = "<LoadingComplete")
-	return true
+SendWait(">LoadingPreloads", true)
 }
 
 L_ReadPreload(Preload){
 local
-global TempFile, CurrentLFD, ProjectFile
-global RemoteFeed, CurrentDetection
-
+global CurrentLFD
+global TempFile, ProjectFile
+SaveToHistory("VERBOSE:","Get Preload", Preload)
 CheckFileFirst := true
-; Load Preloads from File
+
+; Load Preloads from File? (F8)
 if (A_ThisLabel = "8GuiPreloads")
 	{
 	c_LoadSavedValues := GetIniValue(ProjectFile, "PreloadReaderMenu", "c_LoadSavedValues")
@@ -149,83 +145,62 @@ if (A_ThisLabel = "8GuiPreloads")
 	else
 		CheckFileFirst := false
 	}
+	
+; Load Preloads from File
 if (CheckFileFirst = true)
 	{
 	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload)
 	if (PreloadValue != "ERROR" AND PreloadValue != "")
-		{
-		SaveToHistory("LOADED", Preload . "=" . PreloadValue, "from " .  TempFile)
 		return PreloadValue
-		}
 	}
-
 SendValue := ">RPL(" . Preload . ")"
-SaveToHistory(SendValue)
-WaitForRemoteFeedback(SendValue)
-Detection := CurrentDetection
-SaveToHistory(Detection)
+Detection := SendWait(SendValue, false)
 PreloadValue := RemoteExtraction(SendValue, Detection)
+if (PreloadValue = "false")
+	{
+	Msgbox, 4096 ,%Preload%, "%Preload%" nicht vorhanden.
+	Exit
+	}
 SaveIniValue(TempFile, "LFD_" . CurrentLFD , Preload, PreloadValue)
-SaveToHistory("VERBOSE:", Preload . "=" .  PreloadValue, "Result L_ReadPreload")
-; Preloadvalue or "false"
 return PreloadValue
 }
 
 L_UpdatePreload(Preload, ChangeTo){
 local
-global TempFile, CurrentLFD 
-global CurrentDetection
 SendValue := ">UPL(" . Preload . ")(" . ChangeTo . ")"
-SaveToHistory(SendValue)
-WaitForRemoteFeedback(SendValue)
-Detection := CurrentDetection
-SaveToHistory(Detection)
-PreloadValue := RemoteExtraction(SendValue, Detection)
-return PreloadValue
+Detection := SendWait(SendValue, false)
+PreloadOriginal := RemoteExtraction(SendValue, Detection)
+if (PreloadOriginal = "false")
+	{
+	Msgbox, 4096 ,%Preload%, "%Preload%" nicht vorhanden.
+	Exit
+	}
+return PreloadOriginal
 }
 
 L_LoadPreloadList(){
 local
 global PreloadList, PreloadListPath
-global CurrentDetection
 SendValue := ">PreloadList"
-SaveToHistory(SendValue)
-WaitForRemoteFeedback(SendValue)
-Detection := CurrentDetection
-SaveToHistory("<PreloadList")
+Detection := SendWait(SendValue, false)
 PreloadList := RemoteExtraction(SendValue, Detection)
 FileAppend , %PreloadList%, %PreloadListPath%
-return
 }
 
 L_SkipXModul(){
 local
-global CurrentDetection
 global WaitForXModulSec
 SendValue := ">SkipXModul," . WaitForXModulSec
-SaveToHistory(SendValue)
-WaitForRemoteFeedback(SendValue)
-CheckWorkWindow()
-Detection := CurrentDetection
-SaveToHistory(Detection)
+Sleep, 1050 ; Due to OCR Overload
+Detection:= SendWait(SendValue, true)
 Result := RemoteExtraction(SendValue, Detection)
-; Result:
-; 0 = false
-; 1 = true
-return Result
+return Result ; Result: "false" / "true"
 }
 
 L_GetNextLFD(NClickBackButton){
 local
-global CurrentDetection
 SendValue := ">GetNextLFD." . NClickBackButton
-SendValueClean := StrReplace(SendValue, "." . NClickBackButton)
-SaveToHistory("VERBOSE:", SendValueClean)
-WaitForRemoteFeedback(SendValue)
-CheckWorkWindow()
-Detection := CurrentDetection
-DetectionClean := StrReplace(Detection, "." . NClickBackButton)
-SaveToHistory("VERBOSE:", DetectionClean)
+Detection := SendWait(SendValue, true)
 NextLFD := RemoteExtraction(SendValue, Detection)
 if (NextLFD != "Error")
 	return NextLFD
@@ -238,38 +213,24 @@ else
 
 L_ExcludeHopelessLFDs(HopelessLFDString){
 local
-global CurrentDetection
 if (HopelessLFDString = "")
 	SendValue := ">ExcludeHopelessLFDs"
 else
 	SendValue := ">ExcludeHopelessLFDs=" . HopelessLFDString
-SaveToHistory("VERBOSE:", SendValue)
-WaitForRemoteFeedback(SendValue)
-CheckWorkWindow()
-Detection := CurrentDetection
-SaveToHistory("VERBOSE:", Detection)
+Detection := SendWait(SendValue, true)
 }
 
 L_TryClickingButton(Button, Count){
 local
-global CurrentDetection
 SendValue := ">ClickButton=" . Count . "," . Button
-SaveToHistory(SendValue)
-WaitForRemoteFeedback(SendValue)
-CheckWorkWindow()
-Detection := CurrentDetection
-SaveToHistory(Detection)
+Detection := SendWait(SendValue, true)
 Result := RemoteExtraction(SendValue, Detection)
-; Result:
-; "false"
-; "true"
-return Result
+return Result ; Result: "false" / "true"
 }
 
 L_ReadMultiplePreloads(CurrentLFD, PreloadString, PreTested:=true){
 local
 global TempFile
-global CurrentDetection
 global MissingPreloadString := ""
 
 ; (1) PreTested?
@@ -284,10 +245,7 @@ else
 	
 ; Sending MissingPreloadString / Waiting / Return 
 SendValue := ">MPL(" . MissingPreloadString . ")"
-SaveToHistory("VERBOSE:", SendValue)
-WaitForRemoteFeedback(SendValue)
-Detection := CurrentDetection
-SaveToHistory("VERBOSE:", Detection)
+Detection := SendWait(SendValue, false)
 MultiplePreloadValues := RemoteExtraction(SendValue, Detection)
 ; Beispiel: 18|9|1990
 Loop, Parse, MissingPreloadString, "|"
