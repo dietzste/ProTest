@@ -146,12 +146,11 @@ SetKeyDelay, fast
 
 OCRIsEmpty(){
 local 
-global ae, ue
 Gui, 99:+AlwaysOnTop +ToolWindow
-gui, 99:add, Text, x10 y10 w200 Center, Jetzt manuelle Eingabe t%ae%tigen?
+gui, 99:add, Text, x10 y10 w200 Center, Jetzt manuelle Eingabe tätigen?
 gui, 99:add, button, x10 y30 w50 g99GuiYes, Ja
 gui, 99:add, button, x65 y30 w50 g99GuiCancel, nein 
-gui, 99:add, button, x130 y30 w80 g99GuiRetryOCR, Retry OCR
+gui, 99:add, button, x130 y30 w80 Default g99GuiRetryOCR, Retry OCR
 gui, 99:show, Center Autosize, Keine fn gefunden!
 WinWaitActive, Keine fn gefunden!
 WinWaitClose, Keine fn gefunden!
@@ -160,20 +159,20 @@ return Result
 99GuiEscape:
 99GuiCancel:
 99GuiClose:
-SaveToHistory("Keine fn gefunden. Eigene Aktion durchf" . ue . "hren? Nein")
+SaveToHistory("Keine fn gefunden. Eigene Aktion durchführen? Nein")
 Result := "Exit"
 Gui 99:Destroy
 return 
 
 99GuiRetryOCR:
-SaveToHistory("Keine fn gefunden. Eigene Aktion durchf" . ue . "hren? Retry OCR")
+SaveToHistory("Keine fn gefunden. Eigene Aktion durchführen? Retry OCR")
 Result := "Retry"
 Gui 99:Destroy
 return 
 
 99GuiYes:
-SaveToHistory("Keine fn gefunden. Eigene Aktion durchf" . ue . "hren? Ja")
-Msgbox, 4096, Skript pausiert!, Skript ist pausiert. Eingabe t%ae%tigen, dann mit F6 fortfahren!
+SaveToHistory("Keine fn gefunden. Eigene Aktion durchführen? Ja")
+Msgbox, 4096, Skript pausiert!, Skript ist pausiert. Eingabe tätigen, dann mit F6 fortfahren!
 Result := "Pause"
 Gui 99:Destroy
 return 
@@ -318,7 +317,7 @@ if (ShowLFD != "")
 	if (ShowLFDValues != "")
 		MsgBox, 4096, %ShowLFD% , %ShowLFDValues%
 	else
-		MsgBox, 4096, %ShowLFD% , F%ue%r "%ShowLFD%" sind noch keine Werte vorhanden!
+		MsgBox, 4096, %ShowLFD% , Für "%ShowLFD%" sind noch keine Werte vorhanden!
 	}
 else
 	MsgBox, 4096, ShowLFD, Eingabe ist leer!
