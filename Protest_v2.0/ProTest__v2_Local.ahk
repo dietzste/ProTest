@@ -192,49 +192,11 @@ return
 
 ;______ENDE AUTO EXECUTE SECTION ______
 
-;;;;; TEST Section ;;;;
-#if WinExist("Notepad++")
-^t::
-return 
-#if
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;  HOTKEYS    ;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;   Basic WORK HOTKEYS   ;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-#if WinExist("Notepad++")
-F5::
-if (A_IsCompiled != 1)
-	{
-	Send, ^S
-	SaveToHistory("RELOAD")
-	Reload
-	}
-return
-#if
-
-+F5::
-	SaveToHistory("RELOAD")
-	if (CurrentLFD != "")
-		SaveIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", CurrentLFD)
-	Reload
-return
-
-F6::
-	PAUSE
-	SaveToHistory("PAUSE")
-Return
-
-+ESC::
-	Suspend
-Return
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;    ADVANCED HOTKEYS    ;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-#Include ProTest_AdvancedHotkeys.ahk
+#Include ProTest_Hotkeys.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;   REMOTE CONNECTION    ;;;;;;;;;
