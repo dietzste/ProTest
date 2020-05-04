@@ -105,6 +105,44 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	}
 }
 
+PrepareStopfn(){
+local
+global e_Stopfn1, e_Stopfn2, e_Stopfn3
+global StopFnArray := {}
+StopFnControlArray := [e_Stopfn1, e_Stopfn2, e_Stopfn3]
+StopFnString := ""
+for i, StopFn in StopFnControlArray
+	{
+	if (StopFn != "")
+		{
+		StopFnArray[A_Index] := StopFn
+		if (StopFnString = "")
+			StopFnString := StopFn
+		else
+			StopFnString .= ", " StopFn
+		}
+	}
+if (StopFnString != "")
+	SaveToHistory("StopFn: " . StopFnString )
+}
+
+PrepareUpComingFn(){
+local
+global ProjectFile
+global UpcomingFnIndex := 0
+global UpcomingFnArray := {}
+loop, 5 {
+UpcomingFnName := GetIniValue(ProjectFile, "AdvancedSearchMenu", "e_fnN" . A_Index)
+if (UpcomingFnName != "ERROR")
+	{
+	UpcomingFnValue := GetIniValue(ProjectFile,"AdvancedSearchMenu", "e_fnV" . A_Index)
+	UpcomingFnArray[UpcomingFnName] := UpcomingFnValue 
+	++UpcomingFnIndex
+	SaveToHistory(UpcomingFnName, "= " . UpcomingFnValue,"F4")
+	}
+} ; ende loop
+} ; ende function
+
 SkipIntro(fnOCR){
 local
 global LibraryFile
