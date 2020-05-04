@@ -23,10 +23,7 @@ loop, 5 {
 e_fnN%A_Index% := GetIniValue(ProjectFile,AdvancedSearchMenu, "e_fnN" . A_Index, A_Space)
 e_fnV%A_Index% := GetIniValue(ProjectFile,AdvancedSearchMenu, "e_fnV" . A_Index, A_Space)
 }
-if (AOx = true)
-	c_XModul := GetIniValue(ProjectFile, AdvancedSearchMenu, "c_XModul", 1)
-else
-	c_XModul := 0
+c_XModul := GetIniValue(ProjectFile, AdvancedSearchMenu, "c_XModul", 1)
 
 
 ;;;;;; GUI Menü ;;;;;
@@ -53,8 +50,6 @@ Gui, 4:Add, Button, x10 y238 w60 h25 g4GuiResetControls, Reset
 Gui, 4:Add, Button, x75 y238 w60 h25 g4GuiHelp, Hilfe
 Gui, 4:Add, Button, x178 y238 w80 h25 Default g4GuiSave, Speichern
 Gui, 4:Show, Center Autosize, %GuiF4%
-if (AOx = false)
-	Control, Disable ,, X-Pr%ue%fmodul %ue%berspringen , %GuiF4%
 return
 
 4GuiClose:
