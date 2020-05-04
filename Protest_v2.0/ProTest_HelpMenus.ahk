@@ -36,8 +36,6 @@ SetTimer, WinMoveMsgBox, 50
 ; Finetuning
 if (Window = GuiF3)
 	FinetuneY := (ScreenHeight * -30)/StandardHeight
-else if (Window = GuiF10)
-	FinetuneY := (ScreenHeight * 100)/StandardHeight 
 else
 	FinetuneY := 0
 
@@ -56,38 +54,37 @@ return
 
 GetHelpText(Window, Byref HelpText){
 local
-global ae, ue, oe, sz
-global AOx
 global x_ADDToStartfnX, x_ADDToStartfnY
 global GuiF2, GuiF3, GuiF4, GuiF8, GuiF10
 global ProjectFile, BasicFile, LibraryFile
 global ProjectName, TempFileName
+
 if (Window = GuiF2)
 {
 2GuiHelpText =
 (
 Je nach Aktionsmodus (Intro, fn Suche, Beides)
 werden einige Aktionen (de-)aktiviert. 
-'Beide' %ue%berspringt erst das Intro, dann erfolgt
+'Beide' überspringt erst das Intro, dann erfolgt
 die fn-Suche.
 
-Auswahl 'Suche mit LFD-Finder' %oe%ffnet F3-Men%ue%,
-'Erweiterte Optionen' (Ein) %oe%fnnet das F4-Men%ue%. 
+Auswahl 'Suche mit LFD-Finder' öffnet F3-Menü,
+'Erweiterte Optionen' (Ein) öfnnet das F4-Menü. 
 
 Falls die aktuelle Erhebung ohne LFDs arbeitet: Bei
 Auswahl 'Keine Eingabe' die Checkbox 'LFDs vorhanden'
-abw%ae%hlen.
+abwählen.
 
 Stop-fn(s): 
-Eingaben k%oe%nnen einstellig oder mehrstellig sein (z.B. 3).
+Eingaben können einstellig oder mehrstellig sein (z.B. 3).
 
-Skip-Button 'verweigert': dr%ue%ckt verweigert 
-Button. 'Clear&Back' dr%ue%ckt Clear und Back
-hintereinander (=R%ue%w%ae%rtssuche).
+Skip-Button 'verweigert': drückt verweigert 
+Button. 'Clear&Back' drückt Clear und Back
+hintereinander (=Rückwärtssuche).
 
-{Enter} = dr%ue%ckt Enter Taste
+{Enter} = drückt Enter Taste
 
-Priorit%ae%t der fn-Suche:
+Priorität der fn-Suche:
 1) Stop-fns
 2) Eingaben der Erweiterten Optionen (F4)
 3) NagFns -> Library.ini -> [fnNag]
@@ -95,19 +92,6 @@ Priorit%ae%t der fn-Suche:
 Helptext = %2GuiHelpText%
 return 
 }
-
-if (AOx = true)
-{
-F3AutoEditZusatz =
-(
-AutoEdit: %oe%ffnet einen weiteren Editor, mit dem die 
-Preloadliste geladen werden kann. %ue%ber den Button 
-'Hinzuf%ue%gen' werden gew%ae%hlte Preload-Variablen in das 
-Men%ue% eingef%ue%gt. (Auch im Fenster F8 anwendbar)
-)
-}
-else
-	F3AutoEditZusatz = AutoEdit: AddOn
 
 if (Window = GuiF3)
 {
@@ -126,41 +110,41 @@ Bsp. 1: Suche Preload (sexPRE) mit dem Wert 2
 Bsp. 2: Suche Preload (sexPRE), Wert darf nicht 1 sein. 
 Bsp. 3: Suche Preload (sexPRE), Wert darf nicht leer sein.
 
-Start LFD ist der StartPunkt f%ue%r die LFD-Suche.
+Start LFD ist der StartPunkt für die LFD-Suche.
 
 Button 'LFD Werte' zeigt Werte der Start LFD an
 (Quelle: %TempFileName%). 
 
-%F3AutoEditZusatz%
+AutoEdit: öffnet einen weiteren Editor, mit dem die 
+Preloadliste geladen werden kann. über den Button 
+'Hinzufügen' werden gewählte Preload-Variablen in das 
+Menü eingefügt. (Auch im Fenster F8 anwendbar)
 )
 Helptext = %3GuiHelpText%
 return 
 }
 
-if (AOx = false)
-	F4XModulZusatz = AddOn: X-Pr%ue%fmodul %ue%berspringen
-else
-	F4XModulZusatz =
-
 if (Window = GuiF4)
 {
 4GuiHelpText =
 (
-Zul%ae%ssig sind sind neben Zahlen 
-folgende Funktionsw%oe%rter:
+Zulässig sind sind neben Zahlen 
+folgende Funktionswörter:
 Ende/Stop	-> beendet/stoppt Durchlauf 
-'Preload'	-> holt Preloadwert von 'Preload'
-[Button]	-> dr%ue%ckt Button
-{Enter}	-> dr%ue%ckt NUR Enter
+{Enter}	-> drückt NUR Enter
+[Button]-> drückt Button
+
+Preloadwert abrufen mit Get(Preload), für
+mehrere Get(Proload1/Preload2...) eingeben.
 
 Beispiele:
 fn	Wert
 24104	2
 32620	Ende
-20103	sexPRE
+20103	Get(sexPRE)
 290102	[Aufgaben]
 
-%F4XModulZusatz%
+X-Prüfmodul überspringen
 [Adresstool noch nicht implementiert]
 )
 Helptext = %4GuiHelpText%
@@ -169,7 +153,7 @@ return
 
 if (Window = GuiF8)
 {
-8GuiHelpText := "Automatische Konvertierung f" . ue . "r:`n"
+8GuiHelpText := "Automatische Konvertierung für:`n"
 8GuiHelpText .= GetIniSection(LibraryFile, "Converter")
 8GuiHelpText .= "`r`rz.B Eingabe '2101P1' sucht `rnach Preload 'P41598PRE'"
 Helptext = %8GuiHelpText%
@@ -180,21 +164,25 @@ if (Window = GuiF10)
 {
 10GuiHelpText =
 (
-fn Start/End	= Positionen der fn
-Scale		= ScaleFactor (Default: 4.0)
+Pos X/Y		= Startkoordinaten des Suchfensters 
+Länge 		= Länge des Suchfensters (in Pixel)
+Breite		= Breite des Suchfensters (in Pixel)
 
-Der Button 'Show' zeigt den (ungef%ae%hren) Bereich
+Der Button 'Show' zeigt den (ungefähren) Bereich
 an, in der die Texterkennung sucht. Der Button 
-'Test' f%ue%hrt eine Testung der Einstellungen durch.
+'Test' führt eine Testung der Einstellungen durch.
+Scale factor (Default: 4.0)
 
-Checkbox 'abh%ae%ngig' = Anhand der Position 
-fn Start werden die Parameter fn End bestimmt:
-fn End X = fn Start X + %x_ADDToStartfnX%
-fn End Y = fn Start Y + %x_ADDToStartfnY%
+Einstellungen ändern:
+1) Button ändern drücken
+2) Button Show drücken
+3) Maus an Anfangsposition bewegen, dann x drücken
+4) mit den Pfeiltasten Bereich vergrößern/verkleinern
+5) Button Speichern drücken
 
 Einstellungen dauerhaft speichern:
 Button 'Speichern' und die Shift-Taste gleichzeitig 
-dr%ue%cken. Und anschlie%sz%ende Message-Box best%ae%tigen. 
+drücken. Und anschließende Message-Box bestätigen. 
 
 )
 Helptext = %10GuiHelpText%
