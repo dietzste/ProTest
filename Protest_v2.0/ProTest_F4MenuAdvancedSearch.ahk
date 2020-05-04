@@ -26,10 +26,10 @@ e_fnV%A_Index% := GetIniValue(ProjectFile,AdvancedSearchMenu, "e_fnV" . A_Index,
 c_XModul := GetIniValue(ProjectFile, AdvancedSearchMenu, "c_XModul", 1)
 
 
-;;;;;; GUI MenÃ¼ ;;;;;
+;;;;;; GUI Menü ;;;;;
 ; EDIT-FIELDs
 Gui, 4:+AlwaysOnTop ToolWindow
-Gui, 4:Add, Groupbox, x10 y14 w247 h160 cNavy Center, Werte f%ue%r fn(s) vergeben...
+Gui, 4:Add, Groupbox, x10 y14 w247 h160 cNavy Center, Werte für fn(s) vergeben...
 Gui, 4:Add, Groupbox, x17 y35 w77 h130 Center, fn
 Gui, 4:Add, Groupbox, x99 y35 w150 h130 Center , Wert
 Gui, 4:Add, Edit, x25  y50 w62  h20 Center Limit%fnLimit% 	ve_fnN1, %e_fnN1%
@@ -43,8 +43,8 @@ Gui, 4:Add, Edit, x106 y116 w135 h20 Center	   		   		ve_fnV4, %e_fnV4%
 Gui, 4:Add, Edit, x25  y138 w62  h20 Center Limit%fnLimit% 	ve_fnN5, %e_fnN5%
 Gui, 4:Add, Edit, x106 y138 w135 h20 Center		   	   		ve_fnV5, %e_fnV5%
 ; CheckBoxes
-Gui, 4:Add, CheckBox, x17 y180  w140  h20 Checked%c_XModul% vc_XModul, X-Pr%ue%fmodul %ue%berspringen 
-Gui, 4:Add, CheckBox, x17 y202  w140  h20 Disabled, Adresstool %ue%berspringen 
+Gui, 4:Add, CheckBox, x17 y180  w140  h20 Checked%c_XModul% vc_XModul, X-Prüfmodul überspringen 
+Gui, 4:Add, CheckBox, x17 y202  w140  h20 Disabled, Adresstool überspringen 
 ; Buttons
 Gui, 4:Add, Button, x10 y238 w60 h25 g4GuiResetControls, Reset
 Gui, 4:Add, Button, x75 y238 w60 h25 g4GuiHelp, Hilfe
