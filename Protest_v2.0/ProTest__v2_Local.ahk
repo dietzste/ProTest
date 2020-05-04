@@ -268,23 +268,17 @@ Return
 
 #Include Protest_LFDFinder.ahk
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;; INTERAKTIONS-MENÜS ;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;  INTERAKTIONS-MENÜS  ;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_F2MenuQuickSetup.ahk
 #Include Protest_F3MenuLFDFinder.ahk
 #Include Protest_F4MenuAdvancedSearch.ahk
+#Include Protest_F7MenuLernModus.ahk
 #Include Protest_F8MenuPreloadReader.ahk
 #Include Protest_F10MenuBasicSettings.ahk
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;    AddOns    ;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;#Include Protest_AddOns.ahk
-;#Include Protest_F7MenuLernModus.ahk
-
+#Include ProTest_AutoEdit.ahk
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;     Hilfe-Texte Menüs      ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
