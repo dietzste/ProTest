@@ -6,7 +6,6 @@
 #NoEnv
 #SingleInstance Ignore
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-
 ListLines Off
 
 SetTitleMatchMode, 2
@@ -85,12 +84,6 @@ BasicSettingsMenu := "BasicSettingsMenu"
 ; special Menu Settings
 DisON := "Disabled1"
 DisOFF := "Disabled0"
-
-;Sonderzeichen Workaround
-ue := "ü"
-ae := "ä"
-oe := "ö"
-sz := "ß"
 
 ; Work Variables
 WorkWindow := "ahk_class TV_CClientWindowClass"
