@@ -86,7 +86,7 @@ for i, control in UpcomingControlArray
 	UpcomingValue := % %UpcomingName%
 	if (%UpcomingName% = "")
 		DeleteIniValue(ProjectFile, AdvancedSearchMenu, UpcomingName) 
-	else
+	else if (UpcomingValue != "")
 		SaveIniValue(ProjectFile, AdvancedSearchMenu, UpcomingName, UpcomingValue)
 	} ; ende loop
 } ; ende for loop

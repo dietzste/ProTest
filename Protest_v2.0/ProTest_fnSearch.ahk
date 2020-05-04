@@ -4,37 +4,40 @@
 
 fnSearch(fnOCR, Index){
 local
-global AOx
-global ae, oe, ue, fast, fnSearchIsOver
-global ProjectFile, TempFile
-global r_AdvancedON, UpcomingFnIndex
-global SleepAfterEnter
-global SameFnCount, TriedAnywaySkip, TriedXModulSkip
+global fast, fnSearchIsOver
+global UpcomingFnIndex
+global SameFnCount, TriedXModulSkip
+global SleepWhileOCREmpty
 static LastfnOCR
 SetKeyDelay, fast
 
 ; fnOCR empty?
 if (fnOCR = "")
 	{
-	; Second try
-	fnOCR := OCR("(2)!", 2)
-	if (fnOCR = "")
+	; Try Click verweigert Anyway
+	PleasWaitWindow("On")
+	SaveToHistory("VERBOSE:", "Try Anyway Skip")
+	ClickSkippButton(fnOCR)
+	CheckfnOCR := OCR("TryAnywaySkip", Index)
+	PleasWaitWindow("Off")
+	if (CheckfnOCR != "")
 		{
-		; Try Click verweigert Anyway
-		if (TriedAnywaySkip = false)
+		SleepWhileOCREmpty := SleepWhileOCREmpty-50
+		return fnSearchIsOver := false
+		}
+	else
+		{
+		; Prüfmodul überspringen?
+		SleepWhileOCREmpty := SleepWhileOCREmpty-50
+		global ProjectFile, r_AdvancedON
+		if (r_AdvancedON = 1 AND GetIniValue(ProjectFile, "AdvancedSearchMenu", "c_XModul", 1) = 1)
 			{
-			SaveToHistory("VERBOSE:", "Try Anyway Skip")
-			ClickSkippButton(fnOCR)
-			TriedAnywaySkip := true
-			return fnSearchIsOver := false
-			}
-		if (r_AdvancedON = 1 And AOx = true AND GetIniValue(ProjectFile, "AdvancedSearchMenu", "c_XModul", 1) = 1)
-			{
-			SaveToHistory("Clear-Button vorhanden? (Hinweis XModul)")
 			if (TriedXModulSkip = false)
 				{
+				PleasWaitWindow("On")
 				XModulSkipped := TrySkipXModul()
 				TriedXModulSkip := true
+				PleasWaitWindow("Off")
 				if (XModulSkipped = false)
 					{
 					Result := OCRIsEmpty()
@@ -47,36 +50,32 @@ if (fnOCR = "")
 					return fnSearchIsOver := false
 				}
 			}
-		else
-			{
-			Result := OCRIsEmpty()
-			if (Result = "Exit")
-				Exit
-			else if (Result = "Pause")
-				Pause
-			}
-		TriedAnywaySkip := false
-		return fnSearchIsOver := false
-		}
+		} ; ende else
+	Result := OCRIsEmpty()
+	if (Result = "Exit")
+		Exit
+	else if (Result = "Pause")
+		Pause
 	}
 
 ; Check - Doppelte Schleife?
-if (Index >= 1)
+if (Index => 1)
 	{
 	if (fnOCR = LastfnOCR)
 		{
 		++SameFnCount
-		if (SameFnCount >= 5)
+		if (SameFnCount >= 3)
 			{
-			Msgbox, 4132, Kein verweigert Button vorhanden (fn: %fnOCR%)!, Jetzt manuelle Eingabe t%ae%tigen? (Danach und mit 'F6' fortfahren)
+			Msgbox, 4132, Kein verweigert Button vorhanden (fn: %fnOCR%)!, Jetzt manuelle Eingabe tätigen? (Danach und mit 'F6' fortfahren)
 			IfMsgBox, Yes
 				{
-				SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchf" . ue . "hren? JA")
+				SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? JA")
 				Send, {F6}
+				return fnSearchIsOver := false
 				}
 			else
 				{
-				SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchf" . ue . "hren? Nein")
+				SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? Nein")
 				Exit
 				}
 			}
@@ -88,7 +87,9 @@ if (Index >= 1)
 TriedAnywaySkip := false
 LastfnOCR := fnOCR
 ; MATCH with Stop Fn?
-CheckStopFn(fnOCR, Index)
+Result := CheckStopFn(fnOCR, Index)
+if (Result = true)
+	return fnSearchIsOver := true
 
 ; MATCH with Upcoming Fn?
 if (r_AdvancedON = 1 AND UpcomingFnIndex != 0)
@@ -107,7 +108,6 @@ SaveToHistory("VERBOSE:", fnOCR . " KEINE Stop-fn, Upcoming-fn, Nag-fn")
 
 ; Clicking Buttons
 ClickSkippButton(fnOCR)
-Sleep, SleepAfterEnter
 return fnSearchIsOver := false
 
 } ; ende function fnSearch
@@ -115,59 +115,65 @@ return fnSearchIsOver := false
 ClickSkippButton(fnOCR){
 local
 global dd_SkipButton
+global SleepAfterEnter
 if (dd_SkipButton = 1)
 	{
 	Send, {PgUp}
 	if (fnOCR != "")
-		SaveToHistory(fnOCR, "[verweigert]")
+		SaveToHistory(fnOCR, "verweigert")
 	}
 else
 	{
 	Send, {PgDn}
-	SaveToHistory(fnOCR, "Klicke Clear&Back")
+	SaveToHistory(fnOCR, "Clear&Back")
 	}
+Sleep, SleepAfterEnter
 }
-
 
 CheckStopFn(fnOCR, Index){
 local
-global ue, e_Stopfn1, e_Stopfn2, e_Stopfn3
-StopFnArray := [e_Stopfn1, e_Stopfn2, e_Stopfn3]
+global StopFnArray
 for i, StopFn in StopFnArray
 	{
-	if (StopFn != "")
+	StopfnLength := StrLen(StopFn)
+	CompareFn := SubStr(fnOCR, 1 , StopfnLength)
+	if (CompareFn = StopFn)
 		{
-		StopfnLength := StrLen(StopFn)
-		CompareFn := SubStr(fnOCR, 1 , StopfnLength)
-		if (CompareFn = StopFn)
-			{
-			Msgbox, 4096, Durchlauf beendet!, Stop-fn "%StopFn%" erreicht! Es wurden %Index% Fragen %ue%bersprungen.
-			SaveToHistory(fnOCR . "MATCH mit Stop fn: " . StopFn)
-			Exit
-			}
+		Msgbox, 4096, Durchlauf beendet!, Stop-fn "%StopFn%" erreicht! Es wurden %Index% Fragen übersprungen.
+		SaveToHistory(fnOCR, " MATCH mit Stop fn: " . StopFn, Index " Frage(n) übersprungen")
+		return true
 		}
 	}
-return
+return false
 }
 
 CheckUpcomingFn(fnOCR, Index){
 local
-global r_AdvancedON
-global AdvancedSearchMenu
 global ProjectFile
-global UpcomingFnIndex
-loop, %UpcomingFnIndex% {
-UpcomingFnName := GetIniValue(ProjectFile,AdvancedSearchMenu, "e_fnN" . A_Index)
-If (UpcomingFnName = fnOCR)
+global UpcomingFnArray
+For UpcomingFnName, UpcomingFnValue in UpcomingFnArray
 	{
-	UpcomingFnValue := GetIniValue(ProjectFile, AdvancedSearchMenu, "e_fnV" . A_Index)
-	if (UpcomingFnValue != "" AND UpcomingFnValue != "ERROR" )
+	if (UpcomingFnName = fnOCR)
 		{
-		EnterfnValue(fnOCR, UpcomingFnValue, "F4 Menu",  Index)
+		EnterfnValue(fnOCR, UpcomingFnValue, "F4 Menu", Index)
 		return true
 		}
-	}	
-} ; ende loop
+	else
+		{
+		fnOCR6th := fnCorrectionRemove6thAlpha(fnOCR)
+		if (fnOCR6th != fnOCR and UpcomingFnName = fnOCR6th)
+			{
+			EnterfnValue(fnOCR6th, UpcomingFnValue, "F4 Menu", Index)
+			return true
+			}
+		fnOCR6a := fnCorrection6isA(fnOCR)
+		if (fnOCR6a != fnOCR and UpcomingFnName = fnOCR6a)
+			{
+			EnterfnValue(fnOCR6a, UpcomingFnValue, "F4 Menu", Index)
+			return true
+			}
+		}
+	} ; ende foor-loop
 return false
 } ; ende function	
 
@@ -175,57 +181,48 @@ CheckNagFn(fnOCR, Index){
 local
 global LibraryFile
 fnNagValue := GetIniValue(LibraryFile, "fnNag", fnOCR)
-If (fnNagValue != "ERROR")
-	{ 
-	EnterfnValue(fnOCR, fnNagValue, "fnNag", Index)
-	return true
-	}
-else
+If (fnNagValue = "ERROR")
 	{
-	c_fnOCR := AutoCorrection(fnOCR, "fnNag", fnValue)
+	; AutoCorrection
+	c_fnOCR := AutoCorrection(fnOCR, "fnNag", fnNagValue)
 	if (c_fnOCR = fnOCR)
 		return false
 	else
-		{
-		fnNagValue := fnValue
-		EnterfnValue(fnOCR, fnNagValue, "fnNag", Index)
-		return true
-		}
+		EnterfnValue(c_fnOCR, fnNagValue, "fnNag", Index)
 	}
+else
+	EnterfnValue(fnOCR, fnNagValue, "fnNag", Index)
+return true
 }
 
 TrySkipXModul(){
 local
-global ue, ProjectFile
-global fnSearchIsOver
 ; keine fn/ verweigert Button vorhanden 
-; Test ob PrÃ¼fmodul X (hat kein clear-Button)
+; Test ob Püfmodul X (hat kein clear-Button)
 Result := L_TryClickingButton("&Clear", 1)
 if (Result = "false")
 	{
 	SaveToHistory("VERBOSE:", "Xmodul: Kein Clear-Button vorhanden (=XModul?)")
-	Msgbox, 4132, XModul, Soll versucht werden jetzt das Xmodul zu %ue%berspringen?
+	Msgbox, 4132, XModul, Soll versucht werden jetzt das Xmodul zu überspringen?
 	IfMsgBox, Yes
 		{
-		SaveToHistory("XModul " . ue . "berspringen?", "Ja")
+		SaveToHistory("XModul überspringen?", "Ja")
 		; kein Clear-Button vorhanden, wahrscheinlich Xmodul
-		SaveToHistory("VERBOSE:", "Xmodul: Kein Clear-Button vorhanden (=XModul?)")
-		if (L_SkipXModul() = true)
+		if (L_SkipXModul() = "true")
 			{
-			SaveToHistory("VERBOSE:", "Xmodul: XModul Ã¼bersprungen: true")
+			SaveToHistory("# XPrüfmodul übersprungen #")
 			return true
 			}
 		else
 			{
-			SaveToHistory("VERBOSE:", "Xmodul: XModul Ã¼bersprungen: false")
-			Msgbox, 4096, Ups!, Versuch XModul zu %ue%bersprungen ist gescheitert!
+			Msgbox, 4096, Ups!, Versuch XModul zu übersprungen ist gescheitert!
 			return false
 			}
 		}
 	else
 		{
-		SaveToHistory("XModul " . ue . "berspringen?", "Nein")
-		Exit
+		SaveToHistory("XModul überspringen?", "Nein")
+		return false
 		}
 	}
 else
