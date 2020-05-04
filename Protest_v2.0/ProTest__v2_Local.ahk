@@ -136,19 +136,27 @@ Menu, Tray, Insert
 Menu, Tray, Add , About ProTest, AboutMessage
 Menu, Tray, Add , Update, UpdateProTest
 
-
 if (A_IsCompiled = 1)
 	{
-	AOx := false
-	Capture2TextStarted := false
 	Goto F11Routine
 	}
 if (A_IsCompiled != 1)
 	{
-	AOx := false
-	;WorkWindow := "TeamViewer"
-	WorkWindow := "Editor"
-	SettingUpFiles("B142.ini")
+	Capture2TextStarted := false
+	WorkWindow := GetIniValue("TestModus.ini", "TestModus", "WorkWindow", "TeamViewer")
+	LastProjectFile := GetIniValue("TestModus.ini", "TestModus", "LastProjectFile")
+	if (LastProjectFile = "Error")
+		{
+		InputBox, EnteredIniFile, Enter Ini-File,,,150,120
+		if (ErrorLevel = 1)
+			ExitApp
+		else
+			{
+			LastProjectFile := EnteredIniFile . ".ini"
+			SaveIniValue("TestModus.ini", "TestModus", "LastProjectFile", LastProjectFile)
+			}
+		}
+	SettingUpFiles(LastProjectFile)
 	SettingUpCapture2Text()
 	Send, {F10}
 	WinWaitActive, %GuiF10%
