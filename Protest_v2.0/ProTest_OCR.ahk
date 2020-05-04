@@ -1,9 +1,8 @@
 OCR(Part, OCRIndex){
 local 
-global Capture2TextIniFileAppDataPath, fast, ultrafast
-static OCR
-static OCRFirstWord := true
-static 
+global ultrafast
+global RawOCRTestOutput
+global SleepWhileOCREmpty
 SetKeydelay, ultrafast
 BlockInput, MouseMove 
 Clipboard =
@@ -11,7 +10,7 @@ loop, 3 {
 ;;; OCR Field Search ;;;
 if (A_Index = 1)
 	{
-	if (OCRIndex <= 1)
+	if (OCRIndex = 0)
 		OCRJustierung(Part)
 	else
 		Send #{r}
@@ -19,9 +18,10 @@ if (A_Index = 1)
 else
 	{
 	if (A_Index = 2)
-		Send #{r}
-	else
-		OCRJustierung(Part)
+		sleep, SleepWhileOCREmpty
+	if (A_Index = 3)
+		sleep, (SleepWhileOCREmpty/2)
+	Send #{r}	
 	}
 
 ;;; WAIT FOR CLIPBOARD ;;;
@@ -29,15 +29,13 @@ if (A_Index = 1) OR (A_Index = 2 AND OCR != "")
 	ClipWait, 0.8
 OCR := ""
 OCR := Clipboard
-if (OCR = "")
-	SaveToHistory("VERBOSE:","OCR Empty")
-;MsgBox, 4096, Test OCR Result, %OCR%
+if (RawOCRTestOutput = "true")
+	{
+	BlockInput, MouseMoveOff
+	return OCR
+	}
 
-;;;; RESET FIRSTWORD SEARCH ;;;
-if (A_Index = 2)
-	IniWrite, true, %Capture2TextIniFileAppDataPath%, ForwardTextLineCapture, FirstWord
-	
-;;; OCR Clean UP ;;;
+;;; OCR CleanUp ;;;
 if (OCR != "")
 	OCR := OCRCleanUp(OCR, Part)
 OCRLength := StrLen(OCR)
@@ -46,55 +44,37 @@ BlockInput, MouseMoveOff
 ;;; ChECK INPUT / SEND BACK TO CALLER ;;;
 if (OCR != "")
 	{
-	if (A_Index = 1 AND OCRLength <= 3)
+	if (Part = "Test")
 		{
-		OCRFirstWord := false
-		SaveToHistory("VERBOSE:","OCR Short - 2. Try")
-		IniWrite, false, %Capture2TextIniFileAppDataPath%, ForwardTextLineCapture, FirstWord
-		Sleep, 300
-		Continue
-		}
-	else 
-		{
-		AutoCorrection := false
-		if (Part != "Intro")
+		fnOCR5  := fnCorrectionRemove6thAlpha(OCR)
+		OCRVariation := ""
+		if (OCR != fnOCR5)
+			OCRVariation := fnOCR5
+		fnOCR6a := fnCorrection6isA(OCR)
+		if (OCR != fnOCR6a)
 			{
-			if Instr(Part, "!") 
-				SaveToHistory(OCR, Part)
+			if (OCRVariation = "")
+				OCRVariation := fnOCR6a
 			else
-				SaveToHistory(OCR, "(OCR)")
+				OCRVariation .= " und " fnOCR6a
 			}
-		if (Part = "Test")
+		if (OCRVariation != "")
 			{
-			; 6 = a Korrektur
-			if Substr(OCR, OCRLength) = "6"
-				{
-				AutoCorrection := true
-				OCRVariation := Substr(OCR, 1, (OCRLength-1))
-				OCRVariation := OCRVariation . "a"
-				OCRRemark := "Erkannt wurde " . OCR . ". In der Library wird auch nach " . OCRVariation . " gesucht (AutoKorrektur)."
-				}
-			}
-		ListLines, On
-		if (AutoCorrection = false)
-			return OCR
-		else
+			OCRRemark := "Erkannt wurde " . OCR . ". In der Library wird auch nach " . OCRVariation . " gesucht (AutoKorrektur)."
 			return OCRRemark
+			}
 		}
+	return OCR
 	}
 else
 	{
-	if (A_Index <= 2)
-		{
-		SaveToHistory("VERBOSE:","OCR Empty (" . A_Index . ")")
-		Sleep, 400
-		Continue
-		}
-	else
-		return OCR
+	if (A_Index = 2 and SleepWhileOCREmpty < 1500 and Part = "fn-Suche")
+		SleepWhileOCREmpty := SleepWhileOCREmpty + 50
+	SaveToHistory("VERBOSE:","OCR Empty (" . A_Index . ")", "OCRIndex: " . OCRIndex, SleepWhileOCREmpty)
+	Continue
 	}
-		
 } ; ende loop
+return OCR
 } ; ende function OCR
 
 ;;; OCR MOUSE MOVE FUNCTION ;;;
@@ -110,9 +90,7 @@ Click
 OCRMoveMouse(Part, Mode){
 local
 global e_fnStartPosX, e_fnStartPosY, e_fnEndPosX, e_fnEndPosY
-static CoordinatesLoaded
 
-CoordMode, Mouse, Client
 ;; SET SPEED CURSOR ;;
 if (Part = "Test")
 	SpeedCursor := 15
@@ -133,65 +111,85 @@ else if (Mode = "EndPos")
 	}
 	
 ;; MOVE MOUSE ;;
+CoordMode, Mouse, Window
 MouseMove, %PositionX%, %PositionY% , %SpeedCursor%
 }
 
 ;;; OCR CLEAN UP FUNCTION ;;;
 OCRCleanUp(OCR, Part){
 local
+global AllowAlphas
 OCR := StrReplace(OCR, "?", "7") ; ? = 7 
-OCR := RegExReplace(OCR, "\W") ; keine special Charakters
-OCR := StrReplace(OCR, "_")
+OCR := RegExReplace(OCR, "\W") ; alle außer  [a-zA-Z0-9_]
+OCR := StrReplace(OCR, "_") ; kein underscore
 AlphaMatch := 0
 Loop, Parse, OCR
 	{
 	if A_LoopField is alpha
 		++AlphaMatch
-	if (AlphaMatch = 2)
+	if (AlphaMatch > AllowAlphas)
 		{
-		SecondAlphaPosition := A_Index
+		; 2. Buchstabe
+		AlphaPosition := A_Index
 		Break
 		}
 	}
 if (AlphaMatch > 1)
-	OCR := SubStr(OCR, 1 , --SecondAlphaPosition)
+	OCR := SubStr(OCR, 1 , --AlphaPosition)
 return OCR
 }
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;  OCR CORRECTION  ;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 AutoCorrection(fnOCR, Section, ByRef fnValue){
 local
 global LibraryFile
-fnOCRLength := Strlen(fnOCR)
 
-; Remove6th
-if (fnOCRLength = 6)
+; Remove6thAlpha
+fnOCR6th := fnCorrectionRemove6thAlpha(fnOCR)
+if (fnOCR6th != fnOCR)
+	{
+	fnValue := GetIniValue(LibraryFile, Section, fnOCR6th)
+	if (fnValue != "ERROR")
+		return fnOCR6th
+	}
+
+; last 6 is letter a
+fnOCR6a := fnCorrection6isA(fnOCR)
+if (fnOCR6a != fnOCR)
+	{
+	fnValue := GetIniValue(LibraryFile, Section, fnOCR6a)
+	if (fnValue != "ERROR")
+		return fnValue
+	}
+return fnOCR
+}
+
+fnCorrectionRemove6thAlpha(fnOCR){
+local
+if (Strlen(fnOCR) = 6)
 	{
 	fnOCR6th := Substr(fnOCR, 6)
 	if fnOCR6th is alpha
 		{
 		fnOCR5 := SubStr(fnOCR, 1, 5)
-		fnValue := GetIniValue(LibraryFile, Section, fnOCR5)
-		SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR5)
-		if (fnValue != "ERROR")
-			{
-			SaveToHistory(fnOCR5, "=" . fnValue, Section)
-			return fnOCR5
-			}
+		SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR5, fnOCR, "Remove6thAlpha" )
+		return fnOCR5
 		}
 	}
+return fnOCR
+}
 
-; 6 = a Korrektur
-if Substr(fnOCR, fnOCRLength) = "6"
+fnCorrection6isA(fnOCR){
+local
+if Substr(fnOCR, Strlen(fnOCR)) = "6"
 	{
-	fnOCR6a := Substr(fnOCR, 1, (fnOCRLength-1))
-	fnOCR6a := fnOCR6a . "a"
-	fnValue := GetIniValue(LibraryFile, Section, fnOCR6a)
-	SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR6a)
-	if (fnValue != "ERROR")
-		{
-		SaveToHistory(fnOCR6a, "=" . fnValue, Section)
-		return fnValue
-		}
+	; last 6 is letter a
+	fnOCR6a := Substr(fnOCR, 1, (Strlen(fnOCR)-1)) . "a"
+	SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR6a, fnOCR, "6 = a")
+	return fnOCR6a
 	}
 return fnOCR
 }
