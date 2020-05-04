@@ -4,7 +4,7 @@
 
 ProtestMainFunction(){
 local
-global ue, fast, med, CurrentLFD
+global fast, med, CurrentLFD
 global WorkWindow, HistoryFileName, ProjectFile
 global DefaultSleep, SleepAfterEnter
 global TimeOutMsgSkippedIntro
@@ -14,9 +14,9 @@ global c_Beginning, e_Beginning, c_SendDate, c_SkipLastPart
 global e_Day, e_Month, e_Year
 global r_AdvancedON
 global StudyWithLFDs := GetIniValue(ProjectFile, "QuickSetupMenu", "c_StudyWithLFDs",1)
-static XModulSkipped
+global AdvancedSearchMenu
 CheckWorkWindow()
-ListLines Off
+SaveToHistory("####  F2  ####")
 WinKill, %HistoryFileName%
 If (r_Main1 = 1) OR (r_Main3 = 1)
 	{
@@ -60,54 +60,47 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		{
 		ListLines On
 		Sleep, DefaultSleep
-		CheckCapture2TextIsRunning()
 		if (CurrentLFD = "" and StudyWithLFDs = 1)
 			CurrentLFD := InputBoxLFD()
 		global IntroIsOver := false
+		Index := 0
 		loop {
-		fnOCR := OCR("Intro", A_Index)
-		if (fnOCR != "")
-			SkipIntro(fnOCR)
-		else
+		fnOCR := OCR("Intro", Index)
+		if (fnOCR = "")
 			{
+			if (Index = 0)
+				Continue
 			Result := OCRIsEmpty()
 			if (Result = "Exit")
 				Exit
 			else if (Result = "Pause")
 				Pause
 			}
-			
-		Sleep, SleepAfterEnter
+		else
+			SkipIntro(fnOCR)
+		++Index
 		} Until (IntroIsOver = true)
 		if (TimeOutMsgSkippedIntro > 0)
-			MsgBox, 4096, Intro %ue%bersprungen! , Intro %ue%bersprungen! (No match for fn: "%fnOCR%"), %TimeOutMsgSkippedIntro%
-		SaveToHistory("INTRO OVER")
+			MsgBox, 4096, Intro übersprungen! , Intro übersprungen! (No match for fn: "%fnOCR%"), %TimeOutMsgSkippedIntro%
+		SaveToHistory("### ENDE INTRO ###")
 		}
 	}
 If (r_Main2 = 1 OR r_Main3 = 1)
 	{
-	ListLines On
+	SaveToHistory("### START fn-Suche ###")
 	Sleep, DefaultSleep
+	CheckWorkWindow()
 	CheckCapture2TextIsRunning()
 	global SameFnCount := 0
-	global TriedAnywaySkip := false
 	global TriedXModulSkip := false 
-	global fnSearchIsOver := false
-	XModulSkipped := false
-	; detect Number of Entries F4 Menu
-	global UpcomingFnIndex := 0
+	PrepareStopfn()
 	if (r_AdvancedON = 1)
-		{
-		loop, 5 {
-		UpcomingFnName := GetIniValue(ProjectFile,"AdvancedSearchMenu", "e_fnN" . A_Index)
-		if (UpcomingFnName != "ERROR")
-			UpcomingFnIndex := A_Index
-		} ; ende loop
-		} ; ende if
+		PrepareUpComingFn()
+	SaveToHistory("######")
+	global fnSearchIsOver := false
 	loop {
-	fnOCR := OCR("fn-Suche", A_Index)
-	Index := A_Index - 1
-	fnSearch(fnOCR, Index)
+	fnOCR := OCR("fn-Suche", A_Index-1)
+	fnSearch(fnOCR, A_Index-1)
 	} Until (fnSearchIsOver = true)
 	}
 }
@@ -115,7 +108,7 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 SkipIntro(fnOCR){
 local
 global LibraryFile
-global fast, IntroIsOver
+global IntroIsOver
 ; Check in LibraryFile
 fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
 If (fnIntroValue = "ERROR")
