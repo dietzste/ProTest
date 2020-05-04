@@ -175,6 +175,20 @@ Send, {Enter}
 SetKeyDelay, fast
 }
 
+PleasWaitWindow(Mode){
+local
+if (Mode = "On")
+	{
+	Gui, 15: -Caption +AlwaysOnTop -SysMenu
+	Gui, 15:Font, s14, Verdana
+	Gui, 15:Add, Text,, Bitte warten...
+	Gui, 15:Show, Autosize Center, PleaseWaitWindow
+	}
+else if (Mode = "Off")
+	Gui 15:Destroy
+}
+
+
 OCRIsEmpty(){
 local 
 Gui, 99:+AlwaysOnTop +ToolWindow
