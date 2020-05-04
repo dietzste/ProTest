@@ -93,7 +93,7 @@ Gui, 2:Add, Button, x170 y140 w75 h20 %IntroDisLFD% g2GuiShowLFDValues, LFD Wert
 Gui, 2:Add, CheckBox, x180 y185 w100  h20 %IntroDis% Checked%c_StudyWithLFDs% vc_StudyWithLFDs g2GuiLFDsAvailable, LFDs vorhanden
 ; 3. Last Part 
 Gui, 2:Add, Groupbox, x17 y210 w280 h50 %IntroDis% cBlack , Haupt-Intro
-Gui, 2:Add, CheckBox, x32 y230 w84  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, %ue%berspringen!
+Gui, 2:Add, CheckBox, x32 y230 w84  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, überspringen!
 ; fn Search
 Gui, 2:Add, Groupbox, x10 y273 w293 h108 %fnDis% cNavy, fn Suche
 Gui, 2:Add, Text, x19 y295 w90  h20 %fnDis%, STOP fn(s):
