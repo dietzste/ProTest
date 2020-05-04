@@ -173,7 +173,7 @@ return
 
 SaveToHistory(Info, params*){
 local
-global HistoryFile, AOx
+global HistoryFile
 global CreateHistory, VerboseHistory
 ;ListLines Off
 TimeStemp := A_DDD . A_Space . A_DD . "." A_MMM . A_Space . A_Hour . ":" . A_Min . ":" . A_Sec 
@@ -181,24 +181,20 @@ if (Strlen(Info) <= 4)
 	Spacing := A_Tab
 else
 	Spacing := A_Space
-if (params.MaxIndex() = "")
-	SendHistory := TimeStemp . A_Space . Info
-else if (params.MaxIndex() = 1)
-	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1]
-else if (params.MaxIndex() = 2)
-	{
-	if (params[2] = "")
-		SendHistory := TimeStemp . A_Space . Info . Spacing . params[1]
-	else
-		SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . ")"
-	}
-else if (params.MaxIndex() = 3)	
-	SendHistory := TimeStemp . A_Space . Info . Spacing . params[1] . A_Space . "(" . params[2] . " - " . params[3] . ")"
 
-if (AOx = true AND %CreateHistory% = true)
+BasicHistory := TimeStemp . A_Space . Info
+SendHistory := BasicHistory
+if (params.MaxIndex() = 1)
+	SendHistory := BasicHistory . Spacing . params[1]
+else if (params.MaxIndex() = 2)
+	SendHistory := BasicHistory . Spacing . params[1] . A_Space . "(" . params[2] . ")"
+else if (params.MaxIndex() = 3)	
+	SendHistory := BasicHistory . Spacing . params[1] . A_Space . "(" . params[2] . " - " . params[3] . ")"
+
+if (CreateHistory = 1) ; true
 	{
 	; Verbose-Kommentare (nicht) mit speichern
-	if (%VerboseHistory% = true)
+	if (VerboseHistory = "true")
 		FileAppend, %SendHistory%`n, %HistoryFile%
 	else if (Info != "VERBOSE:")
 		FileAppend, %SendHistory%`n, %HistoryFile%
