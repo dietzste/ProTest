@@ -98,21 +98,28 @@ CurrentLFD 	:= ""
 ultrafast := 30
 fast := 100
 med := 130
+NewEntryF7fnIntro := false
+NewEntryF7fnNag := false
+Capture2TextStarted := false
 
 ; Changable Settings
-SleepAfterEnter 		:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
-TimeOutMsgLFDMatch 		:= GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgLFDMatch")
-TimeOutMsgSkippedIntro 	:= GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgSkippedIntro")/1000
+SleepAfterEnter			:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
+TimeOutMsgLFDMatch		:= GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgLFDMatch")
+TimeOutMsgSkippedIntro	:= GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgSkippedIntro")/1000
 
 ; Advanced Settings
-DefaultSleep	  := GetIniValue(BasicFile, "AdvancedSettings",  "DefaultSleep")
-LFDLimit		  := GetIniValue(BasicFile, "AdvancedSettings",  "LFDLimit")
-fnLimit			  := GetIniValue(BasicFile, "AdvancedSettings",  "fnLimit")
-TimeOutRemoteTest := GetIniValue(BasicFile, "AdvancedSettings",  "TimeOutRemoteTest")
-RemoteBuffer 	  := GetIniValue(BasicFile, "AdvancedSettings",  "RemoteBuffer")
-WaitForXModulSec  := GetIniValue(BasicFile, "AdvancedSettings",  "WaitForXModulSec")
-CreateHistory	  := GetIniValue(BasicFile, "AdvancedSettings",  "CreateHistory")
-VerboseHistory 	  := GetIniValue(BasicFile, "AdvancedSettings",  "VerboseHistory")
+DefaultSleep		:= GetIniValue(BasicFile, "AdvancedSettings",  "DefaultSleep")
+LFDLimit			:= GetIniValue(BasicFile, "AdvancedSettings",  "LFDLimit")
+fnLimit				:= GetIniValue(BasicFile, "AdvancedSettings",  "fnLimit")
+TimeOutRemoteTest	:= GetIniValue(BasicFile, "AdvancedSettings",  "TimeOutRemoteTest")
+RemoteBuffer		:= GetIniValue(BasicFile, "AdvancedSettings",  "RemoteBuffer")
+WaitForXModulSec	:= GetIniValue(BasicFile, "AdvancedSettings",  "WaitForXModulSec")
+VerboseHistory		:= GetIniValue(BasicFile, "AdvancedSettings",  "VerboseHistory")
+
+; OCR Settings
+RawOCRTestOutput	:= GetIniValue(BasicFile, "OCR",  "RawOCRTestOutput")
+AllowAlphas			:= GetIniValue(BasicFile, "OCR",  "AllowAlphas")
+SleepWhileOCREmpty	:= GetIniValue(BasicFile, "OCR",  "SleepWhileOCREmpty")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea
@@ -184,11 +191,6 @@ else
 }
 
 return
-
-; To-DO
-/*
-*/
-
 
 ;______ENDE AUTO EXECUTE SECTION ______
 
