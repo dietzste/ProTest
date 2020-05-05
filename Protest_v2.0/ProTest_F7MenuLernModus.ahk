@@ -10,6 +10,7 @@ F7Routine:
 ; MouseMoves
 F7MousePosX := ""
 F7MousePosY := ""
+EnterWhileSaving := GetIniValue(ProjectFile, "LernModus", "EnterWhileSaving", 1)
 
 7GuiSetControls:
 CheckCapture2TextIsRunning()
@@ -18,15 +19,16 @@ e_fnLearn := OCR("Learn", 0)
 if (F7MousePosX != "")
 	MouseMove, F7MousePosX, F7MousePosY
 
+fnValue := ""
+fnComment := ""
+dd_Section := ""
+
 ; Eintrag vorhanden?
 SectionArray := ["fnIntro", "fnNag"]
 For i, Section in SectionArray
 	{
 	if (e_fnLearn = "")
-		{
-		fnValue := ""
 		break
-		}
 	dd_Section := Section
 	fnValue := GetIniValue(LibraryFile, Section, e_fnLearn)
 	if (fnValue = "ERROR")
@@ -64,7 +66,7 @@ if (fnValue = "ERROR")
 	}
 else
 	{
-	if dd_Section := "fnIntro"
+	if (dd_Section = "fnIntro")
 		SectionList := "fnIntro||fnNag"
 	else
 		SectionList := "fnIntro|fnNag||"
@@ -73,7 +75,7 @@ ActionList := fnValue . "||Get()|Reverse()|Stop|Ende|{Enter}"
 e_comment := ExtractfnComment(e_fnLearn, dd_Section)
 
 Gui, 7: +AlwaysOnTop ToolWindow
-Gui, 7:Add, Groupbox, x10 y10 w220 h115 cnavy, Lernmodus
+Gui, 7:Add, Groupbox, x10 y10 w220 h140 cnavy, Lernmodus
 Gui, 7:Add, Text, x20 y34 w50 h20, OCR-fn:
 Gui, 7:Add, Edit, x103 y32 w120 h20 ve_fnLearn,	%e_fnLearn%
 Gui, 7:Add, Text, x20 y56 w70 h20, Eingabewert:
@@ -82,18 +84,21 @@ Gui, 7:Add, Text, x20 y79 w74 h20, Kommentar:
 Gui, 7:Add, Edit, x103 y77 w120 h20 ve_comment, % e_comment
 Gui, 7:Add, Text, x20 y103 w74 h20, Abschnitt:
 Gui, 7:Add, DropDownList, x103 y101 w120  h80 vdd_Section, % SectionList
-Gui, 7:Add, Button, x10 y130 w75 h25 g7GuiNext, Speichern
-Gui, 7:Add, Button, x155 y130 w75 h25 Default g7GuiEnter, Ausführen
+Gui, 7:Add, Checkbox, x20 y128 w140 h20 Checked%EnterWhileSaving% vEnterWhileSaving, beim Speichern ausführen
+Gui, 7:Add, Button, x10 y155 w75 h25 g7GuiSave, Speichern
+Gui, 7:Add, Button, x155 y155 w75 h25 Default g7GuiEnter, Ausführen
 Gui, 7:Show, Autosize Center, % GuiF7
 return 
 
 7GuiClose:
 7GuiEscape:
+Gui 7:Submit, NoHide
+SaveIniValue(ProjectFile, "LernModus", "EnterWhileSaving", EnterWhileSaving)
 Gui 7:Destroy
 DeleteIniSection(TempFile, "LernModus")
 return  
 
-7GuiNext:
+7GuiSave:
 WinActivate, %WorkWindow%
 MouseGetPos, F7MousePosX, F7MousePosY
 Gui 7:Submit, NoHide
@@ -155,11 +160,14 @@ else
 	DeleteIniValue(LibraryFile, dd_Section, "NeuerEintrag")
 	}
 Gui 7:Destroy
-EnterfnValue(e_fnLearn, fnValue, "LernModus")
+if (EnterWhileSaving = 1)
+	EnterfnValue(e_fnLearn, fnValue, "LernModus")
+SaveIniValue(ProjectFile, "LernModus", "EnterWhileSaving", EnterWhileSaving)
 Goto 7GuiSetControls
 return
 
 7GuiEnter:
+Gui 7:Submit, NoHide
 WinActivate, %WorkWindow%
 MouseGetPos, F7MousePosX, F7MousePosY
 if (e_fnLearn != "" and fnValue != "")
@@ -172,6 +180,7 @@ else
 	Msgbox, 4096, Fehlende Angaben, Eintragungen für OCR-fn oder fnEingabewert fehlen!
 	return
 	}
+SaveIniValue(ProjectFile, "LernModus", "EnterWhileSaving", EnterWhileSaving)
 Goto 7GuiSetControls
 return 
 
