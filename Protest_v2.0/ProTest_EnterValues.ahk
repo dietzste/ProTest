@@ -1,9 +1,24 @@
 EnterfnValue(fnOCR, fnValue, Mode, params*){
 local
 global SleepAfterEnter
+global LastFn
 ShowIndex := false
 MsgboxZusatz := ""
 SaveToHistory("VERBOSE:", fnOCR . " fnValue: " fnValue)
+
+if (LastFn = fnOCR)
+	{
+	static SameFn := false
+	if (SameFn = true)
+		{
+		Msgbox, 4096, Gleiche Fn erkannt!, Die Fn %fnOCR% war im letzten Durchgang bereits vorhanden. Der Durchlauf wird vorsichtshalber gestoppt! (SleepAfterEnter: %SleepAfterEnter% ms)
+		SaveToHistory("Gleiche Fn erkannt! Durchlauf abgebrochen.")
+		Exit
+		}
+	SameFn := true
+	Sleep, SleepAfterEnter
+	return 
+	}
 
 ; Check Index
 if (params.MaxIndex() = 1)
@@ -11,8 +26,6 @@ if (params.MaxIndex() = 1)
 	Index := params[1]
 	MsgboxZusatz := "Es wurden " . Index . " Fragen übersprungen."
 	}
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;  Beginn Procedure  ;;;

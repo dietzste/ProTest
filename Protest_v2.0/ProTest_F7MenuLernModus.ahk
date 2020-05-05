@@ -161,7 +161,10 @@ else
 	}
 Gui 7:Destroy
 if (EnterWhileSaving = 1)
+	{
+	LastFn := ""
 	EnterfnValue(e_fnLearn, fnValue, "LernModus")
+	}
 SaveIniValue(ProjectFile, "LernModus", "EnterWhileSaving", EnterWhileSaving)
 Goto 7GuiSetControls
 return
@@ -173,6 +176,7 @@ MouseGetPos, F7MousePosX, F7MousePosY
 if (e_fnLearn != "" and fnValue != "")
 	{
 	Gui 7:Destroy
+	LastFn := ""
 	EnterfnValue(e_fnLearn, fnValue, "LernModus")
 	}
 else
