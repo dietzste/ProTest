@@ -7,15 +7,7 @@ UpdateProTest:
 
 ; Download UppateClient
 UpdateClientName := "UpdateProTest.exe"
-if FileExist(UpdateClientName)
-	{
-	;Run, UpdateProTest.ahk , %A_ScriptDir%
-	FileGetSize, UpdateClientSize , UpdateProTest.exe
-	if (UpdateClientSize != 850432)
-		DownloadUpdateClient(UpdateClientName)
-	}
-else
-	DownloadUpdateClient(UpdateClientName)
+DownloadUpdateClient(UpdateClientName)
 Run, %UpdateClientName%
 return 
 
