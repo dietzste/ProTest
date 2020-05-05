@@ -12,6 +12,8 @@ if (params.MaxIndex() = 1)
 	MsgboxZusatz := "Es wurden " . Index . " Fragen übersprungen."
 	}
 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;  Beginn Procedure  ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -60,7 +62,7 @@ else if (InStr(fnValue, "["))
 	{
 	ButtonName := GetValueBetweenSquareBrackets(fnValue)
 	Result := L_TryClickingButton(ButtonName, 1)
-	If (Result = true)
+	If (Result = "true")
 		{
 		SaveToHistory(fnOCR, "= [" . ButtonName . "]", Mode)
 		return
@@ -83,7 +85,7 @@ else
 			PreloadValue := L_ReadPreload(PreloadString)
 			Send, %PreloadValue%{Enter}
 			Sleep, SleepAfterEnter
-			SaveToHistory(fnOCR, "= " . PreloadValue, PreloadString)
+			SaveToHistory(fnOCR, "= " . PreloadValue, PreloadString, Mode)
 			}
 		}
 	else if Instr(fnValue, "Reverse")
@@ -100,7 +102,7 @@ else
 ;;;; associated functions ;;;;
 
 GetValueBetweenSquareBrackets(String){
-OpenBracketPos := 1
+OpenBracketPos := InStr(String, "[") + 1
 ClosedBracketPos := InStr(String, "]")
 StringLength := ClosedBracketPos - OpenBracketPos
 return Substr(String, OpenBracketPos, StringLength)
