@@ -15,6 +15,7 @@ global e_Day, e_Month, e_Year
 global r_AdvancedON
 global StudyWithLFDs := GetIniValue(ProjectFile, "QuickSetupMenu", "c_StudyWithLFDs",1)
 global AdvancedSearchMenu
+global LastFn := ""
 CheckWorkWindow()
 SaveToHistory("####  F2  ####")
 WinKill, %HistoryFileName%
@@ -79,6 +80,8 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		else
 			SkipIntro(fnOCR)
 		++Index
+		if (fnOCR != "")
+			LastFn := fnOCR
 		} Until (IntroIsOver = true)
 		if (TimeOutMsgSkippedIntro > 0)
 			MsgBox, 4096, Intro übersprungen! , Intro übersprungen! (No match for fn: "%fnOCR%"), %TimeOutMsgSkippedIntro%
@@ -91,7 +94,6 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	Sleep, DefaultSleep
 	CheckWorkWindow()
 	CheckCapture2TextIsRunning()
-	global SameFnCount := 0
 	global TriedXModulSkip := false 
 	PrepareStopfn()
 	if (r_AdvancedON = 1)
@@ -101,6 +103,8 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	loop {
 	fnOCR := OCR("fn-Suche", A_Index-1)
 	fnSearch(fnOCR, A_Index-1)
+	if (fnOCR != "")
+		LastFn := fnOCR
 	} Until (fnSearchIsOver = true)
 	}
 }

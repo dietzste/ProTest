@@ -6,9 +6,9 @@ fnSearch(fnOCR, Index){
 local
 global fast, fnSearchIsOver
 global UpcomingFnIndex
-global SameFnCount, TriedXModulSkip
+global TriedXModulSkip
 global SleepWhileOCREmpty
-static LastfnOCR
+global LastFn
 SetKeyDelay, fast
 
 ; fnOCR empty?
@@ -59,33 +59,31 @@ if (fnOCR = "")
 	}
 
 ; Check - Doppelte Schleife?
-if (Index => 1)
+Static SameFn := 0
+if (fnOCR = LastFn)
 	{
-	if (fnOCR = LastfnOCR)
+	++SameFn
+	if (SameFn = 2)
 		{
-		++SameFnCount
-		if (SameFnCount >= 3)
+		; wenn mindestens 2 mal die gleiche
+		Msgbox, 4132, Kein verweigert Button vorhanden (fn: %fnOCR%)!, Jetzt manuelle Eingabe tätigen? (Danach und mit 'F6' fortfahren)
+		IfMsgBox, Yes
 			{
-			Msgbox, 4132, Kein verweigert Button vorhanden (fn: %fnOCR%)!, Jetzt manuelle Eingabe tätigen? (Danach und mit 'F6' fortfahren)
-			IfMsgBox, Yes
-				{
-				SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? JA")
-				Send, {F6}
-				return fnSearchIsOver := false
-				}
-			else
-				{
-				SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? Nein")
-				Exit
-				}
+			SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? JA")
+			Send, {F6}
+			return fnSearchIsOver := false
+			}
+		else
+			{
+			SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? Nein")
+			Exit
 			}
 		}
-	else
-		SameFnCount := 0
 	}
+else
+	SameFn := 0
 
 TriedAnywaySkip := false
-LastfnOCR := fnOCR
 ; MATCH with Stop Fn?
 Result := CheckStopFn(fnOCR, Index)
 if (Result = true)
