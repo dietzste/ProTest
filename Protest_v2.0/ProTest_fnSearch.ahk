@@ -212,20 +212,12 @@ if (Result = "false")
 			return true
 			}
 		else
-			{
 			Msgbox, 4096, Ups!, Versuch XModul zu übersprungen ist gescheitert!
-			return false
-			}
 		}
 	else
-		{
 		SaveToHistory("XModul überspringen?", "Nein")
-		return false
-		}
 	}
 else
-	{
 	SaveToHistory("VERBOSE:", "Xmodul: Clear-Button vorhanden (= Nicht XModul)")
-	return false
-	}
+return false
 }
