@@ -30,32 +30,12 @@ For i, Section in SectionArray
 	if (e_fnLearn = "")
 		break
 	dd_Section := Section
-	fnValue := GetIniValue(LibraryFile, Section, e_fnLearn)
-	if (fnValue = "ERROR")
+	CorrectedfnOCR := AutoCorrection(fnOCR, dd_Section, fnValue)
+	if (CorrectedfnOCR != e_fnLearn)
 		{
-		; Remove6thAlpha
-		fnOCR6th := fnCorrectionRemove6thAlpha(e_fnLearn)
-		fnValue := GetIniValue(LibraryFile, Section, fnOCR6th)
-		if (fnValue = "ERROR")
-			{
-			fnOCR6a := fnCorrection6isA(e_fnLearn)
-			fnValue := GetIniValue(LibraryFile, Section, fnOCR6a)
-			if (fnValue = "ERROR")
-				Continue
-			else
-				{
-				e_fnLearn := fnOCR6a
-				break
-				}
-			}
-		else
-			{
-			e_fnLearn := fnOCR6th
-			break
-			}
-		}
-	else
+		e_fnLearn := CorrectedfnOCR
 		break
+		}
 	}
 ; Eintrag noch nicht vorhanden
 if (fnValue = "ERROR")
