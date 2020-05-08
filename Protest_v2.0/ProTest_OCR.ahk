@@ -46,11 +46,11 @@ if (OCR != "")
 	{
 	if (Part = "Test")
 		{
-		fnOCR5  := fnCorrectionRemove6thAlpha(OCR)
 		OCRVariation := ""
-		if (OCR != fnOCR5)
-			OCRVariation := fnOCR5
-		fnOCR6a := fnCorrection6isA(OCR)
+		fnOCRWithoutAlpha  := fnCorrectionRemoveLastAlpha(OCR)
+		if (OCR != fnOCRWithoutAlpha)
+			OCRVariation := fnOCRWithoutAlpha
+		fnOCR6a := fnCorrectionReplaceLast6witha(OCR)
 		if (OCR != fnOCR6a)
 			{
 			if (OCRVariation = "")
@@ -147,48 +147,51 @@ AutoCorrection(fnOCR, Section, ByRef fnValue){
 local
 global LibraryFile
 
-; Remove6thAlpha
-fnOCR6th := fnCorrectionRemove6thAlpha(fnOCR)
-if (fnOCR6th != fnOCR)
+; RemoveLastAlpha
+fnOCRWithoutAlpha := fnCorrectionRemoveLastAlpha(fnOCR)
+if (fnOCRWithoutAlpha != fnOCR)
 	{
-	fnValue := GetIniValue(LibraryFile, Section, fnOCR6th)
+	fnValue := GetIniValue(LibraryFile, Section, fnOCRWithoutAlpha)
 	if (fnValue != "ERROR")
-		return fnOCR6th
+		return fnOCRWithoutAlpha
 	}
 
-; last 6 is letter a
-fnOCR6a := fnCorrection6isA(fnOCR)
+; ReplaceLast 6 with letter a
+fnOCR6a := fnCorrectionReplaceLast6witha(fnOCR)
 if (fnOCR6a != fnOCR)
 	{
 	fnValue := GetIniValue(LibraryFile, Section, fnOCR6a)
 	if (fnValue != "ERROR")
-		return fnValue
+		return fnOCR6a
 	}
 return fnOCR
 }
 
-fnCorrectionRemove6thAlpha(fnOCR){
+fnCorrectionRemoveLastAlpha(fnOCR){
 local
-if (Strlen(fnOCR) = 6)
+global RemoveLastAlpha
+if (RemoveLastAlpha = "false")
+	return fnOCR
+LastDigit := Substr(fnOCR, Strlen(fnOCR))
+if LastDigit is alpha
 	{
-	fnOCR6th := Substr(fnOCR, 6)
-	if fnOCR6th is alpha
-		{
-		fnOCR5 := SubStr(fnOCR, 1, 5)
-		SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR5, fnOCR, "Remove6thAlpha" )
-		return fnOCR5
-		}
+	fnOCRWithoutAlpha := SubStr(fnOCR, 1, (Strlen(fnOCR)-1))
+	SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCRWithoutAlpha, fnOCR, "RemoveLastAlpha")
+	return fnOCRWithoutAlpha
 	}
 return fnOCR
 }
 
-fnCorrection6isA(fnOCR){
+fnCorrectionReplaceLast6witha(fnOCR){
 local
+global ReplaceLast6witha
+if (ReplaceLast6witha = "false")
+	return fnOCR
 if Substr(fnOCR, Strlen(fnOCR)) = "6"
 	{
 	; last 6 is letter a
 	fnOCR6a := Substr(fnOCR, 1, (Strlen(fnOCR)-1)) . "a"
-	SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR6a, fnOCR, "6 = a")
+	SaveToHistory("VERBOSE:", "AutoCorrection, Probiere " . fnOCR6a, fnOCR, "ReplaceLast6witha")
 	return fnOCR6a
 	}
 return fnOCR
