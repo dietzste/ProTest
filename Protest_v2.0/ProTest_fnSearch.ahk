@@ -158,13 +158,13 @@ For UpcomingFnName, UpcomingFnValue in UpcomingFnArray
 		}
 	else
 		{
-		fnOCR6th := fnCorrectionRemove6thAlpha(fnOCR)
-		if (fnOCR6th != fnOCR and UpcomingFnName = fnOCR6th)
+		fnOCRLastAlphaRemoved := fnCorrectionRemoveLastAlpha(fnOCR)
+		if (fnOCRLastAlphaRemoved != fnOCR and UpcomingFnName = fnOCRLastAlphaRemoved)
 			{
-			EnterfnValue(fnOCR6th, UpcomingFnValue, "F4 Menu", Index)
+			EnterfnValue(fnOCRLastAlphaRemoved, UpcomingFnValue, "F4 Menu", Index)
 			return true
 			}
-		fnOCR6a := fnCorrection6isA(fnOCR)
+		fnOCR6a := fnCorrectionReplaceLast6witha(fnOCR)
 		if (fnOCR6a != fnOCR and UpcomingFnName = fnOCR6a)
 			{
 			EnterfnValue(fnOCR6a, UpcomingFnValue, "F4 Menu", Index)
@@ -182,11 +182,11 @@ fnNagValue := GetIniValue(LibraryFile, "fnNag", fnOCR)
 If (fnNagValue = "ERROR")
 	{
 	; AutoCorrection
-	c_fnOCR := AutoCorrection(fnOCR, "fnNag", fnNagValue)
-	if (c_fnOCR = fnOCR)
+	CorrectedfnOCR := AutoCorrection(fnOCR, "fnNag", fnNagValue)
+	if (CorrectedfnOCR = fnOCR)
 		return false
 	else
-		EnterfnValue(c_fnOCR, fnNagValue, "fnNag", Index)
+		EnterfnValue(CorrectedfnOCR, fnNagValue, "fnNag", Index)
 	}
 else
 	EnterfnValue(fnOCR, fnNagValue, "fnNag", Index)
