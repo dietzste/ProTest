@@ -155,14 +155,14 @@ global IntroIsOver
 fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
 If (fnIntroValue = "ERROR")
 	{
-	c_fnOCR := AutoCorrection(fnOCR, "fnIntro", fnIntroValue)
-	if (c_fnOCR = fnOCR) 
+	CorrectedfnOCR := AutoCorrection(fnOCR, "fnIntro", fnIntroValue)
+	if (CorrectedfnOCR = fnOCR) 
 		{
 		IntroIsOver := true
 		return
 		}
 	else
-		fnOCR := c_fnOCR
+		fnOCR := CorrectedfnOCR
 	}
 ; Eingaben abrufen
 EnterfnValue(fnOCR, fnIntroValue, "Intro") 
