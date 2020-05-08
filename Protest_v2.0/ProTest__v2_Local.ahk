@@ -113,6 +113,8 @@ VerboseHistory		:= GetIniValue(BasicFile, "AdvancedSettings",  "VerboseHistory")
 RawOCRTestOutput	:= GetIniValue(BasicFile, "OCR",  "RawOCRTestOutput")
 AllowAlphas			:= GetIniValue(BasicFile, "OCR",  "AllowAlphas")
 SleepWhileOCREmpty	:= GetIniValue(BasicFile, "OCR",  "SleepWhileOCREmpty")
+RemoveLastAlpha		:= GetIniValue(BasicFile, "OCR",  "RemoveLastAlpha", "true")
+ReplaceLast6witha	:= GetIniValue(BasicFile, "OCR",  "ReplaceLast6witha", "true")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea
