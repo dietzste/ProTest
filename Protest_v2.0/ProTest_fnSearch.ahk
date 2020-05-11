@@ -9,6 +9,7 @@ global UpcomingFnIndex
 global TriedXModulSkip
 global SleepWhileOCREmpty
 global LastFn
+global MaxSkips 
 SetKeyDelay, fast
 
 ; fnOCR empty?
@@ -63,9 +64,9 @@ Static SameFn := 0
 if (fnOCR = LastFn)
 	{
 	++SameFn
-	if (SameFn = 2)
+	if (SameFn = MaxSkips)
 		{
-		; wenn mindestens 2 mal die gleiche
+		; wenn gleiche fn MaxSkips-mal...
 		Msgbox, 4132, Kein verweigert Button vorhanden (fn: %fnOCR%)!, Jetzt manuelle Eingabe tätigen? (Danach und mit 'F6' fortfahren)
 		IfMsgBox, Yes
 			{
