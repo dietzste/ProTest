@@ -24,15 +24,6 @@ PreloadDetailsFile := ConfigFolder . "\PreloadDetails.ini"
 HeartPicture := ConfigFolder . "\Heart.png"
 LibraryFile := ConfigFolder . "\Library.ini"
 
-; Version
-ProTestVersion := GetIniValue(BasicFile, "ProTestVersion", "Version")
-if (ProTestVersion = "ERROR")
-	{
-	; get Version from FileName
-	VersionStart := Instr(A_ScriptName, "_v") + 2
-	ProTestVersion := Substr(A_ScriptName,VersionStart, 3)
-	}
-
 if !FileExist(ConfigFolder)
 	{
 	Msgbox,4096, Ups!, %ConfigFolder% existiert nicht!
@@ -123,6 +114,15 @@ ScreenHeight := MonitorCoordBottom
 StandardWidth := 1920
 StandardHeight := 1080
 ListLines On
+
+; Version
+ProTestVersion := GetIniValue(BasicFile, "ProTestVersion", "Version")
+if (ProTestVersion = "ERROR")
+	{
+	; get Version from FileName
+	VersionStart := Instr(A_ScriptName, "_v") + 2
+	ProTestVersion := Substr(A_ScriptName,VersionStart, 3)
+	}
 
 ; Tray Menu
 Menu, Tray, Insert
