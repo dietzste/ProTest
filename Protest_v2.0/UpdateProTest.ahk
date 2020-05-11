@@ -1,38 +1,34 @@
-Ôªø#Warn
+#Warn
 #NoEnv
 SetWorkingDir %A_ScriptDir%
 
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen
 ; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte √úbereinstimmung
-
-;Sonderzeichen Workaround
-ue := "√º"
-ae := "√§"
-oe := "√∂"
-sz := "√ü"
-
-OverwriteKeysAnywayArray := { 1: "Version"
-, 2: "x_ADDToStartfnX"
-, 3: "x_ADDToStartfnY"
-, 4: "TimeOutMsgLFDMatch"
-, 5: "TimeOutMsgSkippedIntro"
-, 6: "TimeOutRemoteTest"
-, 7: "290102"}
-
-OverwriteValuesArray  := { 1: "IntroGetSex"
-, 2: "IntroSexReversed"
-, 3: "IntroGetDateOfBirth"
-, 4: "p73170yPRE"
-, 5: "name_apPRE"}
-
+; 3 = exakte bereinstimmung
 
 ; FileManagement
 ConfigFolder := A_ScriptDir . "\Config"
 BasicFile := ConfigFolder . "\BasicSettings.ini"
 UpdateLogFile := "UpdateLog_" . A_YYYY .  A_MM . A_DD . ".txt"
 UpdateTimeStemp :=  A_DD . "." . A_MM . "." . A_YYYY
+
+;;; UPDATE CONTROL ;;;
+
+OverwriteKeysAnywayArray := { 1: "Version"
+, 2: "TimeOutMsgLFDMatch"
+, 3: "TimeOutMsgSkippedIntro"
+, 4: "TimeOutRemoteTest"
+, 5: "290102"
+, 6: "SleepAfterEnter"}
+
+OverwriteValuesArray := { 1: "IntroGetSex"
+, 2: "IntroSexReversed"
+, 3: "IntroGetDateOfBirth"
+, 4: "p73170yPRE"
+, 5: "name_apPRE"}
+
+;;; Ende AutoSection ;;;
 
 ; (E1) Error Handling - Checking File Location
 if (A_IsCompiled = 1) 
@@ -52,20 +48,6 @@ if !FileExist(ProTestProgram)
 
 ; (E2) Error Handling - Exit ProTestProgramm
 ProTestWasRunning := ExitProTestProgramm(ProTestProgram)
-
-; (0) Deleting Old Sections/Keys
-DeleteIniValue(BasicFile, "ChangableSettings", "MsgDurationLFDMatch")
-DeleteIniValue(BasicFile, "ChangableSettings", "MsgDurationSkippedIntro")
-DeleteIniValue(BasicFile, "ChangableSettings", "CreateHistory")
-DeleteIniValue(BasicFile, "AdvancedSettings", "CreatHistory")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input1")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input2")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input3")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthDay")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthMonth")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthYear")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_sex")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "c_dependent")
 
 ; (1) Checking Latest Version
 CurrentVersion := GetIniValue(BasicFile, "ProTestVersion", "Version")
@@ -117,8 +99,8 @@ else
 	
 ; Menu
 Gui, 21: +AlwaysOnTop ToolWindow
-Gui, 21:Add, Radio, x12 y10 w160 h20 Checked%Hard% vr_UpdateHard, alle Dateien %ue%berschreiben
-Gui, 21:Add, Radio, x12 y35 w170 h20 Checked%Soft% Disabled%Hard% vr_UpdateSoft, nur Neuerungen %ue%bernehmen
+Gui, 21:Add, Radio, x12 y10 w160 h20 Checked%Hard% vr_UpdateHard, alle Dateien ¸berschreiben
+Gui, 21:Add, Radio, x12 y35 w170 h20 Checked%Soft% vr_UpdateSoft, nur Neuerungen ¸bernehmen
 Gui, 21:Add, Button, x60 y65 w60 h25 Default gGui21Update, Update
 Gui, 21:Show, Autosize Center, %Title%
 return
@@ -142,29 +124,36 @@ Gui21Update:
 Gui 21:Submit, NoHide
 if (r_UpdateHard = 1)
 	{
-	UpdateClaim := "und dabei alle Dateien " . ue . "berschreiben"
+	UpdateClaim := "und dabei alle Dateien ¸berschreiben"
 	UpdateModus := "Hard"
 	}
 if (r_UpdateSoft = 1)
 	{
-	UpdateClaim := "und Neuerungen " . ue . "bernehmen"
+	UpdateClaim := "und Neuerungen ¸bernehmen"
 	UpdateModus := "Soft"
 	}
-if (ForceUpdate = "true")
-	{
-	UpdateModus := "Force"
-	}
-MsgBox, 4132, Update to %LatestVersion%?, Update von ProTest jetzt durchf%ue%hren %UpdateClaim%?
+MsgBox, 4132, Update to %LatestVersion%?, Update von ProTest jetzt durchf¸hren %UpdateClaim%?
 IfMsgBox, YES
 	{
 	; (3) DOWNLOAD LATEST Version
 	Gui 21:Destroy
-	GoSub WaitingProcessWindow
 	SaveToUpdateLog("Download Latest Version (" . LatestVersion . ")")
 	SaveToUpdateLog("UpdateModus: " . UpdateModus)
-	DownloadLatestVersion(LatestVersion, UpdateModus)
+	WaitingProcessWindow(LatestVersion, "Lade neuste Version")
+	DownloadLatestVersion(LatestVersion)
+	WaitingProcessWindow(LatestVersion, "zip-Datei entpacken")
+	UnzipFile(UpdateModus)
 	if (UpdateModus = "Soft")
 		Goto SoftUpdate
+	if (UpdateModus = "Hard")
+		{
+		SaveToUpdateLog("Alle Dateien ersetzt")
+		SaveToUpdateLog("Update auf Version " . LatestVersion . " abgeschlossen!")
+		Gosub 15GuiClose
+		MsgBox, 4096, Update erfolgreich!, Update auf Version %LatestVersion% abgeschlossen!
+		RunProTest(ProTestProgram)
+		ExitApp
+		}
 	} ; Ende MsgBox
 else
 	{
@@ -177,25 +166,27 @@ return
 ; (4) Soft Update
 Softupdate:
 ; (4.1) Compare Files
-FilestoCompare := CompareUpdateFiles()
-SaveToUpdateLog(FilestoCompare . " ini-Datei(en) unterschiedlich")
+FilestoCompareCount := CompareFiles()
+SaveToUpdateLog(FilestoCompareCount . " ini-Datei(en) unterschiedlich")
 ; (4.2) Update Changes
-For Index, Filename in CompareUpdateFilesArray
+WaitingProcessWindow(LatestVersion, "Vergleiche ini-Dateien")
+For Index, Filename in CompareFilesArray
 	{
 	OldFile := ConfigFolder . "\" . Filename
-	Newfile := UpdateFolder . "\Config\" . Filename
-	SaveToUpdateLog( Index . "/" . FilestoCompare .  " ### Update " . Filename . " ###")
+	Newfile := UpdateFolderPath . "\Config\" . Filename
+	SaveToUpdateLog( Index . "/" . FilestoCompareCount .  " ### Update " . Filename . " ###")
 	if (Filename = "Capture2Text.ini")
 		{
 		FileCopy, %Newfile%, %OldFile%, 1
 		Continue
 		}
 	CompareIniSections(OldFile, NewFile)
-	DeleteOldLibrarySections(OldFile)
 	}
 SaveToUpdateLog("Update auf Version " . LatestVersion . " abgeschlossen!")
-UpdateExeFiles()
-FileRemoveDir, %UpdateFolder% , 1
+WaitingProcessWindow(LatestVersion, "‹berschreibe exe-Dateien")
+OverwriteExeFiles()
+WaitingProcessWindow(LatestVersion, "Entferne Update-Ordner")
+FileRemoveDir, %UpdateFolderPath% , 1
 Gosub 15GuiClose
 MsgBox, 4096, Update erfolgreich!, Update auf Version %LatestVersion% abgeschlossen!
 RunProTest(ProTestProgram)
@@ -204,7 +195,198 @@ return
 
 ;;;;;; SOFT UPDATE FUNCTIONS ;;;;;;;;;;
 
-DeleteOldLibrarySections(FilePath){
+CompareFiles(){
+local
+global ConfigFolder
+global UpdateFolderPath
+global CompareFilesArray := []
+FilesCount := 0
+Loop, Files, %UpdateFolderPath%\Config\*.ini
+	{
+	UpdateFile := UpdateFolderPath . "\Config\" . A_LoopFileName
+	OldFile := ConfigFolder . "\" . A_LoopFileName
+	if Instr(OldFile, "BasicSettings")
+		{
+		DeleteOldSettings()
+		CompareFilesArray[++FilesCount] := A_LoopFileName
+		Continue
+		}
+	DeleteOldIniSections(OldFile)
+	FileGetSize, UpdateSize , %UpdateFile%
+	FileGetSize, InstalledSize, %OldFile%
+	if (UpdateSize != InstalledSize)
+		{
+		CompareFilesArray[++FilesCount] := A_LoopFileName
+		if (InstalledSize = "")
+			{
+			FileCopy, %UpdateFile%, %OldFile%
+			SaveToUpdateLog("Neue Datei: " . A_LoopFileName)
+			}
+		}
+	} ; ende Loop
+return CompareFilesArray.Count()
+}
+
+OverwriteExeFiles(){
+local
+global UpdateFolderPath
+ProTestExeFiles := ["ProTest_v2.0.exe", "ProTest_v2.0_RemoteClient.exe"]
+For i, ExeFile in ProTestExeFiles
+	{
+	NewFile := UpdateFolderPath . "\" . ExeFile
+	FileCopy, %NewFile%, %ExeFile%, 1
+	}
+}
+
+CompareIniSections(OldFile, NewFile){
+local
+; Get Ini-Section-List
+OldSectionList := GetIniSectionNames(Oldfile)
+NewSectionList := GetIniSectionNames(Newfile)
+Loop, Parse, NewSectionList , "`n"
+	{
+	; Compare Sections
+	CurrentSection := A_LoopField
+	; Abschnitt vorhanden?
+	if !Instr(OldSectionList, CurrentSection)
+		{
+		; Neuer Abschnitt
+		CopySection(OldFile, NewFile, CurrentSection)
+		}
+	else
+		{
+		; Abschnitt bereits vorhanden
+		; Load Sections
+		NewSectionKeys := GetIniSection(NewFile, CurrentSection)
+		OldSectionKeys := GetIniSection(OldFile, CurrentSection)
+		; Abschnitte gleich?
+		if (NewSectionKeys = OldSectionKeys)
+			{
+			; gleiche Abschnitte
+			Continue
+			}
+		if (NewSectionKeys != OldSectionKeys)
+			{
+			; unterschiedliche Abschnitte
+			CompareIniKeys(OldFile, NewFile, CurrentSection, NewSectionKeys, OldSectionKeys)
+			}
+		}
+	} ; ende loop
+} ; ende function
+
+CompareIniKeys(OldFile, NewFile, CurrentSection, NewSectionKeys, OldSectionKeys){
+local
+global UpdateTimeStemp
+NewKeyEntry := false
+; Zeilen des Abschnitts untersuchen
+Loop, Parse, NewSectionKeys , "`n"
+	{
+	CurrentLine := A_LoopField
+	if Instr(OldSectionKeys, CurrentLine)
+		{
+		; identische Eintragung
+		Continue
+		}
+	if !Instr(OldSectionKeys, CurrentLine)
+		{
+		; Unterschiedliche Eintragung
+		CurrentNewKey := GetCleanKey(CurrentLine)
+		IniRead, OldCompleteValue, %OldFile%, %CurrentSection%, %CurrentNewKey%
+		IniRead, NewCompleteValue, %NewFile%, %CurrentSection%, %CurrentNewKey%
+		; Vergleich mit altem File
+		if (OldCompleteValue = "ERROR")
+			{
+			; Neuer Key
+			if (NewKeyEntry = false)
+				{
+				; ersten neuen Eintrag mit Abstand einf¸gen
+				SaveIniValue(OldFile, CurrentSection, "`n;;; Update " . UpdateTimeStemp . "`nUpdate", "Update")
+				NewKeyEntry := true 
+				}
+			; (weiterer) neuer Key
+			IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
+			SaveToUpdateLog("NEU: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewCompleteValue)
+			if (NewKeyEntry = true)
+				DeleteIniValue(OldFile, CurrentSection, "Update")
+			}
+		else
+			{
+			; andere Eintragung vorhanden
+			ChangeKeyEntry(OldFile, NewFile, CurrentSection, CurrentNewKey, OldCompleteValue, NewCompleteValue)
+			} ; ende else
+		} ; ende if
+	} ; ende loop
+} ; ende 
+; Ver‰nderter Eingabewert
+
+ChangeKeyEntry(OldFile, NewFile, CurrentSection, CurrentNewKey, OldCompleteValue, NewCompleteValue){
+local
+global OverwriteKeysAnywayArray
+global OverwriteValuesArray
+global UpdateTimeStemp
+ValueOverwritten := false
+; Ver‰nderter Eingabewert
+NewValue := GetIniValue(NewFile, CurrentSection, CurrentNewKey)
+OldValue := GetIniValue(OldFile, CurrentSection, CurrentNewKey)
+if (OldValue = NewValue)
+	return 
+else
+	{
+	; Eingabewerte sind nicht gleich, Eingabewerte ‰ndern/lˆschen falls...
+	; a) Key in OverwriteKeysAnywayArray
+	For i, ChangeKey in OverwriteKeysAnywayArray
+		{
+		if (ChangeKey = CurrentNewKey)
+			{
+			;Change Key Value
+			NewCompleteValue := NewCompleteValue . " `; (Update " . UpdateTimeStemp . ")" 
+			IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
+			SaveToUpdateLog("Ge‰ndert: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewCompleteValue)
+			ValueOverwritten := true
+			}
+		}
+	; b) ge‰nderte Eingabewerte
+	For i, ChangeValue in OverwriteValuesArray  
+		{
+		if (ChangeValue = OldValue)
+			{
+			NewCompleteValue := A_Space . StrReplace(OldCompleteValue, OldValue , NewValue)
+			IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
+			SaveToUpdateLog("Ge‰ndert: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewValue . " (vorher: " . OldValue . ")")
+			ValueOverwritten := true
+			}
+		} ; ende for loop
+	if (ValueOverwritten = false)
+		SaveToUpdateLog("Eigene Eintragung: [" . CurrentSection . "] " . CurrentNewKey . " = " . OldValue . " (urspr¸nglich: " . NewValue . ")")
+	} ; ende else
+} ; ende function
+
+CopySection(OldFile, NewFile, Section){
+local
+NewSectionKeys := GetIniSection(NewFile, Section)
+SaveToUpdateLog("Neuer Abschnitt: [" . Section . "]")
+Loop, Parse, NewSectionKeys , "`n"
+	{
+	CurrentLine := A_LoopField
+	CurrentNewKey := Substr(CurrentLine, 1, Instr(CurrentLine, "=")-1)
+	IniRead, CurrentNewCompleteValue, %NewFile%, %Section%, %CurrentNewKey%
+	IniWrite, %CurrentNewCompleteValue%, %OldFile%, %Section%, %CurrentNewKey% 
+	SaveToUpdateLog("NEU: [" . Section . "] " . CurrentNewKey . " = " . CurrentNewCompleteValue)
+	} ; ende loop
+} ; ende function
+
+GetCleanKey(CurrentLine){
+local
+CurrentKey := Substr(CurrentLine, 1, Instr(CurrentLine, "=")-1)
+if Instr(CurrentKey, A_Space)
+	CurrentKey := StrReplace(CurrentKey, A_Space)
+if Instr(CurrentKey, A_Tab)
+	CurrentKey := StrReplace(CurrentKey, A_Tab)
+return CurrentKey
+}
+
+
+DeleteOldIniSections(FilePath){
 local 
 if Instr(FilePath, "Library.ini")
 	{
@@ -222,179 +404,34 @@ if Instr(FilePath, "BasicSettings.ini")
 	DeleteIniSection(FilePath, "PositionParameterF10")
 }
 
-CompareUpdateFiles(){
-local
-global ConfigFolder
-global UpdateFolder
-global CompareUpdateFilesArray := []
-FilesCount := 0
-Loop, Files, %UpdateFolder%\Config\*.ini
-	{
-	UpdateFile := UpdateFolder . "\Config\" . A_LoopFileName
-	FileGetSize, UpdateSize , %UpdateFile%
-	InstalledFile := ConfigFolder . "\" . A_LoopFileName
-	FileGetSize, InstalledSize, %InstalledFile%
-	if (UpdateSize != InstalledSize)
-		{
-		CompareUpdateFilesArray[++FilesCount] := A_LoopFileName
-		if (InstalledSize = "")
-			{
-			FileCopy, %UpdateFile%, %InstalledFile%
-			SaveToUpdateLog("Neue Datei: " . A_LoopFileName)
-			}
-		}
-	; Force BasicFile.ini to be compared
-	if (A_LoopFileName = "BasicSettings.ini")
-		{
-		if (FilesCount = 0)
-			CompareUpdateFilesArray[++FilesCount] := A_LoopFileName
-		else
-			CompareUpdateFilesArray[FilesCount] := A_LoopFileName
-		}
-	} ; ende Loop
-return CompareUpdateFilesArray.Count()
+; (0) Deleting Old Sections/Keys
+DeleteOldSettings(){
+global BasicFile
+DeleteIniValue(BasicFile, "ChangableSettings", "MsgDurationLFDMatch")
+DeleteIniValue(BasicFile, "ChangableSettings", "MsgDurationSkippedIntro")
+DeleteIniValue(BasicFile, "ChangableSettings", "CreateHistory")
+DeleteIniValue(BasicFile, "AdvancedSettings", "CreatHistory")
+DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input1")
+DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input2")
+DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input3")
+DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthDay")
+DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthMonth")
+DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthYear")
+DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_sex")
+DeleteIniValue(BasicFile, "BasicSettingsMenu", "c_dependent")
 }
 
-UpdateExeFiles(){
+;;;;;;;;;;;;;;;;;;;
+;;;; UpdateLog ;;;;
+;;;;;;;;;;;;;;;;;;;
+
+SaveToUpdateLog(Info){
 local
-global UpdateFolder
-ProTestExeFiles := ["ProTest_v2.0.exe", "ProTest_v2.0_RemoteClient.exe"]
-For i, ExeFile in ProTestExeFiles
-	{
-	NewFile := UpdateFolder . "\" . ExeFile
-	FileCopy, %NewFile%, %ExeFile%, 1
-	}
+UpdateLogFile := "UpdateLog_" . A_YYYY .  A_MM . A_DD . ".txt"
+TimeStemp := A_DDD . A_Space . A_DD . "." A_MMM . A_Space . A_Hour . ":" . A_Min . ":" . A_Sec 
+UpdateLog := TimeStemp . A_Space . Info
+FileAppend, %UpdateLog%`n, %UpdateLogFile%
 }
-
-CompareIniSections(OldFile, NewFile){
-local
-global UpdateTimeStemp
-global ChangedSectionArray
-global OverwriteKeysAnywayArray
-global OverwriteValuesArray 
-OldSectionList := GetIniSectionNames(Oldfile)
-NewSectionList := GetIniSectionNames(Newfile)
-ChangedSectionArray := []
-; Get Ini-Section-Names
-Loop, Parse, NewSectionList , "`n"
-	{
-	; Compare Sections
-	CurrentSection := A_LoopField
-	NewKeyEntry := false
-	; Abschnitt vorhanden?
-	if !Instr(OldSectionList, CurrentSection)
-		{
-		CurrentNewSection := CurrentSection
-		; Nein -> Neuer Abschnitt
-		; Neuen Abschnitt und Keys Einf√ºgen
-		CopySection(OldFile, NewFile, CurrentNewSection)
-		}
-	else
-		{
-		; Ja - Pr√ºfe √Ñnderungen
-		; Load Sections
-		NewSectionKeys := GetIniSection(NewFile, CurrentSection)
-		OldSectionKeys := GetIniSection(OldFile, CurrentSection)
-		SectionIndex := A_Index
-		; Abschnitte gleich?
-		if (NewSectionKeys = OldSectionKeys)
-			{
-			; ja - Abschnitte identisch
-			Continue
-			}
-		if (NewSectionKeys != OldSectionKeys)
-			{
-			; nein - ge√§nderter Abschnitt
-			Loop, Parse, NewSectionKeys , "`n"
-				{
-				CurrentLine := A_LoopField
-				if !Instr(OldSectionKeys, CurrentLine)
-					{
-					; Unterschiedliche Eintragungen
-					CurrentNewKey := Substr(CurrentLine, 1, Instr(CurrentLine, "=")-1)
-					IniRead, OldCompleteValue, %OldFile%, %CurrentSection%, %CurrentNewKey%
-					IniRead, NewCompleteValue, %NewFile%, %CurrentSection%, %CurrentNewKey%
-					; Vergleich mit altem File
-					if (OldCompleteValue = "ERROR")
-						{
-						; Neuer Key
-						if (NewKeyEntry = false)
-							{
-							; ersten neuen Eintrag mit Abstand einf√ºgen
-							SaveIniValue(OldFile, CurrentSection, "`n;;; Update " . UpdateTimeStemp . "`nUpdate", "Update")
-							ChangedSectionArray[SectionIndex] := CurrentSection
-							NewKeyEntry := true 
-							}
-						; weiterer neuer Key
-						IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
-						SaveToUpdateLog("NEU: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewCompleteValue)
-						}
-					else
-						{
-						; Ver√§nderter Eingabewert
-						NewValue := GetIniValue(NewFile, CurrentSection, CurrentNewKey)
-						OldValue := GetIniValue(OldFile, CurrentSection, CurrentNewKey)
-						if (OldValue = NewValue)
-							{
-							; Eingabewerte sind prinzipiell gleich
-							CleanOldCompleteValue  := RegExReplace(OldCompleteValue , "\s")
-							CleanNewCompleteValue  := RegExReplace(NewCompleteValue , "\s")
-							; Kommentare (bis auf Leerzeichen) gleich? Falls ja, Neuen Wert einf√ºgen
-							if (CleanOldCompleteValue = CleanNewCompleteValue)
-								IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
-							Continue
-							}
-						else
-							{
-							; Eingabewerte sind nicht gleich, Eingabewerte √§ndern falls...
-							; a) Key in OverwriteKeysAnywayArray
-							For i, ChangeKey in OverwriteKeysAnywayArray
-								{
-								if (ChangeKey = CurrentNewKey)
-									{
-									;Change Key Value
-									NewCompleteValue := NewCompleteValue . " `; (Update " . UpdateTimeStemp . ")" 
-									IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
-									SaveToUpdateLog("Ge√§ndert: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewCompleteValue)
-									}
-								}
-							; b) ge√§nderte Eingabewerte
-							For i, ChangeValue in OverwriteValuesArray  
-								{
-								if (OldValue = ChangeValue)
-									{
-									NewCompleteValue := A_Space . StrReplace(OldCompleteValue, OldValue , NewValue) ; . " `; (Update " . UpdateTimeStemp . ")" 
-									IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
-									SaveToUpdateLog("Ge√§ndert: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewValue . " (vorher: " . OldValue . ")")
-									}
-								} ; ende for loop
-							} ; ende else
-						} ; ende else
-					} ; ende if
-				} ; ende loop
-			} ; ende if
-		} ; ende else
-	} ; ende loop
-; Delete Update Keys
-For Index, Section in ChangedSectionArray
-	{
-	;Msgbox, 4096, Delete...,  Delete Update in %Section% 
-	DeleteIniValue(OldFile, Section, "Update")
-	}
-} ; ende function
-
-CopySection(OldFile, NewFile, Section){
-local
-NewSectionKeys := GetIniSection(NewFile, Section)
-Loop, Parse, NewSectionKeys , "`n"
-	{
-	CurrentLine := A_LoopField
-	CurrentNewKey := Substr(CurrentLine, 1, Instr(CurrentLine, "=")-1)
-	IniRead, CurrentNewCompleteValue, %NewFile%, %Section%, %CurrentNewKey%
-	IniWrite, %CurrentNewCompleteValue%, %OldFile%, %Section%, %CurrentNewKey% 
-	SaveToUpdateLog("Neuer Abschnitt: [" . Section . "] " . CurrentNewKey . " = " . CurrentNewCompleteValue)
-	} ; ende loop
-} ; ende function
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;      HotKeys       ;;
@@ -423,29 +460,22 @@ if (ProTestWasRunning = true)
 	}
 }
 
-WaitingProcessWindow:
-Gui, 15: -Caption +AlwaysOnTop -SysMenu
-Gui, 15:Font, s16, Verdana
-Gui, 15:Add, Text,, Update wird durchgef√ºhrt... 
+WaitingProcessWindow(LatestVersion, Status){
+local
+Gui 15:Destroy
+Gui, 15: -Caption +AlwaysOnTop -SysMenu +Border
+Gui, 15:Font, s15, Verdana
+Gui, 15:Add, Text,Center, Update wird durchgef¸hrt
+Gui, 15:Font, s9 Italic, Verdana
+Gui, 15:Add, Text, w250 Center, %Status%...
 Gui, 15:Show, Autosize Center, Update to %LatestVersion%
 return
+}
 
 15GuiClose:
 15GuiEscape:
 Gui 15:Destroy
 return 
-
-;;;;;;;;;;;;;;;;;;;
-;;;; UpdateLog ;;;;
-;;;;;;;;;;;;;;;;;;;
-
-SaveToUpdateLog(Info){
-local
-UpdateLogFile := "UpdateLog_" . A_YYYY .  A_MM . A_DD . ".txt"
-TimeStemp := A_DDD . A_Space . A_DD . "." A_MMM . A_Space . A_Hour . ":" . A_Min . ":" . A_Sec 
-UpdateLog := TimeStemp . A_Space . Info
-FileAppend, %UpdateLog%`n, %UpdateLogFile%
-}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internet Functions ;;;
@@ -468,50 +498,44 @@ Version := Substr(htmlText, StartPos, StrLength)
 return Version
 }
 
-DownloadLatestVersion(LatestVersion, UpdateModus){
+DownloadLatestVersion(LatestVersion){
 local
-global ProTestProgram
 ; Download ZipFile
-FolderName := "ProtestUpdate_" . LatestVersion 
-ZipFile := A_WorkingDir . "\" . FolderName . ".zip"
+global UpdateFolderName := "ProtestUpdate_" . LatestVersion 
+global ZipFile := A_WorkingDir . "\" . UpdateFolderName . ".zip"
 URL :=  "https://github.com/dietzste/ProTest/releases/download/" . LatestVersion . "/ProTest_" . LatestVersion . ".zip"
 UrlDownloadToFile, %URL%, %ZipFile%
+}
 
-; Unzip (depending on UpdateModus)
-if (UpdateModus = "Hard" or UpdateModus = "Force")
-	global UpdateFolder := A_WorkingDir
-if (UpdateModus = "Soft")
-	{
-	global UpdateFolder := A_WorkingDir . "\" . FolderName
-	FileCreateDir, %UpdateFolder%
-	}
-shell := ComObjCreate("Shell.Application")
-Folder := shell.NameSpace(ZipFile)
-NewFolder := shell.NameSpace(UpdateFolder)
-NewFolder.CopyHere(Folder.items, 4|16)
-
-; Delete ZipFile
-FileDelete, %ZipFile%
-
-if (UpdateModus = "Hard" or UpdateModus = "Force")
-	{
-	SaveToUpdateLog("Alle Dateien ersetzt")
-	SaveToUpdateLog("Update auf Version " . LatestVersion . " abgeschlossen!")
-	Gosub 15GuiClose
-	MsgBox, 4096, Update erfolgreich!, Update auf Version %LatestVersion% abgeschlossen!
-	RunProTest(ProTestProgram)
-	ExitApp
-	}
-
-} ; Ende Function Download
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Include Functions
 
 #Include Protest_IniFunctions.ahk
 
 ;;; Other Functions
+
+UnzipFile(UpdateModus){
+local
+global ZipFile
+global UpdateFolderName
+; Unzip (depending on UpdateModus)
+if (UpdateModus = "Hard")
+	global UpdateFolderPath := A_WorkingDir
+if (UpdateModus = "Soft")
+	{
+	global UpdateFolderPath := A_WorkingDir . "\" . UpdateFolderName
+	FileCreateDir, %UpdateFolderPath%
+	}
+shell := ComObjCreate("Shell.Application")
+Folder := shell.NameSpace(ZipFile)
+NewFolder := shell.NameSpace(UpdateFolderPath)
+NewFolder.CopyHere(Folder.items, 4|16)
+
+; Delete ZipFile
+FileDelete, %ZipFile%
+} ; Ende UnzipFile
+
 
 ExitProTestProgramm(ProTestProgram){
 local 
@@ -523,7 +547,7 @@ if (ProTestProgram = "ProTest_v2.0.exe")
 		Process, Close, %ProTestProgram%
 		if (ErrorLevel = 0)
 			{
-			MsgBox, 4096, Update Error, Kann %ProTestProgram% nicht schlie√üen!
+			MsgBox, 4096, Update Error, Kann %ProTestProgram% nicht schlieﬂen!
 			Exit 
 			}
 		return ProTestWasRunning := true
@@ -536,7 +560,7 @@ else
 		WinWaitClose %ProTestProgram%
 		if (ErrorLevel = 0)
 			{
-			MsgBox, 4096, Update Error, Kann %ProTestProgram% nicht schlie√üen!
+			MsgBox, 4096, Update Error, Kann %ProTestProgram% nicht schlieﬂen!
 			Exit 
 			}
 		return ProTestWasRunning := true
