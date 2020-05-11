@@ -24,15 +24,6 @@ PreloadDetailsFile := ConfigFolder . "\PreloadDetails.ini"
 HeartPicture := ConfigFolder . "\Heart.png"
 LibraryFile := ConfigFolder . "\Library.ini"
 
-; Version
-ProTestVersion := GetIniValue(BasicFile, "ProTestVersion", "Version")
-if (ProTestVersion = "ERROR")
-	{
-	; get Version from FileName
-	VersionStart := Instr(A_ScriptName, "_v") + 2
-	ProTestVersion := Substr(A_ScriptName,VersionStart, 3)
-	}
-
 if !FileExist(ConfigFolder)
 	{
 	Msgbox,4096, Ups!, %ConfigFolder% existiert nicht!
@@ -94,6 +85,9 @@ med := 130
 NewEntryF7fnIntro := false
 NewEntryF7fnNag := false
 Capture2TextStarted := false
+
+; Version
+ProTestVersion := GetIniValue(BasicFile, "ProTestVersion", "Version", "v2")
 
 ; Changable Settings
 SleepAfterEnter			:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
