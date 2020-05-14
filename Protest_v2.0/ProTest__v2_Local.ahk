@@ -86,6 +86,9 @@ NewEntryF7fnIntro := false
 NewEntryF7fnNag := false
 Capture2TextStarted := false
 
+; Version
+ProTestVersion := GetIniValue(BasicFile, "ProTestVersion", "Version", "v2")
+
 ; Changable Settings
 SleepAfterEnter			:= GetIniValue(BasicFile, "ChangableSettings",  "SleepAfterEnter")
 TimeOutMsgLFDMatch		:= GetIniValue(BasicFile, "ChangableSettings",  "TimeOutMsgLFDMatch")
@@ -115,15 +118,6 @@ ScreenHeight := MonitorCoordBottom
 StandardWidth := 1920
 StandardHeight := 1080
 ListLines On
-
-; Version
-ProTestVersion := GetIniValue(BasicFile, "ProTestVersion", "Version")
-if (ProTestVersion = "ERROR")
-	{
-	; get Version from FileName
-	VersionStart := Instr(A_ScriptName, "_v") + 2
-	ProTestVersion := Substr(A_ScriptName,VersionStart, 3)
-	}
 
 ; Tray Menu
 Menu, Tray, Insert
