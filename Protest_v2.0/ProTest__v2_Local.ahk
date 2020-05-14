@@ -62,7 +62,7 @@ GuiF4  := "Erweiterte Optionen"
 GuiF7  := "Lernmodus"
 GuiF8  := "Preload Reader"
 GuiF9  := "Remote Feedback Test"
-GuiF10 := "Einstellungen"
+GuiF10 := "ProTest Einstellungen"
 GuiF12 := "Protest beenden?"
 
 ; ini section names
