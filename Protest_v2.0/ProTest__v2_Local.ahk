@@ -126,7 +126,7 @@ Menu, Tray, Add , Update, UpdateProTest
 
 if (A_IsCompiled = 1)
 	{
-	Goto F11Routine
+	Goto ChooseProjectFile
 	}
 if (A_IsCompiled != 1)
 	{
@@ -144,53 +144,10 @@ if (A_IsCompiled != 1)
 			SaveIniValue("TestModus.ini", "TestModus", "LastProjectFile", LastProjectFile)
 			}
 		}
-	SettingUpFiles(LastProjectFile)
-	SettingUpCapture2Text()
-	Send, {F10}
+	SettingUpProTest(LastProjectFile)
 	WinWaitActive, %GuiF10%
 	WinClose, %GuiF10%
 	}
-
-SettingUpCapture2Text(){
-local
-global ConfigFolder
-global Capture2TextWorkDir :=  A_ScriptDir . "\Capture2Text"
-global Capture2TextAppDataFolder := A_AppData . "\Capture2Text"
-global Capture2TextIniFileAppDataPath := Capture2TextAppDataFolder . "\Capture2Text.ini"
-global Capture2TextStarted := false
-
-if !FileExist(Capture2TextWorkDir)
-	{
-	Msgbox,4096, Ups!, %Capture2TextWorkDir% existiert nicht!
-	ExitApp
-	}
-
-; Setting up AppData Folder
-if !FileExist(Capture2TextAppDataFolder)
-	FileCreateDir, %Capture2TextAppDataFolder%
-; Setting up Ini-File
-if FileExist(Capture2TextIniFileAppDataPath)
-	{
-	; überschreibe wichtige Einstellungen
-	SaveIniValue(Capture2TextIniFileAppDataPath, "Output", "OutputClipboard", "true")
-	SaveIniValue(Capture2TextIniFileAppDataPath, "Output", "OutputPopup", "false")
-	}
-else
-	FileCopy, %ConfigFolder%\Capture2Text.ini, %Capture2TextIniFileAppDataPath%
-
-Process, Exist , Capture2Text.exe
-if (ErrorLevel = 0) ; Capture2Text not running
-	{
-	Run, Capture2Text.exe , %Capture2TextWorkDir% ,, PID
-	global Captur2TextPID := PID
-	}
-else
-	{
-	; Captur2Text is running, ErrorLevel enthält PID
-	global Captur2TextPID := ErrorLevel
-	}
-Capture2TextStarted := true
-}
 
 return
 
