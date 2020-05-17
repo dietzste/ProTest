@@ -101,6 +101,7 @@ Return
 10GuiClose:
 10GuiEscape:
 10Go:
+Gui 1:Destroy
 if (ChangeButtonName = "Speichern")
 	{
 	MsgBox, 4132, Speichern?, Angaben Speichern?
@@ -109,13 +110,26 @@ if (ChangeButtonName = "Speichern")
 	}
 Gui 10:Destroy
 Gui 11:Destroy
-Gui 1:Destroy
 ListLines On
-return 
+return
+
+10GuiChangeButton:
+Gui 1:Destroy
+if (A_GuiControl = "ändern")
+	10GuiChange := true
+if (A_GuiControl = "Speichern")
+	{
+	10GuiChange := false
+	PermanentSave := GetKeyState("Shift")
+	Gosub 10GuiSaveInput
+	}
+Gui 10:Destroy
+Goto 10GuiSetControls
+return
 
 10GuiChangeBasicFile:
 Gosub 10GuiSaveInput
-GoSub F11Routine
+GoSub ChooseProjectFile
 return 
 
 10GuiResetControls:
@@ -162,18 +176,6 @@ else
 	}
 return
 
-10GuiChangeButton:
-if (A_GuiControl = "ändern")
-	10GuiChange := true
-if (A_GuiControl = "Speichern")
-	{
-	10GuiChange := false
-	PermanentSave := GetKeyState("Shift") 
-	Gosub 10GuiSaveInput
-	}
-Gui 10:Destroy
-Goto 10GuiSetControls
-return 
 
 ; Save Input
 10GuiSaveInput:
@@ -246,7 +248,7 @@ Gui, 10:Default
 GuiControl,, e_fnStartPosX , %MousePosX%
 GuiControl,, e_fnStartPosY , %MousePosY%
 Goto 10GuiShowWindow
-return 
+return
 
 ~Escape::
 Gui  1:Destroy
@@ -291,35 +293,19 @@ global e_fnEndPosY := e_fnStartPosY + e_height
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;   (F11) Choose INI FILE   ;;;;;;
+;;;;    Choose Project File    ;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-F11Routine:
-F11MenuName := "Projektdatei auswählen..."
+ChooseProjectFile:
+ChooseProjectFileMenuName := "Projektdatei auswählen..."
 	
-if WinExist(F11MenuName)
+if WinExist(ChooseProjectFileMenuName)
 	{
-	WinActivate, %F11MenuName%
+	WinActivate, %ChooseProjectFileMenuName%
 	Exit
 	}
 
-FileList := ""
-ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp", "PreloadDetails"]
-LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
-IniLoop:
-Loop, Files, *.ini, R
-	{
-	for i, IniFile in ExcludeIniFileArray
-		{
-		if instr(A_LoopFileName, IniFile)
-			Continue IniLoop
-		}
-	; Priorisiere LastUsedFile, falls vorhanden
-	if (LastUsedFile = A_LoopFileName)
-		FileList .= A_LoopFileName . "||"
-	else
-		FileList .= A_LoopFileName . "|"
-	}
+FileList := CreateProjectFilesList()
 
 if WinExist(GuiF10)
 	NoActionButton := "Back"
@@ -332,7 +318,7 @@ gui, 11:add, listbox, x20 y28 w150 h60 vIniFileInList sort, % FileList
 gui, 11:add, button, x10 y110 w50 g11GuiCancel, % NoActionButton
 gui, 11:add, button, x65 y110 w50 g11GuiNewProjectFile, Neu
 gui, 11:add, button, x135 y110 w55 Default g11GuiIniDecision, OK
-gui, 11:show, Center Autosize, %F11MenuName%
+gui, 11:show, Center Autosize, %ChooseProjectFileMenuName%
 return
 
 11GuiCancel:
@@ -366,12 +352,9 @@ Gui, 11:Submit, NoHide
 if (IniFileInList != "")
 	{
 	ProjectFileName := IniFileInList
-	SettingUpFiles(ProjectFileName)
 	if (A_UserName != "Mensch")
 		SaveIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile", ProjectFileName)
-	SettingUpCapture2Text()
-	Gui 10:Destroy
-	Send {F10}
+	SettingUpProTest(ProjectFileName)
 	}
 else
 	Msgbox, 4096, Ups!, Kein File ausgewählt!
@@ -381,26 +364,18 @@ return
 Gui +LastFound +OwnDialogs +AlwaysOnTop
 InputBox, ProjectName, Projektname , Bitte einen Projektnamen vergeben (z.B. "B152"),, 250, 150
 if (ErrorLevel)
-	{
-	; Inputbox geschlossen/cancel:
-	Gui 11:Destroy
-	Goto F11Routine
-	}
+	Exit
 else
 	{
 	ProjectFileName := ProjectName . ".ini"
-	if Instr(FileList, ProjectName . "|")
+	if Instr(FileList, ProjectFileName)
 		{
-		Msgbox, 4096, Ups!, %ProjectFileName%.ini bereits vorhanden!
-		Gui 11:Destroy
+		Msgbox, 4096, Ups!, %ProjectFileName% bereits vorhanden!
 		GoTo 11GuiNewProjectFile
 		}
 	else
 		{
-		SettingUpFiles(ProjectFileName)
-		SettingUpCapture2Text()
-		Gui 10:Destroy
-		Send {F10}
+		SettingUpProTest(ProjectFileName)
 		}
 	}
 return 
@@ -430,7 +405,7 @@ global TempFile := ProjectFolder . "\" . TempFileName
 global HistoryFileName := ProjectName . "_History" . A_YYYY .  A_MM . A_DD
 global HistoryFile := ProjectFolder  . "\" . HistoryFileName . ".txt"
 
-; PreloadListName
+; PreloadList
 global PreloadListName := ProjectName . "_PreloadList.txt"
 global PreloadListPath := ProjectFolder . "\" . PreloadListName
 ; Load PreloadList
@@ -452,6 +427,80 @@ if (A_IsCompiled = 1)
 global CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", A_Space)
 DeleteIniValue(ProjectFile, "ProjectFiles", "CurrentLFD")
 
-Gui 11:Destroy
 ListLines On
-}	
+}
+
+CreateProjectFilesList(){
+local
+global BasicFile
+global LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
+FileList := ""
+ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp", "PreloadDetails"]
+IniLoop:
+Loop, Files, *.ini, R
+	{
+	for i, IniFile in ExcludeIniFileArray
+		{
+		if instr(A_LoopFileName, IniFile)
+			Continue IniLoop
+		}
+	; Priorisiere LastUsedFile, falls vorhanden
+	if (LastUsedFile = A_LoopFileName)
+		FileList .= A_LoopFileName . "||"
+	else
+		FileList .= A_LoopFileName . "|"
+	}
+return FileList
+}
+
+;;; SETTING UP PROTEST ;;;
+
+SettingUpProTest(ProjectFileName){
+local
+SettingUpFiles(ProjectFileName)
+Gui 11:Destroy
+SettingUpCapture2Text()
+Gui 10:Destroy
+Send {F10}
+}
+
+SettingUpCapture2Text(){
+local
+global ConfigFolder
+global Capture2TextWorkDir :=  A_ScriptDir . "\Capture2Text"
+global Capture2TextAppDataFolder := A_AppData . "\Capture2Text"
+global Capture2TextIniFileAppDataPath := Capture2TextAppDataFolder . "\Capture2Text.ini"
+global Capture2TextStarted := false
+
+if !FileExist(Capture2TextWorkDir)
+	{
+	Msgbox,4096, Ups!, %Capture2TextWorkDir% existiert nicht!
+	ExitApp
+	}
+
+; Setting up AppData Folder
+if !FileExist(Capture2TextAppDataFolder)
+	FileCreateDir, %Capture2TextAppDataFolder%
+; Setting up Ini-File
+if FileExist(Capture2TextIniFileAppDataPath)
+	{
+	; überschreibe wichtige Einstellungen
+	SaveIniValue(Capture2TextIniFileAppDataPath, "Output", "OutputClipboard", "true")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "Output", "OutputPopup", "false")
+	}
+else
+	FileCopy, %ConfigFolder%\Capture2Text.ini, %Capture2TextIniFileAppDataPath%
+
+Process, Exist , Capture2Text.exe
+if (ErrorLevel = 0) ; Capture2Text not running
+	{
+	Run, Capture2Text.exe , %Capture2TextWorkDir% ,, PID
+	global Captur2TextPID := PID
+	}
+else
+	{
+	; Captur2Text is running, ErrorLevel enthält PID
+	global Captur2TextPID := ErrorLevel
+	}
+Capture2TextStarted := true
+}
