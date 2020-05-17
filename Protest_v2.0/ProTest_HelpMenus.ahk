@@ -153,8 +153,9 @@ return
 
 if (Window = GuiF8)
 {
+global PreloadDetailsFile
 8GuiHelpText := "Automatische Konvertierung für:`n"
-8GuiHelpText .= GetIniSection(LibraryFile, "Converter")
+8GuiHelpText .= GetIniSection(PreloadDetailsFile, "Converter")
 8GuiHelpText .= "`r`rz.B Eingabe '2101P1' sucht `rnach Preload 'P41598PRE'"
 Helptext = %8GuiHelpText%
 return 
@@ -176,9 +177,17 @@ Scale factor (Default: 4.0)
 Einstellungen ändern:
 1) Button ändern drücken
 2) Button Show drücken
-3) Maus an Anfangsposition bewegen, dann x drücken
+3) Maus an gewünschte Position bewegen
+4) Strg und linke Maustaste gleichzeitig drücken
 4) mit den Pfeiltasten Bereich vergrößern/verkleinern
 5) Button Speichern drücken
+
+Scale Factor Scan: 
+Button 'Test' und die Shift-Taste gleichzeitig
+drücken. ProTest  führt eine Testung mit versch.
+Scale-Faktoren durch. Falls keine Einstellung
+die Zahlen(!) der fn richtig erkennt: ProTest
+mit F12 schließen und neu öffnen.
 
 Einstellungen dauerhaft speichern:
 Button 'Speichern' und die Shift-Taste gleichzeitig 
