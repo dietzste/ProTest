@@ -147,6 +147,8 @@ ShowHelpWindow(GuiF10)
 return 
 
 10GuiTestOCR:
+if (GetKeyState("Shift") = 1)
+	Goto ScaleFactorScan
 Gui 1:Destroy
 CheckCapture2TextIsRunning()
 CheckWorkWindow()
@@ -176,6 +178,23 @@ else
 	}
 return
 
+ScaleFactorScan:
+CheckWorkWindow()
+e_scaleStatus := e_scale
+TestMessage := "Ergebnisse OHNE OCR-Korrekturen`n`n"
+e_scale := 3.5
+Loop, 16 {
+sleep, SleepAfterEnter
+SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "ScaleFactor", e_scale)
+TestOCR := OCR("ScaleFactorTest", 0)
+TestMessage .= e_scale . ": " . TestOCR . "`n"
+e_scale := e_scale + 0.1
+e_scale := Round(e_scale, 1)
+}
+MsgBox, 4096, Scale Factor, % TestMessage
+e_scale := e_scaleStatus
+SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "ScaleFactor", e_scale)
+return
 
 ; Save Input
 10GuiSaveInput:
