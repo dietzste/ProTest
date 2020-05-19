@@ -258,6 +258,7 @@ WinActivate, %WorkWindow%
 return
 
 #if WinExist("ShowOCRWindow")
+CTRL & LButton::
 ~x::
 WinActivate, %WorkWindow%
 CoordMode, Mouse , Window
