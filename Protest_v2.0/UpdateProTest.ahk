@@ -3,9 +3,9 @@
 SetWorkingDir %A_ScriptDir%
 
 SetTitleMatchMode, 2
-; 1 = wintitle muss mit Titel beginnen
-; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte bereinstimmung
+; 1 = WinTitle muss mit Titel beginnen
+; 2 = WinTitle muss Titel irgendwo enthalten
+; 3 = exakte Übereinstimmung
 
 ; FileManagement
 ConfigFolder := A_ScriptDir . "\Config"
@@ -20,7 +20,9 @@ OverwriteKeysAnywayArray := { 1: "Version"
 , 3: "TimeOutMsgSkippedIntro"
 , 4: "TimeOutRemoteTest"
 , 5: "290102"
-, 6: "SleepAfterEnter"}
+, 6: "SleepAfterEnter"
+, 7: "r_Main1"
+, 8: "r_Main2"}
 
 OverwriteValuesArray := { 1: "IntroGetSex"
 , 2: "IntroSexReversed"
