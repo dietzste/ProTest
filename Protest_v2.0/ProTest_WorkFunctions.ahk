@@ -307,7 +307,7 @@ if (PreloadList != "")
 	PreloadExact := Preload . "`r"
 	If !InStr(PreloadList, PreloadExact)
 		{
-		Msgbox, 4096, Ups! , %Preload% nicht in Liste!
+		Msgbox, 4096, Ups! , %Preload% nicht in Preload-Liste!
 		Exit
 		}
 	}
