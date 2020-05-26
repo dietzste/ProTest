@@ -3,9 +3,9 @@
 SetWorkingDir %A_ScriptDir%
 
 SetTitleMatchMode, 2
-; 1 = wintitle muss mit Titel beginnen
-; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte bereinstimmung
+; 1 = WinTitle muss mit Titel beginnen
+; 2 = WinTitle muss Titel irgendwo enthalten
+; 3 = exakte Übereinstimmung
 
 ; FileManagement
 ConfigFolder := A_ScriptDir . "\Config"
@@ -20,7 +20,9 @@ OverwriteKeysAnywayArray := { 1: "Version"
 , 3: "TimeOutMsgSkippedIntro"
 , 4: "TimeOutRemoteTest"
 , 5: "290102"
-, 6: "SleepAfterEnter"}
+, 6: "SleepAfterEnter"
+, 7: "r_Main1"
+, 8: "r_Main2"}
 
 OverwriteValuesArray := { 1: "IntroGetSex"
 , 2: "IntroSexReversed"
@@ -31,23 +33,15 @@ OverwriteValuesArray := { 1: "IntroGetSex"
 ;;; Ende AutoSection ;;;
 
 ; (E1) Error Handling - Checking File Location
-if (A_IsCompiled = 1) 
-	ProTestProgram := "ProTest_v2.0.exe"
-else
+if !FileExist(ConfigFolder)
 	{
-	ProTestProgram := "ProTest__v2_Local.ahk"
-	if !FileExist(ProTestProgram)
-		ProTestProgram := "ProTest_v2.0.exe"
-	}
-if !FileExist(ProTestProgram)
-	{
-	SaveToUpdateLog("ABBRUCH: " . ProTestProgram . "nicht vorhanden")
-	MsgBox, 4096, Update Error, Die Datei %ProTestProgram% befindet sich nicht im Verzeichnis!
+	SaveToUpdateLog("ABBRUCH: Config-Ordner nicht vorhanden")
+	MsgBox, 4096, Update Error, Die Ordner Config befindet sich nicht im Verzeichnis!
 	ExitApp
 	}
 
 ; (E2) Error Handling - Exit ProTestProgramm
-ProTestWasRunning := ExitProTestProgramm(ProTestProgram)
+ProTestWasRunning := ExitProTestProgramm()
 
 ; (1) Checking Latest Version
 CurrentVersion := GetIniValue(BasicFile, "ProTestVersion", "Version")
@@ -70,7 +64,7 @@ else
 		; 1. AbbruchKriterium 
 		Msgbox, 4096, Update , ProTest ist auf dem neusten Stand! (Version: %CurrentVersion%)
 		;SaveToUpdateLog("ProTest ist auf dem neusten Stand (" . LatestVersion . ")")
-		RunProTest(ProTestProgram)
+		RunProTest()
 		ExitApp
 		}
 	else
@@ -113,7 +107,7 @@ IfMsgBox, YES
 	{
 	; 2. AbbruchKriterium 
 	SaveToUpdateLog("Update abgebrochen")
-	RunProTest(ProTestProgram)
+	RunProTest()
 	ExitApp
 	}
 else
@@ -151,7 +145,7 @@ IfMsgBox, YES
 		SaveToUpdateLog("Update auf Version " . LatestVersion . " abgeschlossen!")
 		Gosub 15GuiClose
 		MsgBox, 4096, Update erfolgreich!, Update auf Version %LatestVersion% abgeschlossen!
-		RunProTest(ProTestProgram)
+		RunProTest()
 		ExitApp
 		}
 	} ; Ende MsgBox
@@ -182,14 +176,18 @@ For Index, Filename in CompareFilesArray
 		}
 	CompareIniSections(OldFile, NewFile)
 	}
-SaveToUpdateLog("Update auf Version " . LatestVersion . " abgeschlossen!")
 WaitingProcessWindow(LatestVersion, "Überschreibe exe-Dateien")
 OverwriteExeFiles()
 WaitingProcessWindow(LatestVersion, "Entferne Update-Ordner")
+SaveToUpdateLog("Update auf Version " . LatestVersion . " abgeschlossen!")
 FileRemoveDir, %UpdateFolderPath% , 1
 Gosub 15GuiClose
 MsgBox, 4096, Update erfolgreich!, Update auf Version %LatestVersion% abgeschlossen!
-RunProTest(ProTestProgram)
+if (RemoteClientChanged = true)
+	MsgBox, 4096, RemoteClient Info, Der RemoteClient wurde erneuert! Bitte RemoteClient austauschen!
+else
+	MsgBox, 4096, RemoteClient Info, Der RemoteClient ist gleichgeblieben. Kein Austausch nötig.
+RunProTest()
 ExitApp
 return 
 
@@ -230,12 +228,29 @@ return CompareFilesArray.Count()
 OverwriteExeFiles(){
 local
 global UpdateFolderPath
-ProTestExeFiles := ["ProTest_v2.0.exe", "ProTest_v2.0_RemoteClient.exe"]
+global RemoteClientChanged := false
+
+; Did RemoteClient change?
+FileGetSize, NewRemoteClientSize , UpdateFolderPath . "\ProTest_RemoteClient.exe"
+FileGetSize, OldRemoteClientSize , ProTest_RemoteClient.exe
+if (NewRemoteClientSize = OldRemoteClientSize)
+	{
+	SaveToUpdateLog("RemoteClient: geändert")
+	RemoteClientChanged := true
+	}
+else
+	SaveToUpdateLog("RemoteClient: unverändert")
+
+ProTestExeFiles := ["ProTest.exe", "ProTest_RemoteClient.exe"]
 For i, ExeFile in ProTestExeFiles
 	{
 	NewFile := UpdateFolderPath . "\" . ExeFile
 	FileCopy, %NewFile%, %ExeFile%, 1
 	}
+if FileExist("ProTest_v2.0.exe")
+	FileDelete, ProTest_v2.0.exe
+if FileExist("ProTest_v2.0_RemoteClient.exe")
+	FileDelete, ProTest_v2.0_RemoteClient.exe
 }
 
 CompareIniSections(OldFile, NewFile){
@@ -257,8 +272,8 @@ Loop, Parse, NewSectionList , "`n"
 		{
 		; Abschnitt bereits vorhanden
 		; Load Sections
-		NewSectionKeys := GetIniSection(NewFile, CurrentSection)
-		OldSectionKeys := GetIniSection(OldFile, CurrentSection)
+		IniRead, NewSectionKeys, %NewFile%, %CurrentSection%
+		IniRead, OldSectionKeys, %OldFile%, %CurrentSection%
 		; Abschnitte gleich?
 		if (NewSectionKeys = OldSectionKeys)
 			{
@@ -356,6 +371,12 @@ else
 			ValueOverwritten := true
 			}
 		} ; ende for loop
+	if Instr(OldValue, "Ã")
+			{
+			; bei Kodierungs-Fehlern überschreiben
+			IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
+			ValueOverwritten := true
+			}
 	if (ValueOverwritten = false)
 		SaveToUpdateLog("Eigene Eintragung: [" . CurrentSection . "] " . CurrentNewKey . " = " . OldValue . " (ursprünglich: " . NewValue . ")")
 	} ; ende else
@@ -363,7 +384,7 @@ else
 
 CopySection(OldFile, NewFile, Section){
 local
-NewSectionKeys := GetIniSection(NewFile, Section)
+IniRead, NewSectionKeys, %NewFile%, %Section%
 SaveToUpdateLog("Neuer Abschnitt: [" . Section . "]")
 Loop, Parse, NewSectionKeys , "`n"
 	{
@@ -384,7 +405,6 @@ if Instr(CurrentKey, A_Tab)
 	CurrentKey := StrReplace(CurrentKey, A_Tab)
 return CurrentKey
 }
-
 
 DeleteOldIniSections(FilePath){
 local 
@@ -419,6 +439,9 @@ DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthMonth")
 DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthYear")
 DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_sex")
 DeleteIniValue(BasicFile, "BasicSettingsMenu", "c_dependent")
+DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn1")
+DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn2")
+DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn3")
 }
 
 ;;;;;;;;;;;;;;;;;;;
@@ -450,13 +473,13 @@ SaveIniValue(Basicfile, "ProTestVersion", "ForceUpdate", "true")
 Reload
 return
 
-RunProTest(ProTestProgram){
+RunProTest(){
 global ProTestWasRunning
 if (ProTestWasRunning = true)
 	{
-	Process, Exist , %ProTestProgram%
+	Process, Exist , ProTest.exe
 	if (ErrorLevel = 0) ; ProTest not running
-		Run, %ProTestProgram%
+		Run, ProTest.exe
 	}
 }
 
@@ -536,35 +559,25 @@ NewFolder.CopyHere(Folder.items, 4|16)
 FileDelete, %ZipFile%
 } ; Ende UnzipFile
 
-
-ExitProTestProgramm(ProTestProgram){
-local 
-if (ProTestProgram = "ProTest_v2.0.exe")
+ExitProTestProgramm(){
+local
+ProTestProgramArray := ["ProTest_v2.0.exe", "ProTest.exe"]
+For i, ExeFile in ProTestProgramArray
 	{
-	Process, Exist , %ProTestProgram%
+	; checking which exe-File is running 
+	Process, Exist , %ExeFile%
 	if (ErrorLevel != 0) ; ProTest running
 		{
-		Process, Close, %ProTestProgram%
+		Process, Close, %ExeFile%
 		if (ErrorLevel = 0)
 			{
-			MsgBox, 4096, Update Error, Kann %ProTestProgram% nicht schließen!
+			MsgBox, 4096, Update Error, Kann %ExeFile% nicht schließen!
 			Exit 
 			}
-		return ProTestWasRunning := true
-		}
-	}	
-else
-	{
-	if WinExist(ProTestProgram)
-		{
-		WinWaitClose %ProTestProgram%
-		if (ErrorLevel = 0)
-			{
-			MsgBox, 4096, Update Error, Kann %ProTestProgram% nicht schließen!
-			Exit 
-			}
+		global ProTestProgram := ExeFile
 		return ProTestWasRunning := true
 		}
 	}
+global ProTestProgram := ""
 return ProTestWasRunning := false
 } ; ende function 
