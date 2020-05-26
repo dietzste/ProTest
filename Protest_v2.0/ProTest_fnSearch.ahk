@@ -61,7 +61,7 @@ if (fnOCR = "")
 
 ; Check - Doppelte Schleife?
 Static SameFn := 0
-if (fnOCR = LastFn)
+if (fnOCR = LastFn and fnOCR != "")
 	{
 	++SameFn
 	if (SameFn = MaxSkips)
