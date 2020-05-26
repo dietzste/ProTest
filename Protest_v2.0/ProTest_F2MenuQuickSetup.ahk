@@ -67,7 +67,7 @@ LFDList := CreateLFDList("F2")
 if (c_StudyWithLFDs = 0)
 	IntroDisLFD := DisON
 
-;;;;;; GUI MenÃ¼ ;;;;;
+;;;;;; GUI Menü ;;;;;
 ; Hauptauswahl
 Gui, 2:+AlwaysOnTop
 Gui, 2:Add, Radio, x60  y15 w70 h15 Checked%r_Main1% vr_Main1 gOnlyIntro, Intro
@@ -164,7 +164,7 @@ if (r_LFD3 = 1)
 return 
 
 2GuiResetControls:
-MsgBox, 4132, Reset?, Reset %GuiF2% (to basic settings)?
+MsgBox, 4132, Reset?, Das Menü auf die Standardeinstellungen zurücksetzen?
 IfMsgBox, YES
 	{
 	Gui 2:Destroy
