@@ -333,7 +333,7 @@ else
 	NoActionButton := "Exit"
 
 Gui, 11:+AlwaysOnTop -SysMenu
-Gui, 11:Add, Groupbox, x10 y5 w180 h100 cNavy, Ini-Projectdateien
+Gui, 11:Add, Groupbox, x10 y5 w180 h100 cNavy, ini-Projektdateien
 gui, 11:add, listbox, x20 y28 w150 h60 vIniFileInList sort, % FileList
 gui, 11:add, button, x10 y110 w50 g11GuiCancel, % NoActionButton
 gui, 11:add, button, x65 y110 w50 g11GuiNewProjectFile, Neu
