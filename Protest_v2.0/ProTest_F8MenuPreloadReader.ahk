@@ -29,9 +29,15 @@ c_LoadSavedValues := GetIniValue(ProjectFile, PreloadReaderMenu, "c_LoadSavedVal
 
 ; Show Current LFD
 if (CurrentLFD != "")
+	{
 	CurrentLFDComment := "(LFD: " . CurrentLFD . ")"
+	LoadSavedValuesDis := DisOFF
+	}
 else
+	{
 	CurrentLFDComment := ""
+	LoadSavedValuesDis := DisON
+	}
 
 ;;;;;; GUI Menü ;;;;;
 ; EDIT-FIELDs
@@ -54,7 +60,7 @@ Gui, 8:Add, CheckBox, x12 y84 w13  h20 Checked%c_PL3% vc_PL3
 Gui, 8:Add, CheckBox, x12 y106 w13	 h20 Checked%c_PL4% vc_PL4
 Gui, 8:Add, CheckBox, x12 y128 w13  h20 Checked%c_PL5% vc_PL5
 ; weitere Checkboxen
-Gui, 8:Add, CheckBox, x30 y195  w220 h20 Checked%c_LoadSavedValues% vc_LoadSavedValues, aus TempFile laden %CurrentLFDComment%
+Gui, 8:Add, CheckBox, x30 y195  w220 h20 %LoadSavedValuesDis% Checked%c_LoadSavedValues% vc_LoadSavedValues, aus TempFile laden %CurrentLFDComment%
 Gui, 8:Add, CheckBox, x30 y217 	w150 h20 vc_DetailsOnly g8GuiOnlyDetails, nur Preload-Details laden
 ; BUTTONS
 Gui, 8:Add, Button,   x30  y162 w50  h25 g8GuiHelp , Hilfe
