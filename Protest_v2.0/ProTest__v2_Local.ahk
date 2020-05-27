@@ -55,15 +55,13 @@ if (StartAsAdmin = "true")
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
 ; Name Menüs
-GuiF1  := "Überblick Hotkeys"
-GuiF2  := "Quick Setup Menu"
-GuiF3  := "LFD Finder Menu"
-GuiF4  := "Erweiterte Optionen"
-GuiF7  := "Lernmodus"
-GuiF8  := "Preload Reader"
-GuiF9  := "Remote Feedback Test"
-GuiF10 := "ProTest Einstellungen"
-GuiF12 := "Protest beenden?"
+GuiF2  := "Hauptmenü (F2)"
+GuiF3  := "LFD Finder (F3)"
+GuiF4  := "Erweiterte Optionen (F4)"
+GuiF7  := "LernModus (F7)"
+GuiF8  := "Preload Reader (F8)"
+GuiF10 := "ProTest Einstellungen (F10)"
+GuiF12 := "Protest beenden? (F12)"
 
 ; ini section names
 QuickSetupMenu := "QuickSetupMenu"

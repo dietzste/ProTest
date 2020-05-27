@@ -1,5 +1,4 @@
 F7::
-GuiF7 := "LernModus - AddtoLibrary"
 SetTitleMatchMode, 3
 If WinExist(GuiF7)
 	WinActivate, %GuiF7%

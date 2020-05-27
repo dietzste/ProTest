@@ -68,13 +68,13 @@ return
 #if
 
 F1::
-MsgBox, 4096 , F1 - %GuiF1% (Version: %ProTestVersion%), 
+MsgBox, 4096 , Überblick Hotkeys (F1) - Version: %ProTestVersion%, 
 (
 Basic Hotkeys:
 F6		= Vorgang pausieren/fortfahren
 Shift + F5%A_Tab%%A_Tab%= Startet Skript neu (Restart)
 Shift + ESC%A_Tab%= Hotkeys (de-)aktivieren
-F9		= %GuiF9%
+F9		= Remote Feedback Test
 F12		= ProTest beenden
 
 Menüs:
