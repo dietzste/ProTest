@@ -85,8 +85,8 @@ else
 	SameFn := 0
 
 TriedAnywaySkip := false
-; MATCH with Stop Fn?
-Result := CheckStopFn(fnOCR, Index)
+; MATCH with Target Fn?
+Result := CheckTargetFn(fnOCR, Index)
 if (Result = true)
 	return fnSearchIsOver := true
 
@@ -103,7 +103,7 @@ MatchNagFn := CheckNagFn(fnOCR, Index)
 if (MatchNagFn = true)
 	return fnSearchIsOver := false
 
-SaveToHistory("VERBOSE:", fnOCR . " KEINE Stop-fn, Upcoming-fn, Nag-fn")
+SaveToHistory("VERBOSE:", fnOCR . " KEINE Ziel-fn, Upcoming-fn, Nag-fn")
 
 ; Clicking Buttons
 ClickSkippButton(fnOCR)
@@ -129,17 +129,17 @@ else
 Sleep, SleepAfterEnter
 }
 
-CheckStopFn(fnOCR, Index){
+CheckTargetFn(fnOCR, Index){
 local
-global StopFnArray
-for i, StopFn in StopFnArray
+global TargetFnArray
+for i, TargetFn in TargetFnArray
 	{
-	StopfnLength := StrLen(StopFn)
-	CompareFn := SubStr(fnOCR, 1 , StopfnLength)
-	if (CompareFn = StopFn)
+	TargetfnLength := StrLen(TargetFn)
+	CompareFn := SubStr(fnOCR, 1 , TargetfnLength)
+	if (CompareFn = TargetFn)
 		{
-		Msgbox, 4096, Durchlauf beendet!, Stop-fn "%StopFn%" erreicht! Es wurden %Index% Fragen übersprungen.
-		SaveToHistory(fnOCR, " MATCH mit Stop fn: " . StopFn, Index " Frage(n) übersprungen")
+		Msgbox, 4096, Durchlauf beendet!, Ziel-fn "%TargetFn%" erreicht! Es wurden %Index% Fragen übersprungen.
+		SaveToHistory(fnOCR, " MATCH mit Ziel-fn: " . TargetFn, Index " Frage(n) übersprungen")
 		return true
 		}
 	}
