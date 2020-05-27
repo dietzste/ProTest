@@ -95,7 +95,7 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	CheckWorkWindow()
 	CheckCapture2TextIsRunning()
 	global TriedXModulSkip := false 
-	PrepareStopfn()
+	PrepareTargetfn()
 	if (r_AdvancedON = 1)
 		PrepareUpComingFn()
 	SaveToHistory("######")
@@ -109,25 +109,25 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	}
 }
 
-PrepareStopfn(){
+PrepareTargetfn(){
 local
-global e_Stopfn1, e_Stopfn2, e_Stopfn3
-global StopFnArray := {}
-StopFnControlArray := [e_Stopfn1, e_Stopfn2, e_Stopfn3]
-StopFnString := ""
-for i, StopFn in StopFnControlArray
+global e_Targetfn1, e_Targetfn2, e_Targetfn3
+global TargetFnArray := {}
+TargetFnControlArray := [e_Targetfn1, e_Targetfn2, e_Targetfn3]
+TargetFnString := ""
+for i, TargetFn in TargetFnControlArray
 	{
-	if (StopFn != "")
+	if (TargetFn != "")
 		{
-		StopFnArray[A_Index] := StopFn
-		if (StopFnString = "")
-			StopFnString := StopFn
+		TargetFnArray[A_Index] := TargetFn
+		if (TargetFnString = "")
+			TargetFnString := TargetFn
 		else
-			StopFnString .= ", " StopFn
+			TargetFnString .= ", " TargetFn
 		}
 	}
-if (StopFnString != "")
-	SaveToHistory("StopFn: " . StopFnString )
+if (TargetFnString != "")
+	SaveToHistory("Ziel-Fn: " . TargetFnString )
 }
 
 PrepareUpComingFn(){
