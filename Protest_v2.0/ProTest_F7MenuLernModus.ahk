@@ -16,12 +16,12 @@ EnterWhileSaving := GetIniValue(ProjectFile, "LernModus", "EnterWhileSaving", 1)
 7GuiSetControls:
 CheckCapture2TextIsRunning()
 CheckWorkWindow()
+e_fnLearn := ""
 e_fnLearn := OCR("Learn", 0)
 if (F7MousePosX != "")
 	MouseMove, F7MousePosX, F7MousePosY
 
 fnValue := ""
-fnComment := ""
 dd_Section := ""
 
 ; Eintrag vorhanden?
@@ -31,12 +31,18 @@ For i, Section in SectionArray
 	if (e_fnLearn = "")
 		break
 	dd_Section := Section
-	CorrectedfnOCR := AutoCorrection(fnOCR, dd_Section, fnValue)
-	if (CorrectedfnOCR != e_fnLearn)
+	fnValue := GetIniValue(LibraryFile, Section, e_fnLearn)
+	if (fnValue = "ERROR")
 		{
-		e_fnLearn := CorrectedfnOCR
-		break
+		CorrectedfnOCR := AutoCorrection(e_fnLearn, Section, fnValue)
+		if (CorrectedfnOCR != e_fnLearn)
+			{
+			e_fnLearn := CorrectedfnOCR
+			break
+			}
 		}
+	else
+		break
 	}
 ; Eintrag noch nicht vorhanden
 if (fnValue = "ERROR")
@@ -53,7 +59,10 @@ else
 		SectionList := "fnIntro|fnNag||"
 	}
 ActionList := fnValue . "||Get()|Reverse()|Stop|Ende|{Enter}"
-e_comment := ExtractfnComment(e_fnLearn, dd_Section)
+if (fnValue != "")
+	fnComment := ExtractfnComment(e_fnLearn, dd_Section)
+else
+	fnComment := ""
 
 Gui, 7: +AlwaysOnTop ToolWindow
 Gui, 7:Add, Groupbox, x10 y10 w220 h140 cnavy, Lernmodus
@@ -62,7 +71,7 @@ Gui, 7:Add, Edit, x103 y32 w120 h20 ve_fnLearn,	%e_fnLearn%
 Gui, 7:Add, Text, x20 y56 w70 h20, Eingabewert:
 Gui, 7:Add, Combobox, x103 y54 w120  h80 vfnValue, % ActionList
 Gui, 7:Add, Text, x20 y79 w74 h20, Kommentar:
-Gui, 7:Add, Edit, x103 y77 w120 h20 ve_comment, % e_comment
+Gui, 7:Add, Edit, x103 y77 w120 h20 vfnComment, % fnComment
 Gui, 7:Add, Text, x20 y103 w74 h20, Abschnitt:
 Gui, 7:Add, DropDownList, x103 y101 w120  h80 vdd_Section, % SectionList
 Gui, 7:Add, Checkbox, x20 y128 w140 h20 Checked%EnterWhileSaving% vEnterWhileSaving, beim Speichern ausführen
