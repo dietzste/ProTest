@@ -12,6 +12,7 @@ global r_Main1, r_Main2, r_Main3
 global r_LFD1, r_LFD2, cb_UseLFD
 global c_Beginning, e_Beginning, c_SendDate, c_SkipLastPart
 global e_Day, e_Month, e_Year
+global c_Next, e_Next
 global r_AdvancedON
 global StudyWithLFDs := GetIniValue(ProjectFile, "QuickSetupMenu", "c_StudyWithLFDs",1)
 global AdvancedSearchMenu
@@ -37,6 +38,14 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		Send, %e_Day%{Enter}%e_Month%{Enter}%e_Year%{Enter}
 		SetKeyDelay, fast
 		SaveToHistory("Datum eingeben: " . e_Day . "." . e_Month . "." . e_Year)
+		}
+	if (c_Next = 1)
+		{
+		;Weiter mit
+		SetKeyDelay, med
+		Send, %e_Next%
+		SetKeyDelay, fast
+		SaveToHistory("Weiter mit: " . e_Next)
 		}
 	if (r_LFD1 = 1)
 		{
