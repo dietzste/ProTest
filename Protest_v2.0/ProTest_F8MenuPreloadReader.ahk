@@ -41,7 +41,7 @@ else
 
 ;;;;;; GUI Menü ;;;;;
 ; EDIT-FIELDs
-Gui, 8:+AlwaysOnTop
+Gui, 8:+AlwaysOnTop ToolWindow
 Gui, 8:Add, Groupbox, x30 y20 w150 h135 cNavy, Preload(s) auslesen
 Gui, 8:Add, Groupbox, x182 y20 w75 h135 cNavy, Neuer Wert
 Gui, 8:Add, Edit, x34 	y40  w140  h20 ve_PLN1, %e_PLN1%

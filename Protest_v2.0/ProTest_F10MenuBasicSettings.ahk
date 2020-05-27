@@ -55,7 +55,7 @@ else
 ; CACLCULATE POSITIONS
 AdjustPositions()
 
-Gui, 10:+AlwaysOnTop
+Gui, 10:+AlwaysOnTop Toolwindow
 ; INI Files
 Gui, 10:Add, Groupbox, x10 y10 w260 h73 cNavy, Ini Files
 Gui, 10:Add, Text, x20 y32  w92  h20 , Project File:
