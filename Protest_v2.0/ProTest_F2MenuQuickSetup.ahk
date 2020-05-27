@@ -22,14 +22,15 @@ if (2GuiReset = true)
 ;GuiControlArray
 2GuiControlArray := [
 , "r_Main1", "r_Main2", "r_Main3"
+, "c_Beginning", "e_Beginning"
+, "c_SendDate"
+, "c_Next", "e_Next"
 , "r_LFD1", "r_LFD2", "r_LFD3"
-, "r_AdvancedON", "r_AdvancedOFF"
-, "e_Beginning", "cb_UseLFD"
-, "e_Stopfn1", "e_Stopfn2", "e_Stopfn3",
-, "dd_SkipButton", 
-, "c_Beginning", "c_SendDate", 
+, "cb_UseLFD", "c_StudyWithLFDs"
 , "c_SkipLastPart"
-, "c_StudyWithLFDs" ]
+, "e_Targetfn1", "e_Targetfn2", "e_Targetfn3"
+, "dd_SkipButton"
+, "r_AdvancedON", "r_AdvancedOFF" ]
 for i, control in 2GuiControlArray
 	{
 	%control% := GetIniValue(ProjectFile, QuickSetupMenu, control)
@@ -42,7 +43,7 @@ e_Day := GetIniValue(ProjectFile, QuickSetupMenu, "e_Day", A_DD)
 e_Month := GetIniValue(ProjectFile, QuickSetupMenu, "e_Month", A_MM )
 e_Year := GetIniValue(ProjectFile, QuickSetupMenu, "e_Year", A_YYYY )
 
-; UntermenÃ¼s (de-)aktivieren
+; Untermenüs (de-)aktivieren
 if (r_Main1 = 1)
 	{
 	IntroDis := DisOFF
@@ -74,41 +75,43 @@ Gui, 2:Add, Radio, x60  y15 w70 h15 Checked%r_Main1% vr_Main1 gOnlyIntro, Intro
 Gui, 2:Add, Radio, x130 y15 w70 h15 Checked%r_Main2% vr_Main2 gOnlyfnSearch, fn Suche
 Gui, 2:Add, Radio, x220 y15 w70 h15 Checked%r_Main3% vr_Main3 gboth, Beides
 ; Intro
-Gui, 2:Add, Groupbox, x10 y40 w293 h228 cNavy %IntroDis%, Intro
+Gui, 2:Add, Groupbox, x10 y40 w293 h253 cNavy %IntroDis%, Intro
 ; 1. Beginning
-Gui, 2:Add, Groupbox, x17 y60 w280 h69 %IntroDis% cBlack, Anfang
+Gui, 2:Add, Groupbox, x17 y60 w280 h93 %IntroDis% cBlack, Anfang
 Gui, 2:Add, CheckBox, x32 y75 w70  h20 %IntroDis% Checked%c_Beginning% vc_Beginning, Starten mit:
 Gui, 2:Add, Edit,    x112 y75 w160 h20 %IntroDis% ve_Beginning, %e_Beginning%
 Gui, 2:Add, CheckBox, x32 y98 w100 h20 %IntroDis% Checked%c_SendDate%  vc_SendDate, Datum eingeben
 Gui, 2:Add, Edit,    x137 y99 w20 h20 %IntroDis% Center ve_Day, %e_Day%
 Gui, 2:Add, Edit,    x162 y99 w20 h20 %IntroDis% Center ve_Month, %e_Month%
 Gui, 2:Add, Edit,    x187 y99 w35 h20 %IntroDis% Center ve_Year, %e_Year%
+Gui, 2:Add, CheckBox, x32 y124 w70 h20 %IntroDis% Checked%c_Next%  vc_Next, Weiter mit:
+Gui, 2:Add, Edit,    x112 y124 w160 h20 %IntroDis% ve_Next, %e_Next%
 ; 2. LFD 
-Gui, 2:Add, Groupbox, x17 y124 w280 h90 cBlack %IntroDisLFD%, LFD Eingabe
-Gui, 2:Add, Radio, x32 y140 w40  h20 %IntroDisLFD% Checked%r_LFD1% vr_LFD1 g2GuiShowButton, LFD:
-Gui, 2:Add, Radio, x32 y162 w140 h20 %IntroDisLFD% Checked%r_LFD2% vr_LFD2 gOpenF3, Suche mit LFD-Finder
-Gui, 2:Add, Radio, x32 y184 w140  h20 %IntroDisLFD% Checked%r_LFD3% vr_LFD3 g2GuiShowButton, keine Eingabe
-Gui, 2:Add, ComboBox, x77 y140 w75 h100 %IntroDisLFD% Limit%LFDLimit%  vcb_UseLFD, % LFDList
-Gui, 2:Add, Button, x170 y140 w75 h20 %IntroDisLFD% g2GuiShowLFDValues, LFD Werte
-Gui, 2:Add, CheckBox, x180 y185 w100  h20 %IntroDis% Checked%c_StudyWithLFDs% vc_StudyWithLFDs g2GuiLFDsAvailable, LFDs vorhanden
+Gui, 2:Add, Groupbox, x17 y149 w280 h90 cBlack %IntroDisLFD%, LFD Eingabe
+Gui, 2:Add, Radio, x32 y165 w40  h20 %IntroDisLFD% Checked%r_LFD1% vr_LFD1 g2GuiShowButton, LFD:
+Gui, 2:Add, Radio, x32 y187 w140 h20 %IntroDisLFD% Checked%r_LFD2% vr_LFD2 gOpenF3, Suche mit LFD-Finder
+Gui, 2:Add, Radio, x32 y209 w140  h20 %IntroDisLFD% Checked%r_LFD3% vr_LFD3 g2GuiShowButton, keine Eingabe
+Gui, 2:Add, ComboBox, x77 y165 w75 h100 %IntroDisLFD% Limit%LFDLimit%  vcb_UseLFD, % LFDList
+Gui, 2:Add, Button, x170 y165 w75 h20 %IntroDisLFD% g2GuiShowLFDValues, LFD Werte
+Gui, 2:Add, CheckBox, x180 y210 w100  h20 %IntroDis% Checked%c_StudyWithLFDs% vc_StudyWithLFDs g2GuiLFDsAvailable, LFDs vorhanden
 ; 3. Last Part 
-Gui, 2:Add, Groupbox, x17 y210 w280 h50 %IntroDis% cBlack , Haupt-Intro
-Gui, 2:Add, CheckBox, x32 y230 w84  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, überspringen!
+Gui, 2:Add, Groupbox, x17 y235 w280 h50 %IntroDis% cBlack , Haupt-Intro
+Gui, 2:Add, CheckBox, x32 y255 w84  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, überspringen!
 ; fn Search
-Gui, 2:Add, Groupbox, x10 y273 w293 h108 %fnDis% cNavy, fn Suche
-Gui, 2:Add, Text, x19 y295 w90  h20 %fnDis%, STOP fn(s):
-Gui, 2:Add, Edit, x90 y292 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Stopfn1, %e_Stopfn1%
-Gui, 2:Add, Edit, x140 y292 w46 h20 %fnDis% Limit%fnLimit% Center ve_Stopfn2, %e_Stopfn2%
-Gui, 2:Add, Edit, x190 y292 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Stopfn3, %e_Stopfn3%
-Gui, 2:Add, Text, x19 y323  w92 h20 %fnDis%, Skip-Button:
-Gui, 2:Add, DropDownList, x90 y321 w110 h70 %fnDis% AltSubmit Center Choose%dd_SkipButton% vdd_SkipButton, verweigert||Clear&Back
-Gui, 2:Add, Text, x19 y353 w135 h20 %fnDis%, Erweiterte Optionen:
-Gui, 2:Add, Radio, x130 y352 w35 h15 %fnDis% Checked%r_AdvancedON% vr_AdvancedON gOpenF4, Ein
-Gui, 2:Add, Radio, x170 y352 w35 h15 %fnDis% Checked%r_AdvancedOFF% vr_AdvancedOFF, Aus
+Gui, 2:Add, Groupbox, x10 y298 w293 h108 %fnDis% cNavy, fn Suche
+Gui, 2:Add, Text, x19 y320 w90  h20 %fnDis%, Ziel fn(s):
+Gui, 2:Add, Edit, x90 y317 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Targetfn1, %e_Targetfn1%
+Gui, 2:Add, Edit, x140 y317 w46 h20 %fnDis% Limit%fnLimit% Center ve_Targetfn2, %e_Targetfn2%
+Gui, 2:Add, Edit, x190 y317 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Targetfn3, %e_Targetfn3%
+Gui, 2:Add, Text, x19 y348  w92 h20 %fnDis%, Skip-Button:
+Gui, 2:Add, DropDownList, x90 y346 w110 h70 %fnDis% AltSubmit Center Choose%dd_SkipButton% vdd_SkipButton, verweigert||Clear&Back
+Gui, 2:Add, Text, x19 y378 w135 h20 %fnDis%, Erweiterte Optionen:
+Gui, 2:Add, Radio, x130 y377 w35 h15 %fnDis% Checked%r_AdvancedON% vr_AdvancedON gOpenF4, Ein
+Gui, 2:Add, Radio, x170 y377 w35 h15 %fnDis% Checked%r_AdvancedOFF% vr_AdvancedOFF, Aus
 ; Abschluss
-Gui, 2:Add, Button, x10 y390 w50 h25 g2GuiHelp, Hilfe
-Gui, 2:Add, Button, x70 y390 w50 h25 g2GuiResetControls, Reset
-Gui, 2:Add, Button, x223 y390 w80 h25 g2GuiGO Default, Ok
+Gui, 2:Add, Button, x10 y415 w50 h25 g2GuiHelp, Hilfe
+Gui, 2:Add, Button, x70 y415 w50 h25 g2GuiResetControls, Reset
+Gui, 2:Add, Button, x223 y415 w80 h25 g2GuiGO Default, Ok
 Gui, 2:Show, x850 y480 Autosize Center, %GuiF2%
 if (r_LFD3 = 1 OR r_LFD2 = 1) 
 	Control, Hide ,, LFD Werte, %GuiF2%
