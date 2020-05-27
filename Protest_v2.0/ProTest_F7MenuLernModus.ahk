@@ -1,5 +1,6 @@
 F7::
 GuiF7 := "LernModus - AddtoLibrary"
+SetTitleMatchMode, 3
 If WinExist(GuiF7)
 	WinActivate, %GuiF7%
 else
@@ -7,6 +8,7 @@ else
 return
 
 F7Routine:
+SetTitleMatchMode, 2
 ; MouseMoves
 F7MousePosX := ""
 F7MousePosY := ""

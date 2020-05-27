@@ -4,6 +4,7 @@
 
 F2::
 ListLines Off
+SetTitleMatchMode, 3
 If WinExist(GuiF2)
 	WinActivate, %GuiF2%
 else
@@ -11,6 +12,7 @@ else
 return
 
 F2Routine:
+SetTitleMatchMode, 2
 2GuiReset := false
 
 2GuiSetControls:

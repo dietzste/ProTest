@@ -4,6 +4,7 @@
 
 F3::
 ListLines Off
+SetTitleMatchMode, 3
 If WinExist(GuiF3)
 	WinActivate, %GuiF3%
 else
@@ -11,6 +12,7 @@ else
 return
 
 F3Routine:
+SetTitleMatchMode, 2
 3GuiReset := false
 ; Fenster mit/ohne LFD
 if (CurrentLFD != "")

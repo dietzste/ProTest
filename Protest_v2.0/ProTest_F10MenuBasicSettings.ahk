@@ -4,6 +4,7 @@
 
 F10::
 ListLines Off
+SetTitleMatchMode, 3
 If WinExist(GuiF10)
 	WinActivate, %GuiF10%
 else
@@ -11,6 +12,7 @@ else
 return
 
 F10Routine:
+SetTitleMatchMode, 2
 OCRFailedCount := 0
 PermanentSave := ""
 10GuiReset := false

@@ -3,6 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 F4::
+SetTitleMatchMode, 3
 If WinExist(GuiF4)
 	WinActivate, %GuiF4%
 else
@@ -10,6 +11,7 @@ else
 return
 
 F4Routine:
+SetTitleMatchMode, 2
 4GuiReset := false
 
 4GuiSetControls:
