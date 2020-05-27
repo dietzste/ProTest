@@ -75,7 +75,7 @@ Falls die aktuelle Erhebung ohne LFDs arbeitet: Bei
 Auswahl 'Keine Eingabe' die Checkbox 'LFDs vorhanden'
 abwählen.
 
-Stop-fn(s): 
+Ziel-fn(s): 
 Eingaben können einstellig oder mehrstellig sein (z.B. 3).
 
 Skip-Button 'verweigert': drückt verweigert 
@@ -85,9 +85,9 @@ hintereinander (=Rückwärtssuche).
 {Enter} = drückt Enter Taste
 
 Priorität der fn-Suche:
-1) Stop-fns
+1) Ziel-fns (F2)
 2) Eingaben der Erweiterten Optionen (F4)
-3) NagFns -> Library.ini -> [fnNag]
+3) fnNag (Library)
 )
 Helptext = %2GuiHelpText%
 return 
