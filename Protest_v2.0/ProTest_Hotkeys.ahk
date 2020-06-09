@@ -91,6 +91,7 @@ Strg + d 	 	= gibt aktuelles Datum ein
 Shift + F3/F8	= öffnet AutoEdit Menü
 Strg + m 	 	= überspringt XModul
 Strg + r 	 	= startet Befragung neu
+Strg + u 		= prüft auf Updates
 Bild hoch		= drückt verweigert-Button
 Bild runter	= drückt Clear&Back 
 )
