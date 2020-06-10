@@ -136,7 +136,7 @@ else
 		{
 		; Ersten neuen Eintrag mit Abstand + Zeitstempel einfügen
 		TimeStemp :=  A_DD . "." . A_MM . "." . A_YYYY
-		SaveIniValue(LibraryFile, dd_Section, "`n;;; Neuer Eintrag " . TimeStemp . "`nNeuerEintrag", "Blank")
+		SaveIniValue(LibraryFile, dd_Section, "`n;;; Neuer Eintrag " . TimeStemp . "(" . ProjectName . ")" . "`nNeuerEintrag", "Blank")
 		if (dd_Section = "fnIntro")
 			NewEntryF7fnIntro := true
 		else
