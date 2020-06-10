@@ -74,17 +74,22 @@ else if Instr(fnValue, "{Enter}")
 else if (InStr(fnValue, "["))
 	{
 	ButtonName := GetValueBetweenSquareBrackets(fnValue)
-	Result := L_TryClickingButton(ButtonName, 1)
-	If (Result = "true")
+	if (ButtonName = "verweigert")
 		{
-		SaveToHistory(fnOCR, "= [" . ButtonName . "]", Mode)
-		return
+		Send, {PgUp}
+		Sleep, SleepAfterEnter
 		}
 	else
 		{
-		Msgbox, 4096, Durchlauf beendet..., ...da der für fn "%fnOCR%" vorgesehene Button ("%ButtonName%") nicht vorhanden ist!
-		Exit
+		Result := L_TryClickingButton(ButtonName, 1)
+		If (Result != "true")
+			{
+			Msgbox, 4096, Durchlauf beendet..., ...da der für fn "%fnOCR%" vorgesehene Button ("%ButtonName%") nicht vorhanden ist!
+			Exit
+			}
 		}
+	SaveToHistory(fnOCR, "= [" . ButtonName . "]", Mode)
+	return
 	}
 else
 	{
