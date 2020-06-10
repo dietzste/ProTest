@@ -58,7 +58,7 @@ else
 	else
 		SectionList := "fnIntro|fnNag||"
 	}
-ActionList := fnValue . "||Get()|Reverse()|Stop|Ende|{Enter}"
+ActionList := fnValue . "||Get(sexPRE)|Get(gebtPRE/gebmPRE/gebjPRE)|Get()|Reverse(sexPRE)|Reverse()|Stop|Ende|{Enter}"
 if (fnValue != "")
 	fnComment := ExtractfnComment(e_fnLearn, dd_Section)
 else
