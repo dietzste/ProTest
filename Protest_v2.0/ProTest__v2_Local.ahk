@@ -101,6 +101,7 @@ RemoteBuffer		:= GetIniValue(BasicFile, "AdvancedSettings",  "RemoteBuffer")
 WaitForXModulSec	:= GetIniValue(BasicFile, "AdvancedSettings",  "WaitForXModulSec")
 VerboseHistory		:= GetIniValue(BasicFile, "AdvancedSettings",  "VerboseHistory")
 MaxSkips			:= GetIniValue(BasicFile, "AdvancedSettings",  "MaxSkips")
+SkipIfPreloadZero	:= GetIniValue(BasicFile, "AdvancedSettings",  "SkipIfPreloadZero")
 
 ; OCR Settings
 RawOCRTestOutput	:= GetIniValue(BasicFile, "OCR",  "RawOCRTestOutput")
