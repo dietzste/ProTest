@@ -197,9 +197,9 @@ Result := RemoteExtraction(SendValue, Detection)
 return Result ; Result: "false" / "true"
 }
 
-L_GetNextLFD(NClickBackButton){
+L_GetNextLFD(){
 local
-SendValue := ">GetNextLFD." . NClickBackButton
+SendValue := ">GetNextLFD"
 Detection := SendWait(SendValue, true)
 NextLFD := RemoteExtraction(SendValue, Detection)
 if (NextLFD != "Error")
