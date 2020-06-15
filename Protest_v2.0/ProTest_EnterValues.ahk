@@ -1,9 +1,18 @@
 EnterfnValue(fnOCR, fnValue, Mode, params*){
 local
 global SleepAfterEnter
+global MaxLengthfnValue
 global LastFn
 ShowIndex := false
 MsgboxZusatz := ""
+
+; emergency shutdown
+if StrLen(fnValue) > MaxLengthfnValue
+	{
+	SaveToHistory("Schwerer Fehler (OCR = " . fnOCR . ")")
+	Exit
+	}
+	
 SaveToHistory("VERBOSE:", fnOCR . " fnValue: " fnValue)
 
 if (LastFn = fnOCR)
