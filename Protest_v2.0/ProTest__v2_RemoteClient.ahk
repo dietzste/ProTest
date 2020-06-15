@@ -115,17 +115,14 @@ return "<ExcludeHopelessLFDs"
 
 R_GetNextLFD(Detection){
 local
-global fast, med, NipoFenster
+global med, NipoFenster
 global RemoteSimulation
 SaveRemoteHistory("VERBOSE:", "Function GetNextLFD")
-; Clicking Back
-NPressBackButton := Substr(Detection, 13)
 If (RemoteSimulation = true)
 	NextLFD := 1234
 else
 	{
-	SaveRemoteHistory("VERBOSE:", "Back Button " . NPressBackButton . " Times")
-	Loop, %NPressBackButton%  {
+	; (1) First Back
 	ButtonIsVisible := IsButtonVisible("&Back")
 	if (ButtonIsVisible = true)
 		{
@@ -134,11 +131,17 @@ else
 		}
 	else
 		return "Error"
-	}
+	; (2) Second Back
+	ButtonIsVisible := IsButtonVisible("&Clear")
+	if (ButtonIsVisible = false)
+		{
+		ControlClick, &Back, %NipoFenster%,,,, NA
+		Sleep, med
+		}
 	NextLFD := ReadingNextLFD()
-	return NextLFD
-	} ; ende if
-}
+	}
+return NextLFD
+} ; ende function
 
 ReadingNextLFD(){
 local  
@@ -153,6 +156,8 @@ Loop {
 	ControlClick, &Back, %NipoFenster%,,,, NA
 	Sleep, med
 	ControlGetText, LFDinEditField, Edit1, %NipoFenster%,,,,NA
+	if (ErrorLevel = 1) ; Error while reading next LFD
+		Exit
 	Sleep, med
 	if (HopelessLFDString != "")
 		{

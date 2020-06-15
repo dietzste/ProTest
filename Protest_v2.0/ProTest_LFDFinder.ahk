@@ -125,10 +125,7 @@ if (Command = "Start")
 else if (Command = "NeedNextLFD")
 	{
 	SaveToHistory("VERBOSE:", "Hole nächste LFD")
-	if (LFDStatus = 2)
-		NextLFD := L_GetNextLFD(1)
-	if (LFDStatus = 3)
-		NextLFD := L_GetNextLFD(2)
+	NextLFD := L_GetNextLFD()
 	SaveToHistory("Nächste LFD: " . NextLFD . " LFD #" . LFDCount)
 	CurrentLFD := NextLFD
 	LFDStatus := 2
