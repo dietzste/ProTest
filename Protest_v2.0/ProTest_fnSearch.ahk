@@ -71,6 +71,7 @@ if (fnOCR = LastFn and fnOCR != "")
 		IfMsgBox, Yes
 			{
 			SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? JA")
+			SaveToHistory("PAUSE")
 			Send, {F6}
 			return fnSearchIsOver := false
 			}

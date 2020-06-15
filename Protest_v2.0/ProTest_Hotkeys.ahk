@@ -29,7 +29,8 @@ return
 
 F6::
 	PAUSE
-	SaveToHistory("PAUSE")
+	if (A_IsPaused = 0)
+		SaveToHistory("PAUSE")
 Return
 
 +ESC::
