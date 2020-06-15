@@ -4,7 +4,6 @@
 
 F3::
 ListLines Off
-SetTitleMatchMode, 3
 If WinExist(GuiF3)
 	WinActivate, %GuiF3%
 else
@@ -16,7 +15,7 @@ SetTitleMatchMode, 2
 3GuiReset := false
 ; Fenster mit/ohne LFD
 if (CurrentLFD != "")
-	F3MenuName := "LFD Finder Menu - LFD: " . CurrentLFD
+	F3MenuName := GuiF3 . " - LFD: " . CurrentLFD
 else
 	F3MenuName := GuiF3
 
