@@ -93,7 +93,7 @@ WinActivate, %WorkWindow%
 MouseGetPos, F7MousePosX, F7MousePosY
 Gui 7:Submit, NoHide
 ; check if fnValue/Comment exists
-if (fnValue = "" or e_comment = "")
+if (fnValue = "" or fnComment = "")
 	{
 	Msgbox, 4096, Fehlende Angaben, Eintragungen für Eingabewert oder Kommentar fehlen!
 	return
@@ -104,7 +104,7 @@ if (ExistingFnValue != "ERROR")
 	; ja - Eintrag bereits vorhanden
 	IniRead, ExistingFnValue, %LibraryFile%, %dd_Section%, %e_fnLearn%
 	OldEntry := e_fnLearn . " = " . ExistingFnValue
-	NewEntry := e_fnLearn . " = " . fnValue . A_Tab . ";" . A_Space . e_comment
+	NewEntry := e_fnLearn . " = " . fnValue . A_Tab . ";" . A_Space . fnComment
 	; Vergleich ohne Tabs
 	CleanOldEntry := StrReplace(OldEntry, A_Tab)
 	CleanNewEntry := StrReplace(NewEntry, A_Tab)
@@ -122,7 +122,7 @@ if (ExistingFnValue != "ERROR")
 		IfMsgBox, YES
 			{
 			; Eintrag überschrieben
-			SaveIniValue(LibraryFile, dd_Section, e_fnLearn, fnValue . A_Tab . ";" . A_Space . e_comment)
+			SaveIniValue(LibraryFile, dd_Section, e_fnLearn, fnValue . A_Tab . ";" . A_Space . fnComment)
 			SaveToHistory("Neuer Eintrag:", NewEntry, "überschrieben")
 			}
 		else
@@ -143,9 +143,9 @@ else
 			NewEntryF7fnNag := true
 			
 		}
-	SaveIniValue(LibraryFile, dd_Section, e_fnLearn, fnValue . A_Tab . ";" . A_Space . e_comment)
+	SaveIniValue(LibraryFile, dd_Section, e_fnLearn, fnValue . A_Tab . ";" . A_Space . fnComment)
 	SaveIniValue(TempFile, "LernModus", "LastSection" , dd_Section)
-	NewEntry := e_fnLearn . " = " . fnValue . A_Tab . ";" . A_Space . e_comment
+	NewEntry := e_fnLearn . " = " . fnValue . A_Tab . ";" . A_Space . fnComment
 	SaveToHistory("Neuer Eintrag: " . NewEntry)
 	DeleteIniValue(LibraryFile, dd_Section, "NeuerEintrag")
 	}
