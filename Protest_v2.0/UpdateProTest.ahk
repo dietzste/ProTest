@@ -234,12 +234,12 @@ global RemoteClientChanged := false
 FileGetSize, NewRemoteClientSize , UpdateFolderPath . "\ProTest_RemoteClient.exe"
 FileGetSize, OldRemoteClientSize , ProTest_RemoteClient.exe
 if (NewRemoteClientSize = OldRemoteClientSize)
+	SaveToUpdateLog("RemoteClient: unverändert")
+else
 	{
 	SaveToUpdateLog("RemoteClient: geändert")
 	RemoteClientChanged := true
 	}
-else
-	SaveToUpdateLog("RemoteClient: unverändert")
 
 ProTestExeFiles := ["ProTest.exe", "ProTest_RemoteClient.exe"]
 For i, ExeFile in ProTestExeFiles
