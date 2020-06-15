@@ -146,6 +146,7 @@ EnterMultiplePreloadValues(fnOCR, PreloadString){
 local 
 global TempFile
 global fast, med, DefaultSleep
+global SkipIfPreloadZero
 global CurrentLFD
 
 ;(1) Pre-Processing
@@ -161,9 +162,18 @@ Loop, Parse, RealPreloadString, "|"
 	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload)
 	if (PreloadValue = 0) and (Preload = "gebtPRE" or Preload = "gebmPRE" or Preload = "gebjPRE")
 		{
-		Msgbox, 4096, Ups! , Preloadangabe unvollständig! Wert für %Preload% ist Null! Durchlauf wird beendet!
-		SaveToHistory("VERBOSE:", fnOCR . " Preload-Angabe für ungültig! " . Preload . "=0")
-		Exit
+		SaveToHistory("VERBOSE:", fnOCR . " Preload-Angabe ungültig! " . Preload . "=0")
+		if (SkipIfPreloadZero = "false")
+			{
+			Msgbox, 4096, Ups! , Preloadangabe unvollständig! Wert für %Preload% ist Null! Durchlauf wird beendet.
+			Exit
+			}
+		else
+			{
+			Send, {PgUp}
+			sleep, med
+			Continue
+			}
 		}
 	SetKeyDelay, med
 	Send, %PreloadValue%{Enter}
