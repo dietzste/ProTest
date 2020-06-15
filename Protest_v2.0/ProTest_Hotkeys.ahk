@@ -69,16 +69,19 @@ return
 #if
 
 F1::
-MsgBox, 4096 , Überblick Hotkeys (F1) - Version: %ProTestVersion%, 
+MsgBox, 4096 , Überblick Tastenkürzel (F1) - Version: %ProTestVersion%, 
 (
-Basic Hotkeys:
+Interaktion mit  ProTest:
 F6		= Vorgang pausieren/fortfahren
-Shift + F5%A_Tab%%A_Tab%= Startet Skript neu (Restart)
-Shift + ESC%A_Tab%= Hotkeys (de-)aktivieren
-F9		= Remote Feedback Test
 F12		= ProTest beenden
+Shift + F5%A_Tab%%A_Tab%= Startet Skript neu (Restart)
+Shift + ESC%A_Tab%= Tastenkürzel (de-)aktivieren
+Shift + F3/F8	= öffnet AutoEdit Menü
+Strg + u 		= prüft auf Updates
+Menü offen + F1	= öffnet jeweiliges Hilfefenster
+F9		= Remote Feedback Test
 
-Menüs:
+Funktionsmenüs:
 F2		= %GuiF2%
 F3		= %GuiF3%
 F4		= %GuiF4%
@@ -86,15 +89,12 @@ F7		= %GuiF7%
 F8		= %GuiF8%
 F10		= %GuiF10%
 
-Weitere:
-Menü offen + F1	= öffnet jeweiliges Hilfefenster
+Interaktion mit NIPO-Software:
 Strg + d 	 	= gibt aktuelles Datum ein
-Shift + F3/F8	= öffnet AutoEdit Menü
 Strg + m 	 	= überspringt XModul
 Strg + r 	 	= startet Befragung neu
-Strg + u 		= prüft auf Updates
 Bild hoch		= drückt verweigert-Button
-Bild runter	= drückt Clear&Back 
+Bild runter	= drückt Clear- & Back-Button 
 )
 return
 
