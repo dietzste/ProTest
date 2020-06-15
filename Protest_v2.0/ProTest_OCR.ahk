@@ -122,6 +122,7 @@ global AllowAlphas
 OCR := StrReplace(OCR, "?", "7") ; ? = 7 
 OCR := RegExReplace(OCR, "\W") ; alle außer  [a-zA-Z0-9_]
 OCR := StrReplace(OCR, "_") ; kein underscore
+OCR := RegExReplace(OCR, "\s") ; keine whitespaces
 AlphaMatch := 0
 Loop, Parse, OCR
 	{
