@@ -16,7 +16,7 @@ SetTitleMatchMode, 2
 3GuiReset := false
 ; Fenster mit/ohne LFD
 if (CurrentLFD != "")
-	F3MenuName := "LFD Finder Menu - LFD: " . CurrentLFD
+	F3MenuName := GuiF3 . " - LFD: " . CurrentLFD
 else
 	F3MenuName := GuiF3
 
