@@ -57,10 +57,10 @@ AdjustPositions()
 
 Gui, 10:+AlwaysOnTop Toolwindow
 ; INI Files
-Gui, 10:Add, Groupbox, x10 y10 w260 h73 cNavy, Ini Files
-Gui, 10:Add, Text, x20 y32  w92  h20 , Project File:
+Gui, 10:Add, Groupbox, x10 y10 w260 h73 cNavy, Dateien
+Gui, 10:Add, Text, x20 y32  w92  h20 , Projektdatei:
 Gui, 10:Add, Edit, x85 	y29  w90  h20 Disabled, % GetIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile")
-Gui, 10:Add, Text, x20 y54  w92  h20 , Library File:
+Gui, 10:Add, Text, x20 y54  w92  h20 , Library:
 Gui, 10:Add, Edit, x85 	y51  w90  h20 Disabled , Library.ini
 Gui, 10:Add, Button, x205  y27 w50  h20 g10GuiChangeBasicFile, ändern
 ; OCR Konfiguration
