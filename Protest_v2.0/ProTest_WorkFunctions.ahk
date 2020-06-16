@@ -79,7 +79,10 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		if (fnOCR = "")
 			{
 			if (Index = 0)
+				{
+				++Index
 				Continue
+				}
 			Result := OCRIsEmpty()
 			if (Result = "Exit")
 				Exit
