@@ -185,9 +185,9 @@ FileRemoveDir, %UpdateFolderPath% , 1
 Gosub 15GuiClose
 MsgBox, 4096, Update erfolgreich!, Update auf Version %LatestVersion% abgeschlossen!
 if (RemoteClientChanged = true)
-	MsgBox, 4096, RemoteClient Info, Der RemoteClient wurde erneuert! Bitte RemoteClient austauschen!
+	MsgBox, 4096, RemoteClient Info, Der RemoteClient wurde erneuert! Bitte RemoteClient (auf dem Remote- Rechner) ersetzen!
 else
-	MsgBox, 4096, RemoteClient Info, Der RemoteClient ist gleichgeblieben. Kein Austausch nötig.
+	MsgBox, 4096, RemoteClient Info, Der RemoteClient ist gleich geblieben. Kein Austausch nötig.
 RunProTest()
 ExitApp
 return 
