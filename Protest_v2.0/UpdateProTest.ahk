@@ -232,7 +232,8 @@ global UpdateFolderPath
 global RemoteClientChanged := false
 
 ; Did RemoteClient change?
-FileGetSize, NewRemoteClientSize , UpdateFolderPath . "\ProTest_RemoteClient.exe"
+NewRemoteClientPath := UpdateFolderPath . "\ProTest_RemoteClient.exe"
+FileGetSize, NewRemoteClientSize , %NewRemoteClientPath%
 FileGetSize, OldRemoteClientSize , ProTest_RemoteClient.exe
 if (NewRemoteClientSize = OldRemoteClientSize)
 	SaveToUpdateLog("RemoteClient: unverändert")
