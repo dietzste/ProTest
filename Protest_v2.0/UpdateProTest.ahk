@@ -19,10 +19,11 @@ OverwriteKeysAnywayArray := { 1: "Version"
 , 2: "TimeOutMsgLFDMatch"
 , 3: "TimeOutMsgSkippedIntro"
 , 4: "TimeOutRemoteTest"
-, 5: "290102"
-, 6: "SleepAfterEnter"
-, 7: "r_Main1"
-, 8: "r_Main2"}
+, 5: "SleepAfterEnter"
+, 6: "r_Main1"
+, 7: "r_Main2"
+, 8: "r_AdvancedON"
+, 9: "r_AdvancedOFF" }
 
 OverwriteValuesArray := { 1: "IntroGetSex"
 , 2: "IntroSexReversed"
