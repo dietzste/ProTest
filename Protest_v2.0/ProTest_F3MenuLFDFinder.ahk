@@ -4,7 +4,6 @@
 
 F3::
 ListLines Off
-SetTitleMatchMode, 3
 If WinExist(GuiF3)
 	WinActivate, %GuiF3%
 else
