@@ -23,7 +23,8 @@ OverwriteKeysAnywayArray := { 1: "Version"
 , 6: "r_Main1"
 , 7: "r_Main2"
 , 8: "r_AdvancedON"
-, 9: "r_AdvancedOFF" }
+, 9: "r_AdvancedOFF"
+, 10: "0100082" }
 
 OverwriteValuesArray := { 1: "IntroGetSex"
 , 2: "IntroSexReversed"
