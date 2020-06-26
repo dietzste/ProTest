@@ -98,6 +98,11 @@ if (fnValue = "" or fnComment = "")
 	Msgbox, 4096, Fehlende Angaben, Eintragungen für Eingabewert oder Kommentar fehlen!
 	return
 	}
+if Instr(fnComment, ";")
+	{
+	Msgbox, 4096, Korrektur erforderlich, Bitte kein Semikolon ";" im Kommentar verwenden! 
+	return
+	}
 ExistingFnValue := GetIniValue(LibraryFile, dd_Section, e_fnLearn)
 if (ExistingFnValue != "ERROR")
 	{
