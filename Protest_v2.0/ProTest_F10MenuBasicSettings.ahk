@@ -509,6 +509,16 @@ if FileExist(Capture2TextIniFileAppDataPath)
 	; überschreibe wichtige Einstellungen
 	SaveIniValue(Capture2TextIniFileAppDataPath, "Output", "OutputClipboard", "true")
 	SaveIniValue(Capture2TextIniFileAppDataPath, "Output", "OutputPopup", "false")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "Language", "German")
+	
+	; deactivate other hotKeys
+	SaveIniValue(Capture2TextIniFileAppDataPath, "HotKey", "BubbleCapture", "Win+<Unmapped>")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "HotKey", "ForwardTextLineCapture", "Win+<Unmapped>")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "HotKey", "Lang1", "Win+<Unmapped>")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "HotKey", "Lang2", "Win+<Unmapped>")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "HotKey", "Lang3", "Win+<Unmapped>")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "HotKey", "TextLineCapture", "Win+<Unmapped>")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "HotKey", "TextOrientation", "Win+<Unmapped>")
 	}
 else
 	FileCopy, %ConfigFolder%\Capture2Text.ini, %Capture2TextIniFileAppDataPath%
