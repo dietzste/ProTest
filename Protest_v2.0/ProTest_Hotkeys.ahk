@@ -74,11 +74,9 @@ MsgBox, 4096 , Überblick Tastenkürzel (F1) - Version: %ProTestVersion%,
 Interaktion mit  ProTest:
 F6		= Vorgang pausieren/fortfahren
 F12		= ProTest beenden
-Shift + F5%A_Tab%%A_Tab%= Startet Skript neu (Restart)
+Shift + F5%A_Tab%%A_Tab%= ProTest neu starten
 Shift + ESC%A_Tab%= Tastenkürzel (de-)aktivieren
-Shift + F3/F8	= öffnet AutoEdit Menü
 Strg + u 		= prüft auf Updates
-Menü offen + F1	= öffnet jeweiliges Hilfefenster
 F9		= Remote Feedback Test
 
 Funktionsmenüs:
@@ -88,6 +86,8 @@ F4		= %GuiF4%
 F7		= %GuiF7%
 F8		= %GuiF8%
 F10		= %GuiF10%
+Menü offen + F1	= öffnet jeweiliges Hilfefenster
+Shift + F3/F8	= öffnet AutoEdit Menü
 
 Interaktion mit NIPO-Software:
 Strg + d 	 	= gibt aktuelles Datum ein
