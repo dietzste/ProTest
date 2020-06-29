@@ -82,7 +82,14 @@ fast := 100
 med := 130
 NewEntryF7fnIntro := false
 NewEntryF7fnNag := false
-Capture2TextStarted := false
+global Captur2TextPID := CheckIfCapture2TextIsRunning()
+
+CheckIfCapture2TextIsRunning(){
+Process, Exist , Capture2Text.exe
+return Captur2TextPID := ErrorLevel
+; Capture2Text not running -> ErrorLevel = 0
+; Captur2Text is running, -> ErrorLevel = PID
+}
 
 ; Version
 ProTestVersion := GetIniValue(BasicFile, "ProTestVersion", "Version", "v2")

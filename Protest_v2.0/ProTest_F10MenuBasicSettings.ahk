@@ -152,7 +152,7 @@ return
 if (GetKeyState("Shift") = 1)
 	Goto ScaleFactorScan
 Gui 1:Destroy
-CheckCapture2TextIsRunning()
+AlarmIfCapture2TextIsNotRunning()
 CheckWorkWindow()
 Gui, 10:Submit, NoHide
 AdjustPositions()
@@ -349,13 +349,8 @@ return
 Gui 11:Destroy
 if (NoActionButton = "Exit")
 	{
-	if (Capture2TextStarted = false)
-		ExitApp
-	else
-		{
-		CloseCapture2Text(Captur2TextPID)
-		ExitApp
-		}
+	CloseCapture2Text(Captur2TextPID)
+	ExitApp
 	}
 else 
 	Exit
@@ -492,7 +487,6 @@ global ConfigFolder
 global Capture2TextWorkDir :=  A_ScriptDir . "\Capture2Text"
 global Capture2TextAppDataFolder := A_AppData . "\Capture2Text"
 global Capture2TextIniFileAppDataPath := Capture2TextAppDataFolder . "\Capture2Text.ini"
-global Capture2TextStarted := false
 
 if !FileExist(Capture2TextWorkDir)
 	{
@@ -523,16 +517,11 @@ if FileExist(Capture2TextIniFileAppDataPath)
 else
 	FileCopy, %ConfigFolder%\Capture2Text.ini, %Capture2TextIniFileAppDataPath%
 
-Process, Exist , Capture2Text.exe
-if (ErrorLevel = 0) ; Capture2Text not running
+; Start Capture2Text if not running
+global Captur2TextPID
+if (Captur2TextPID = 0) ; Capture2Text not running
 	{
 	Run, Capture2Text.exe , %Capture2TextWorkDir% ,, PID
 	global Captur2TextPID := PID
 	}
-else
-	{
-	; Captur2Text is running, ErrorLevel enthält PID
-	global Captur2TextPID := ErrorLevel
-	}
-Capture2TextStarted := true
 }

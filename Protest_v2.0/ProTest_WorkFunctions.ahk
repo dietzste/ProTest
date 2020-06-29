@@ -105,7 +105,7 @@ If (r_Main2 = 1 OR r_Main3 = 1)
 	SaveToHistory("### START fn-Suche ###")
 	Sleep, DefaultSleep
 	CheckWorkWindow()
-	CheckCapture2TextIsRunning()
+	AlarmIfCapture2TextIsNotRunning()
 	global TriedXModulSkip := false 
 	PrepareTargetfn()
 	if (r_AdvancedON = 1)
@@ -290,9 +290,9 @@ else
 ListLines On
 }
 
-CheckCapture2TextIsRunning(){
-Process, Exist, Capture2Text.exe
-If (ErrorLevel = 0) ; If it is not running
+AlarmIfCapture2TextIsNotRunning(){
+global Captur2TextPID
+If (Captur2TextPID = 0) ; is not running
 	{
 	Msgbox, 4096, Ups!, Capture2Text.exe is not running!
 	Exit 

@@ -14,7 +14,7 @@ F7MousePosY := ""
 EnterWhileSaving := GetIniValue(ProjectFile, "LernModus", "EnterWhileSaving", 1)
 
 7GuiSetControls:
-CheckCapture2TextIsRunning()
+AlarmIfCapture2TextIsNotRunning()
 CheckWorkWindow()
 e_fnLearn := ""
 e_fnLearn := OCR("Learn", 0)

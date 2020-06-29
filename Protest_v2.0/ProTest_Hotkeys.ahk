@@ -127,8 +127,7 @@ CloseCapture2Text(Captur2TextPID)
 return
 
 CloseCapture2Text(Captur2TextPID){
-Process, Exist , %Captur2TextPID%
-if (ErrorLevel = Captur2TextPID)
+if (Captur2TextPID != 0)
 	{
 	Process, Close , %Captur2TextPID%
 	Process, WaitClose , %Captur2TextPID%
