@@ -24,7 +24,10 @@ OverwriteKeysAnywayArray := { 1: "Version"
 , 7: "r_Main2"
 , 8: "r_AdvancedON"
 , 9: "r_AdvancedOFF"
-, 10: "0100082" }
+, 10: "0100082"
+, 11: "27104"
+, 12: "28403"
+, 13: "VerboseHistory" }
 
 OverwriteValuesArray := { 1: "IntroGetSex"
 , 2: "IntroSexReversed"
@@ -208,6 +211,7 @@ Loop, Files, %UpdateFolderPath%\Config\*.ini
 	if Instr(OldFile, "BasicSettings")
 		{
 		DeleteOldSettings()
+		DeleteOldIniSections(OldFile)
 		CompareFilesArray[++FilesCount] := A_LoopFileName
 		Continue
 		}
