@@ -153,11 +153,17 @@ SetKeyDelay, med
 ; Loop
 Loop {
 	Send, {BS}{Down}{Enter}
-	ControlClick, &Back, %NipoFenster%,,,, NA
-	Sleep, med
+	ButtonIsVisible := IsButtonVisible("&Back")
+	if (ButtonIsVisible = true)
+		{
+		ControlClick, &Back, %NipoFenster%,,,, NA
+		Sleep, med
+		}
+	else
+		return "Error"
 	ControlGetText, LFDinEditField, Edit1, %NipoFenster%,,,,NA
-	if (ErrorLevel = 1) ; Error while reading next LFD
-		Exit
+	if (ErrorLevel = 1 or LFDinEditField = "") ; Error while reading next LFD
+		return LFDinEditField := "Error"
 	Sleep, med
 	if (HopelessLFDString != "")
 		{
