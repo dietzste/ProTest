@@ -27,7 +27,8 @@ OverwriteKeysAnywayArray := { 1: "Version"
 , 10: "0100082"
 , 11: "27104"
 , 12: "28403"
-, 13: "VerboseHistory" }
+, 13: "VerboseHistory"
+, 14: "e_Next" }
 
 OverwriteValuesArray := { 1: "IntroGetSex"
 , 2: "IntroSexReversed"
@@ -131,6 +132,7 @@ if (r_UpdateSoft = 1)
 	UpdateClaim := "und Neuerungen übernehmen"
 	UpdateModus := "Soft"
 	}
+Sleep, 550
 MsgBox, 4132, Update to %LatestVersion%?, Update von ProTest jetzt durchführen %UpdateClaim%?
 IfMsgBox, YES
 	{
@@ -238,9 +240,9 @@ global RemoteClientChanged := false
 
 ; Did RemoteClient change?
 NewRemoteClientPath := UpdateFolderPath . "\ProTest_RemoteClient.exe"
-FileGetSize, NewRemoteClientSize , %NewRemoteClientPath%
-FileGetSize, OldRemoteClientSize , ProTest_RemoteClient.exe
-if (NewRemoteClientSize = OldRemoteClientSize)
+FileGetVersion, OldRemoteClientVersion, ProTest_RemoteClient.exe
+FileGetVersion, NewRemoteClientVersion, %NewRemoteClientPath%
+if (NewRemoteClientVersion = OldRemoteClientVersion)
 	SaveToUpdateLog("RemoteClient: unverändert")
 else
 	{
