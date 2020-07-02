@@ -452,13 +452,13 @@ if !(ExStyle & 0x8)
 ;;; Tray Icon
 AboutMessage:
 
-; get Version from FileName
-VersionStart := Instr(A_ScriptName, "_v") + 2
-Version := Substr(A_ScriptName,VersionStart, 3)
+; Get Version exe-File
+FileGetVersion, Version, ProTest_RemoteClient.exe
+Version := Substr(Version, 1, StrLen(Version)- 2)
 
 Gui, 20:+AlwaysOnTop +ToolWindow
-Gui, 20:add, Text, x10 y10 w150 Center, ProTest - Version %Version%
-Gui, 20:add, Text, x10 y30 w150 Center, dietzste@hu-berlin.de
+Gui, 20:add, Text, x10 y10 w190 Center, ProTest RemoteClient Version: %Version%
+Gui, 20:add, Text, x10 y30 w190 Center, dietzste@hu-berlin.de
 Gui, 20:show, Center Autosize, About ProTest
 WinWaitActive, About ProTest
 WinWaitClose, About ProTest
