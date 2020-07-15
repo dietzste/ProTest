@@ -17,8 +17,12 @@ DownloadUpdateClient(UpdateClientName){
 local
 URLUpdateClient :=  "https://github.com/dietzste/ProTest/releases/download/U1.0/UpdateProTest.exe"
 UrlDownloadToFile, %URLUpdateClient%, %UpdateClientName%
-if !FileExist(UpdateClientName)
-	MsgBox, 4096, Update Error, Die Datei %UpdateClientName% konnte nicht geladen werden! Update wird abgebrochen!
+if (ErrorLevel = 1 OR !FileExist(UpdateClientName))
+	{
+	MsgBox, 4096, Fehler beim Download, Die Datei %UpdateClientName% konnte nicht geladen werden! Update wird abgebrochen!
+	Run https://www.githubstatus.com/
+	Exit
+	}
 }
 
 ; force Update 
