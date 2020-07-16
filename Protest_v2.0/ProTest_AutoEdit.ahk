@@ -1,5 +1,6 @@
 ;; MINI - AUTO EDIT
 AutoEdit:
+Gosub RemoveToolTip
 ; Fenster richtig darstellen
 if WinExist(GuiF3) OR WinExist(GuiF8)
 	{

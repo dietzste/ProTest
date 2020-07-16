@@ -50,30 +50,30 @@ Gui, 3:+AlwaysOnTop ToolWindow
 Gui, 3:Add, Groupbox, x9 y9 w130 h205 cNavy, Name Preload
 Gui, 3:Add, Groupbox, x145 y9 w74 h205 cNavy, Wunschwert
 Gui, 3:Add, Groupbox, x226 y9 w102 h205 cNavy, Ausschluss
-Gui, 3:Add, Edit, x13 y30 w120 h20  ve_LFD_PLN1, % e_LFD_PLN1
-Gui, 3:Add, Edit, x152 y30 w60 h20  ve_LFD_PLR1, %  e_LFD_PLR1
-Gui, 3:Add, Edit, x232 y30 w90 h20  ve_LFD_PLE1, %  e_LFD_PLE1
-Gui, 3:Add, Edit, x13 y52 w120 h20 ve_LFD_PLN2, % e_LFD_PLN2
-Gui, 3:Add, Edit, x152 y52 w60 h20 ve_LFD_PLR2, %  e_LFD_PLR2
-Gui, 3:Add, Edit, x232 y52 w90 h20 ve_LFD_PLE2, %  e_LFD_PLE2
-Gui, 3:Add, Edit, x13 y74 w120 h20 ve_LFD_PLN3, % e_LFD_PLN3
-Gui, 3:Add, Edit, x152 y74 w60 h20 ve_LFD_PLR3, %  e_LFD_PLR3
-Gui, 3:Add, Edit, x232 y74 w90 h20 ve_LFD_PLE3, %  e_LFD_PLE3
-Gui, 3:Add, Edit, x13 y96 w120 h20 ve_LFD_PLN4, % e_LFD_PLN4
-Gui, 3:Add, Edit, x152 y96 w60 h20 ve_LFD_PLR4, %  e_LFD_PLR4
-Gui, 3:Add, Edit, x232 y96 w90 h20 ve_LFD_PLE4, %  e_LFD_PLE4
-Gui, 3:Add, Edit, x13 y118 w120 h20 ve_LFD_PLN5, % e_LFD_PLN5
-Gui, 3:Add, Edit, x152 y118 w60 h20 ve_LFD_PLR5, %  e_LFD_PLR5
-Gui, 3:Add, Edit, x232 y118 w90 h20 ve_LFD_PLE5, %  e_LFD_PLE5
-Gui, 3:Add, Edit, x13 y140 w120 h20 ve_LFD_PLN6, % e_LFD_PLN6
-Gui, 3:Add, Edit, x152 y140 w60 h20 ve_LFD_PLR6, %  e_LFD_PLR6
-Gui, 3:Add, Edit, x232 y140 w90 h20 ve_LFD_PLE6, %  e_LFD_PLE6
-Gui, 3:Add, Edit, x13 y162 w120 h20 ve_LFD_PLN7, % e_LFD_PLN7
-Gui, 3:Add, Edit, x152 y162 w60 h20 ve_LFD_PLR7, %  e_LFD_PLR7
-Gui, 3:Add, Edit, x232 y162 w90 h20 ve_LFD_PLE7, %  e_LFD_PLE7
-Gui, 3:Add, Edit, x12 y184 w120 h20 ve_LFD_PLN8, % e_LFD_PLN8
-Gui, 3:Add, Edit, x152 y184 w60 h20 ve_LFD_PLR8, %  e_LFD_PLR8
-Gui, 3:Add, Edit, x232 y184 w90 h20 ve_LFD_PLE8, %  e_LFD_PLE8
+Gui, 3:Add, Edit, x13 y30 w120 h20 ve_LFD_PLN1 g3Gui_Focus, % e_LFD_PLN1
+Gui, 3:Add, Edit, x152 y30 w60 h20 ve_LFD_PLR1 g3Gui_Get_PL_Info, %  e_LFD_PLR1
+Gui, 3:Add, Edit, x232 y30 w90 h20 ve_LFD_PLE1 g3Gui_Get_PL_Info, %  e_LFD_PLE1
+Gui, 3:Add, Edit, x13 y52 w120 h20 ve_LFD_PLN2 g3Gui_Focus, % e_LFD_PLN2
+Gui, 3:Add, Edit, x152 y52 w60 h20 ve_LFD_PLR2 g3Gui_Get_PL_Info, %  e_LFD_PLR2
+Gui, 3:Add, Edit, x232 y52 w90 h20 ve_LFD_PLE2 g3Gui_Get_PL_Info, %  e_LFD_PLE2
+Gui, 3:Add, Edit, x13 y74 w120 h20 ve_LFD_PLN3 g3Gui_Focus, % e_LFD_PLN3
+Gui, 3:Add, Edit, x152 y74 w60 h20 ve_LFD_PLR3 g3Gui_Get_PL_Info, %  e_LFD_PLR3
+Gui, 3:Add, Edit, x232 y74 w90 h20 ve_LFD_PLE3 g3Gui_Get_PL_Info, %  e_LFD_PLE3
+Gui, 3:Add, Edit, x13 y96 w120 h20 ve_LFD_PLN4 g3Gui_Focus, % e_LFD_PLN4
+Gui, 3:Add, Edit, x152 y96 w60 h20 ve_LFD_PLR4 g3Gui_Get_PL_Info, %  e_LFD_PLR4
+Gui, 3:Add, Edit, x232 y96 w90 h20 ve_LFD_PLE4 g3Gui_Get_PL_Info, %  e_LFD_PLE4
+Gui, 3:Add, Edit, x13 y118 w120 h20 ve_LFD_PLN5 g3Gui_Focus, % e_LFD_PLN5
+Gui, 3:Add, Edit, x152 y118 w60 h20 ve_LFD_PLR5 g3Gui_Get_PL_Info, %  e_LFD_PLR5
+Gui, 3:Add, Edit, x232 y118 w90 h20 ve_LFD_PLE5 g3Gui_Get_PL_Info, %  e_LFD_PLE5
+Gui, 3:Add, Edit, x13 y140 w120 h20 ve_LFD_PLN6 g3Gui_Focus, % e_LFD_PLN6
+Gui, 3:Add, Edit, x152 y140 w60 h20 ve_LFD_PLR6 g3Gui_Get_PL_Info, %  e_LFD_PLR6
+Gui, 3:Add, Edit, x232 y140 w90 h20 ve_LFD_PLE6 g3Gui_Get_PL_Info, %  e_LFD_PLE6
+Gui, 3:Add, Edit, x13 y162 w120 h20 ve_LFD_PLN7 g3Gui_Focus, % e_LFD_PLN7
+Gui, 3:Add, Edit, x152 y162 w60 h20 ve_LFD_PLR7 g3Gui_Get_PL_Info, %  e_LFD_PLR7
+Gui, 3:Add, Edit, x232 y162 w90 h20 ve_LFD_PLE7 g3Gui_Get_PL_Info, %  e_LFD_PLE7
+Gui, 3:Add, Edit, x12 y184 w120 h20 ve_LFD_PLN8 g3Gui_Focus, % e_LFD_PLN8
+Gui, 3:Add, Edit, x152 y184 w60 h20 ve_LFD_PLR8 g3Gui_Get_PL_Info, %  e_LFD_PLR8
+Gui, 3:Add, Edit, x232 y184 w90 h20 ve_LFD_PLE8 g3Gui_Get_PL_Info, %  e_LFD_PLE8
 ;OPTIONEN
 Gui, 3:Add, Groupbox, x8 y220 w321 h125 cNavy, Optionen
 Gui, 3:Add, CheckBox, x15 y240 w16 h20 Checked%c_CheckAgain%  vc_CheckAgain, 
@@ -103,6 +103,28 @@ Return
 3GuiEscape:
 Gui 3:Destroy
 Gui 5:Destroy
+Gosub RemoveToolTip
+return
+
+3Gui_Focus:
+GoSub RemoveToolTip
+return
+
+3Gui_Get_PL_Info:
+Gui, 3:Submit, NoHide
+ControlGetFocus, FocusVar, %GuiF3%
+CurrentFieldNumber := Substr(FocusVar, 5)
+ModVar := Mod(CurrentFieldNumber, 3)
+if (ModVar = 0)
+	CurrentFieldNumber := CurrentFieldNumber - 2
+else
+	CurrentFieldNumber := CurrentFieldNumber - 1
+ControlGetText, CurrentPreloadField, Edit%CurrentFieldNumber%
+if (CurrentPreloadField != "")
+	{
+	IniRead, PreloadInfo, %PreloadDetailsFile%, %CurrentPreloadField%
+	SetToolTip(GuiF3, PreloadInfo, -4000)
+	}
 return
 
 3GuiHelp:
@@ -119,7 +141,6 @@ IfMsgBox, YES
 	}
 return
 
-
 3GuiShowLFDValues:
 ShowSelectedLFDValues("cb_StartLFD")
 return 
@@ -135,8 +156,7 @@ if (cb_StartLFD != "")
 		return
 		}
 	}
-Gui 3:Destroy
-Gui 5:Destroy
+Goto 3GuiClose
 return
 
 3GuiSaveInput:
