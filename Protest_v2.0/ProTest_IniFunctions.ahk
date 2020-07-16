@@ -35,7 +35,7 @@ local
 IniRead, SectionDetails, %File%, %Section%
 if (SectionDetails = "")
 	{
-	SectionDetails := "No details on: '" . section . "'"
+	SectionDetails := "Keine Preload-Infos hinterlegt"
 	return SectionDetails
 	}
 else
