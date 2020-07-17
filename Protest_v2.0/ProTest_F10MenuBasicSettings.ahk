@@ -504,6 +504,7 @@ if FileExist(Capture2TextIniFileAppDataPath)
 	SaveIniValue(Capture2TextIniFileAppDataPath, "Output", "OutputClipboard", "true")
 	SaveIniValue(Capture2TextIniFileAppDataPath, "Output", "OutputPopup", "false")
 	SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "Language", "German")
+	SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "Whitelist", "")
 	
 	; deactivate other hotKeys
 	SaveIniValue(Capture2TextIniFileAppDataPath, "HotKey", "BubbleCapture", "Win+<Unmapped>")
