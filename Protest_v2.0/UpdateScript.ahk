@@ -7,9 +7,9 @@ UpdateProTest:
 
 ; Download UppateClient
 UpdateClientName := "UpdateProTest.exe"
-PleasWaitWindow("On")
+MsgWindow("Lade UpdateClient...")
 DownloadUpdateClient(UpdateClientName)
-PleasWaitWindow("Off")
+MsgWindow()
 Run, %UpdateClientName%
 return 
 

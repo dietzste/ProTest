@@ -191,16 +191,17 @@ Send, {Enter}
 SetKeyDelay, fast
 }
 
-PleasWaitWindow(Mode){
+MsgWindow(params*){
 local
-if (Mode = "On")
+if (params.MaxIndex() != "")
 	{
+	MsgWindowText := params[1]
 	Gui, 15: -Caption +AlwaysOnTop -SysMenu
 	Gui, 15:Font, s14, Verdana
-	Gui, 15:Add, Text,, Bitte warten...
+	Gui, 15:Add, Text,, %MsgWindowText%
 	Gui, 15:Show, Autosize Center, PleaseWaitWindow
 	}
-else if (Mode = "Off")
+else
 	Gui 15:Destroy
 }
 

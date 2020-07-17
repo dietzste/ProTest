@@ -38,9 +38,9 @@ global c_CheckTempFileFirst := GetIniValue(ProjectFile, "LFDFinderMenu", "c_Chec
 if (c_CheckTempFileFirst = 1)
 	{
 	CreateLFDsInTempFileArray()
-	PleasWaitWindow("On")
+	MsgWindow("Durchsuche TempFile...")
 	LFDFound := CheckExistingLFDPreloads()
-	PleasWaitWindow("Off")
+	MsgWindow()
 	if (LFDFound = true)
 		{
 		SaveToHistory("Passende LFD im TempFile: " . CurrentLFD)

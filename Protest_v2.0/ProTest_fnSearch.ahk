@@ -16,11 +16,11 @@ SetKeyDelay, fast
 if (fnOCR = "")
 	{
 	; Try Click verweigert Anyway
-	PleasWaitWindow("On")
+	MsgWindow("Bitte warten...")
 	SaveToHistory("VERBOSE:", "Try Anyway Skip")
 	ClickSkippButton(fnOCR)
 	CheckfnOCR := OCR("TryAnywaySkip", Index)
-	PleasWaitWindow("Off")
+	MsgWindow()
 	if (CheckfnOCR != "")
 		{
 		SleepWhileOCREmpty := SleepWhileOCREmpty-50
@@ -35,10 +35,10 @@ if (fnOCR = "")
 			{
 			if (TriedXModulSkip = false)
 				{
-				PleasWaitWindow("On")
+				MsgWindow("Bitte warten...")
 				XModulSkipped := TrySkipXModul()
 				TriedXModulSkip := true
-				PleasWaitWindow("Off")
+				MsgWindow()
 				if (XModulSkipped = false)
 					{
 					Result := OCRIsEmpty()

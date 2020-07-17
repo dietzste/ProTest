@@ -67,7 +67,9 @@ if (FileSize != 0 AND FileSize != "")
 	else
 		Exit
 	}
+MsgWindow("Lade Preload-Liste...")
 L_LoadPreloadList()
+MsgWindow()
 Gui 5:Destroy
 Goto AutoEdit
 return 
