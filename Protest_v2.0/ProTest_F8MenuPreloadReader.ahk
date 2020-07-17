@@ -44,24 +44,21 @@ else
 Gui, 8:+AlwaysOnTop ToolWindow
 Gui, 8:Add, Groupbox, x30 y20 w150 h135 cNavy, Preload(s) auslesen
 Gui, 8:Add, Groupbox, x182 y20 w75 h135 cNavy, Neuer Wert
-Gui, 8:Add, Edit, x34 	y40  w140  h20 ve_PLN1, %e_PLN1%
-Gui, 8:Add, Edit, x190  y40  w60   h20 ve_PLU1, %e_PLU1%
-Gui, 8:Add, Edit, x34 	y62  w140  h20 ve_PLN2, %e_PLN2%
-Gui, 8:Add, Edit, x190  y62  w60   h20 ve_PLU2, %e_PLU2%
-Gui, 8:Add, Edit, x34 	y84 w140   h20 ve_PLN3, %e_PLN3%
-Gui, 8:Add, Edit, x190  y84 w60    h20 ve_PLU3, %e_PLU3%
-Gui, 8:Add, Edit, x34   y106 w140  h20 ve_PLN4, %e_PLN4%
-Gui, 8:Add, Edit, x190  y106 w60   h20 ve_PLU4, %e_PLU4%
-Gui, 8:Add, Edit, x34   y128 w140  h20 ve_PLN5, %e_PLN5%
+Gui, 8:Add, Edit, x34 	y40  w140  h20 ve_PLN1 g8Gui_Show_LFD_Info, %e_PLN1%
+Gui, 8:Add, Edit, x190  y40  w60   h20 ve_PLU1 g8Gui_Get_PL_Info, %e_PLU1%
+Gui, 8:Add, Edit, x34 	y62  w140  h20 ve_PLN2 g8Gui_Show_LFD_Info, %e_PLN2%
+Gui, 8:Add, Edit, x190  y62  w60   h20 ve_PLU2 g8Gui_Get_PL_Info, %e_PLU2%
+Gui, 8:Add, Edit, x34 	y84 w140   h20 ve_PLN3 g8Gui_Show_LFD_Info, %e_PLN3%
+Gui, 8:Add, Edit, x190  y84 w60    h20 ve_PLU3 g8Gui_Get_PL_Info, %e_PLU3%
+Gui, 8:Add, Edit, x34   y106 w140  h20 ve_PLN4 g8Gui_Show_LFD_Info, %e_PLN4%
+Gui, 8:Add, Edit, x190  y106 w60   h20 ve_PLU4 g8Gui_Get_PL_Info, %e_PLU4%
+Gui, 8:Add, Edit, x34   y128 w140  h20 ve_PLN5 g8Gui_Show_LFD_Info, %e_PLN5%
 Gui, 8:Add, Edit, x190  y128 w60   h20 ve_PLU5, %e_PLU5%
 Gui, 8:Add, CheckBox, x12 y40  w13  h20 Checked%c_PL1% vc_PL1
 Gui, 8:Add, CheckBox, x12 y62  w13  h20 Checked%c_PL2% vc_PL2
 Gui, 8:Add, CheckBox, x12 y84 w13  h20 Checked%c_PL3% vc_PL3
 Gui, 8:Add, CheckBox, x12 y106 w13	 h20 Checked%c_PL4% vc_PL4
 Gui, 8:Add, CheckBox, x12 y128 w13  h20 Checked%c_PL5% vc_PL5
-; weitere Checkboxen
-Gui, 8:Add, CheckBox, x30 y195  w220 h20 %LoadSavedValuesDis% Checked%c_LoadSavedValues% vc_LoadSavedValues, aus TempFile laden %CurrentLFDComment%
-Gui, 8:Add, CheckBox, x30 y217 	w150 h20 vc_DetailsOnly g8GuiOnlyDetails, nur Preload-Details laden
 ; BUTTONS
 Gui, 8:Add, Button,   x30  y162 w50  h25 g8GuiHelp , Hilfe
 Gui, 8:Add, Button,   x85  y162 w50  h25 g8GuiResetControls, Reset
@@ -72,22 +69,34 @@ Return
 8GuiClose:
 8GuiEscape:
 GoSub 8GuiSaveInput
+GoSub RemoveToolTip
 Gui 8:Destroy
-if WinExist("AutoEdit")
-	Gui 5:Destroy
+Gui 5:Destroy
 ListLines On
 return
 
-8GuiOnlyDetails:
+8Gui_Get_PL_Info:
 Gui, 8:Submit, NoHide
-if (c_DetailsOnly = 1)
+CurrentEditFieldNumber := GetCurrentEditFieldNumber(GuiF8) - 1
+ControlGetText, CurrentEditFieldText, Edit%CurrentEditFieldNumber%
+if (CurrentEditFieldText != "")
 	{
-	Control, Hide ,, aus TempFile laden, %GuiF8%
-	Control, Uncheck ,, aus TempFile laden, %GuiF8%
+	PreloadInfo := GetIniSection(PreloadDetailsFile , CurrentEditFieldText)
+	SetToolTip(GuiF8, PreloadInfo, -4000)
 	}
-else
-	Control, Show ,, aus TempFile laden, %GuiF8%
-return 
+return
+
+8Gui_Show_LFD_Info:
+Gui, 8:Submit, NoHide
+CurrentEditFieldText := GetCurrentEditFieldText(GuiF8)
+if (CurrentEditFieldText != "" and CurrentLFD != "")
+	{
+	IniRead, LFDPreloads, %TempFile%, LFD_%CurrentLFD%
+	Sort, LFDPreloads
+	LFDInfo := "vorhandene Preload-Werte (" . CurrentLFD . "):`n" . LFDPreloads
+	SetToolTip(GuiF8, LFDInfo, -10000)
+	}
+return
 
 8GuiSaveInput:
 ListLines Off
@@ -116,6 +125,7 @@ ShowHelpWindow(GuiF8)
 return
 
 8GuiResetControls:
+GoSub RemoveToolTip
 MsgBox, 4132, Reset?, Reset %GuiF8%?
 IfMsgBox, YES
 	{
@@ -126,6 +136,7 @@ IfMsgBox, YES
 return
 
 8GuiPreloads:
+GoSub RemoveToolTip
 GoSub 8GuiSaveInput
 loop, 5 {
 PreloadCheckBox := c_PL%A_Index%
@@ -148,7 +159,9 @@ IF (Preload != "") and (PreloadCheckBox = 1)   ; Checkbox ausgewählt
 		; mit/ohne Update 
 		If (PreloadUpdateValue = "-") ; read only
 			{
+			MsgWindow("Hole Preload-Wert...")
 			PreloadOriginal := L_ReadPreload(Preload)
+			MsgWindow()
 			MsgBox, 4096 ,%Preload%, %Preload% = %PreloadOriginal%
 			}
 		else ; read and update
