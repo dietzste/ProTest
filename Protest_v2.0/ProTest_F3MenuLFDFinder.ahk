@@ -108,17 +108,17 @@ return
 
 3Gui_Focus:
 GoSub RemoveToolTip
+ShowPreloadListVariables(GuiF3)
 return
 
 3Gui_Get_PL_Info:
 Gui, 3:Submit, NoHide
-ControlGetFocus, FocusVar, %GuiF3%
-CurrentFieldNumber := Substr(FocusVar, 5)
-ModVar := Mod(CurrentFieldNumber, 3)
+CurrentEditFieldNumber := GetCurrentEditFieldNumber(GuiF3)
+ModVar := Mod(CurrentEditFieldNumber, 3)
 if (ModVar = 0)
-	CurrentFieldNumber := CurrentFieldNumber - 2
+	CurrentFieldNumber := CurrentEditFieldNumber - 2
 else
-	CurrentFieldNumber := CurrentFieldNumber - 1
+	CurrentFieldNumber := CurrentEditFieldNumber - 1
 ControlGetText, CurrentPreloadField, Edit%CurrentFieldNumber%
 if (CurrentPreloadField != "")
 	{
