@@ -191,6 +191,7 @@ return
 #Include Protest_EnterValues.ahk
 #Include Protest_FnSearch.ahk
 #Include Protest_WorkFunctions.ahk
+#Include ProTest_MenuFunctions.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LFD Finder Routine ;;
