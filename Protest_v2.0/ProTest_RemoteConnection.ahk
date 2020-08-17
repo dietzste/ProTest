@@ -162,7 +162,8 @@ if (PreloadValue = "false")
 	Exit
 	}
 CheckLFDSectionNames(CurrentLFD)
-SaveIniValue(TempFile, "LFD_" . CurrentLFD , Preload, PreloadValue)
+if (CurrentLFD != "")
+	SaveIniValue(TempFile, "LFD_" . CurrentLFD , Preload, PreloadValue)
 return PreloadValue
 }
 
