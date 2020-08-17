@@ -161,6 +161,7 @@ if (PreloadValue = "false")
 	Msgbox, 4096 ,%Preload%, "%Preload%" nicht vorhanden.
 	Exit
 	}
+CheckLFDSectionNames(CurrentLFD)
 SaveIniValue(TempFile, "LFD_" . CurrentLFD , Preload, PreloadValue)
 return PreloadValue
 }
@@ -258,7 +259,10 @@ Loop, Parse, MissingPreloadString, "|"
 			{
 			PreloadValue := A_LoopField
 			if (PreloadValue != "false")
-				SaveIniValue(TempFile, "LFD_" . CurrentLFD, Preload, PreloadValue) 
+				{
+				CheckLFDSectionNames(CurrentLFD)
+				SaveIniValue(TempFile, "LFD_" . CurrentLFD, Preload, PreloadValue)
+				}
 			else
 				{
 				Msgbox, 4096, Ups!, Preload "%Preload%" war nicht vorhanden. LFD-Suche wird beendet.

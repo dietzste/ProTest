@@ -381,6 +381,38 @@ else
 	MsgBox, 4096, ShowLFD, Eingabe ist leer!
 }
 
+CheckLFDSectionNames(CurrentLFD){
+local
+global TempFile, TempFileName, IgnoreLFDConflict
+If (IgnoreLFDConflict = "true")
+	return
+else
+	{
+	LFDListTempFile := GetIniSectionNames(TempFile)
+	Loop, parse, LFDListTempFile, `n, `r
+			{
+			if (Instr(A_LoopField, "LFD_"))
+				{
+				LFDCheck := StrReplace(A_LoopField, "LFD_")
+				CurrentTempFileDigits := SubStr(LFDCheck, 1 , 2)
+				CurrentLFDDigits := SubStr(CurrentLFD, 1 , 2)
+				if (CurrentTempFileDigits != CurrentLFDDigits)
+					{
+					LFDConflictText = 
+					( LTrim Join
+					Im TempFile (%TempFileName%) beginnen die LFDs mit %CurrentTempFileDigits% (z.B. %LFDCheck%), die
+					%A_Space%aktuelle LFD ist jedoch %CurrentLFD%. Wahrscheinlich passt die aktuelle Projektdatei nicht
+					%A_Space%zur aktuellen Studie. Der aktuelle Durchlauf wird deshalb beendet. Bitte Projektdatei über das F10 Menü ändern!
+					)
+					MsgBox, 4096, LFD Konflikt!, % LFDConflictText
+					Exit
+					}
+				}
+			}
+	} ; ende else IgnoreLFDConflict
+}
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;     INPUT-BOXES      ;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
