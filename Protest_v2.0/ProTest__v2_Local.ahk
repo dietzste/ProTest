@@ -11,7 +11,7 @@ ListLines Off
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen
 ; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte ï¿½bereinstimmung
+; 3 = exakte Übereinstimmung
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Folder/File Management ;;;
@@ -54,8 +54,8 @@ if (StartAsAdmin = "true")
 
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
-; Name Menï¿½s
-GuiF2  := "Hauptmenï¿½ (F2)"
+; Name Menüs
+GuiF2  := "Hauptmenü (F2)"
 GuiF3  := "LFD Finder (F3)"
 GuiF4  := "Erweiterte Optionen (F4)"
 GuiF7  := "LernModus (F7)"
@@ -80,6 +80,7 @@ CurrentLFD 	:= ""
 ultrafast := 30
 fast := 100
 med := 130
+TabVar := ""
 NewEntryF7fnIntro := false
 NewEntryF7fnNag := false
 global Captur2TextPID := CheckIfCapture2TextIsRunning()
@@ -201,7 +202,7 @@ return
 #Include Protest_LFDFinder.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;  INTERAKTIONS-MENï¿½S  ;;;;;;;;;;;;;;
+;;;;;;;;;;  INTERAKTIONS-MENÜS  ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_F2MenuQuickSetup.ahk
@@ -212,7 +213,7 @@ return
 #Include Protest_F10MenuBasicSettings.ahk
 #Include ProTest_AutoEdit.ahk
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;     Hilfe-Texte Menï¿½s      ;;;;;;;;
+;;;;;;     Hilfe-Texte Menüs      ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_HelpMenus.ahk

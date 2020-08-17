@@ -49,6 +49,16 @@ return
 Goto AutoEdit
 return
 
+#if WinActive(GuiF3)
+~Tab::
+if (TabVar != "")
+	{
+	SetCurrentEditFieldText(GuiF3, TabVar)
+	TabVar := ""
+	}
+return
+#if 
+
 #if WinActive(WorkWindow)
 ^m::
 L_SkipXModul()

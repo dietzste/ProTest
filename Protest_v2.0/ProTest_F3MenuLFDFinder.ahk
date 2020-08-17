@@ -108,7 +108,19 @@ return
 
 3Gui_Focus:
 GoSub RemoveToolTip
-ShowPreloadListVariables(GuiF3)
+MatchingVarsF3 := ShowPreloadListVariables(GuiF3)
+LinesCount := StrSplit(MatchingVarsF3, "`n").maxindex()
+if (LinesCount = 2)
+	{
+	Loop, parse, MatchingVarsF3, `n, `r
+		{
+		if (A_Index = 2)
+			{
+			TabVar := A_Loopfield
+			break
+			}
+		}
+	}
 return
 
 3Gui_Get_PL_Info:
