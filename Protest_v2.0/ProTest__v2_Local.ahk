@@ -11,7 +11,7 @@ ListLines Off
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen
 ; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte Übereinstimmung
+; 3 = exakte ï¿½bereinstimmung
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Folder/File Management ;;;
@@ -54,8 +54,8 @@ if (StartAsAdmin = "true")
 
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
-; Name Menüs
-GuiF2  := "Hauptmenü (F2)"
+; Name Menï¿½s
+GuiF2  := "Hauptmenï¿½ (F2)"
 GuiF3  := "LFD Finder (F3)"
 GuiF4  := "Erweiterte Optionen (F4)"
 GuiF7  := "LernModus (F7)"
@@ -110,6 +110,7 @@ VerboseHistory		:= GetIniValue(BasicFile, "AdvancedSettings",  "VerboseHistory")
 MaxSkips			:= GetIniValue(BasicFile, "AdvancedSettings",  "MaxSkips")
 SkipIfPreloadZero	:= GetIniValue(BasicFile, "AdvancedSettings",  "SkipIfPreloadZero")
 MaxLengthfnValue	:= GetIniValue(BasicFile, "AdvancedSettings",  "MaxLengthfnValue")
+IgnoreLFDConflict	:= GetIniValue(BasicFile, "AdvancedSettings",  "IgnoreLFDConflict")
 
 ; OCR Settings
 RawOCRTestOutput	:= GetIniValue(BasicFile, "OCR",  "RawOCRTestOutput")
@@ -200,7 +201,7 @@ return
 #Include Protest_LFDFinder.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;  INTERAKTIONS-MENÜS  ;;;;;;;;;;;;;;
+;;;;;;;;;;  INTERAKTIONS-MENï¿½S  ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_F2MenuQuickSetup.ahk
@@ -211,7 +212,7 @@ return
 #Include Protest_F10MenuBasicSettings.ahk
 #Include ProTest_AutoEdit.ahk
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;     Hilfe-Texte Menüs      ;;;;;;;;
+;;;;;;     Hilfe-Texte Menï¿½s      ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_HelpMenus.ahk
