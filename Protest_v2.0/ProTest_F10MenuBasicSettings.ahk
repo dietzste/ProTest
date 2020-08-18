@@ -193,9 +193,14 @@ TestMessage .= e_scale . ": " . TestOCR . "`n"
 e_scale := e_scale + 0.1
 e_scale := Round(e_scale, 1)
 }
+TestMessage .= "`n`n Capture2Text wird jetzt neu gestartet..."
 MsgBox, 4096, Scale Factor, % TestMessage
 e_scale := e_scaleStatus
 SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "ScaleFactor", e_scale)
+CloseCapture2Text(Captur2TextPID)
+WinSet, AlwaysOnTop, Off, %GuiF10%
+SettingUpCapture2Text()
+WinSet, AlwaysOnTop, On, %GuiF10%
 return
 
 ; Save Input
