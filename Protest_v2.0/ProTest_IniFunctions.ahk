@@ -4,7 +4,6 @@
 
 GetIniValue(File, Section, key, params*){
 local 
-global TempFile
 ListLines Off
 if (params.MaxIndex() = 1)
 	IniRead, Value, %File%, %Section%, %key%, % params[1]
@@ -38,13 +37,7 @@ if (SectionDetails = "")
 	SectionDetails := "Keine Preload-Infos hinterlegt"
 	return SectionDetails
 	}
-else
-	{
-	loop, 8 {
-	SectionDetails := StrReplace(SectionDetails, "we" . A_Index . "=")
-	}
-	return SectionDetails
-	} ;ende else
+return SectionDetails
 }
 
 GetIniSectionClean(File, Section){
