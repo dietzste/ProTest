@@ -446,12 +446,12 @@ global LFDLimit
 
 ; Setting Up InPut Box
 InputBoxText := "Bitte eine LFD eingeben!"
-InptBoxTitle := "LFD-Angabe fehlt!" 
+InputBoxTitle := "LFD-Angabe fehlt!" 
 InputBoxDefault := GetIniValue(ProjectFile, QuickSetupMenu, "cb_UseLFD", A_Space)
 
 ; Show Input Box
 InputboxDialog:
-InputBox, EnteredLFD , %InptBoxTitle% , %InputBoxText%,, 250, 150,,,,,%InputBoxDefault% 
+InputBox, EnteredLFD , %InputBoxTitle% , %InputBoxText%,, 250, 150,,,,,%InputBoxDefault% 
 if (ErrorLevel = 1 OR EnteredLFD = "") ; Cancel or Closed, no LFD
 	{
 	MsgBox, 4096, Ende , Durchlauf beendet!
@@ -481,3 +481,101 @@ Gui, 20:show, Center Autosize, About ProTest
 WinWaitActive, About ProTest
 WinWaitClose, About ProTest
 return
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;  TEMP FILE Cleaning   ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+CleanTempFile(TempFile){
+local
+FalseEntry := GetIniSection(TempFile, "LFD_")
+if (FalseEntry != "ERROR")
+	DeleteIniSection(TempFile, "LFD_")
+LFDSections := GetIniSectionNames(TempFile)
+LFDDigitsArray := {}
+LFDList := ""
+If (LFDSections != "ERROR")
+	{
+	Loop, parse, LFDSections, `n, `r
+		{
+		if Instr(A_LoopField, "LFD_")
+			{
+			ThisLine := StrReplace(A_LoopField, "LFD_")
+			LFDList .= ThisLine . "`n"
+			FirstTwoDigits := Substr(ThisLine, 1, 2)
+			Value := LFDDigitsArray[FirstTwoDigits]
+			If (Value = "")
+				LFDDigitsArray[FirstTwoDigits] := 1
+			else
+				LFDDigitsArray[FirstTwoDigits] := ++Value
+			}
+		} ; ende loop
+	LFDDigitsCount := LFDDigitsArray.Count()
+	If (LFDDigitsCount > 1)
+		{
+		; start CleanUpLoop
+		CleanupLoopCount := LFDDigitsCount-1
+		Loop, %CleanupLoopCount% {
+		LFDTypeList := ""
+		InputBoxDefault := 0
+		For LFDType, n in LFDDigitsArray
+			{
+			LFDTypeList .= LFDType . "... (n = " . n . ")`n"
+			If (A_Index = 1)
+				{
+				SmallestCount := n
+				InputBoxDefault := LFDType
+				}
+			else if (n < SmallestCount)
+				{
+				SmallestCount := n
+				InputBoxDefault := LFDType
+				}
+			}
+		; InputBox, OutputVar , Title, Prompt, HIDE, Width, Height, X, Y, Locale, Timeout, Default
+		InputBoxTitle := "LFD Konflikt erkannt!"
+		InputBoxText := "Im TempFile starten LFDs mit unterschiedlichen Zahlen:`n" . LFDTypeList . "`nMit welchen zwei Zahlen beginnen die LFDs, die gelöscht werden sollen? (Schleife " . A_Index . "/" . LFDDigitsCount-1 . ")"
+		ShowThisInputBox:
+		InputBox, CleanupDigit , %InputBoxTitle% , %InputBoxText%,, 250, 300,,,,,%InputBoxDefault%
+		if (ErrorLevel = 1) or (ErrorLevel = 0 And CleanupDigit = "")
+			{
+			AbbruchText =
+			( LTrim Join
+			Die Bereinigung des TempFiles wurde abgebrochen! 
+			%A_Space%Um die Bereinigung zu wiederholen, bitte die aktuelle Projektdatei über das F10-Menü erneut auswählen.
+			%A_Space%Das TempFile enthält weiterhin fehlerhafte Eintragungen.
+			)
+			MsgBox, 4096, Bereinigung abgebrochen!, %AbbruchText%
+			Break
+			}
+		else if (ErrorLevel = 0 and StrLen(CleanupDigit) != 2)
+			{
+			MsgBox, 4096, Fehlerhafte Eingabe!, Bitte nur zwei Zahlen eingeben!
+			Goto ShowThisInputBox
+			}
+		else
+			{
+			; Bereinigung TempFile
+			DeletedLFDs := CleanUpTempFile(TempFile, LFDList, CleanupDigit)
+			MsgBox, 4096, Bereinigung durchgeführt!, TempFile erfolgreich bereinigt! Gelöschte LFDs:`n%DeletedLFDs%
+			LFDDigitsArray.Delete(CleanupDigit)
+			}
+		} ; CleanupLoop 
+		} ; if LFDTypes Count
+	} ; ende if LFDSections
+} ; ende function
+
+CleanUpTempFile(TempFile, LFDList , CleanupDigit){
+local
+DeletedLFDs := ""
+Loop, parse, LFDList , `n, `r
+	{
+	if Instr(A_LoopField, CleanupDigit)
+		{
+		ThisLFD := "LFD_" . A_LoopField
+		DeletedLFDs .= A_LoopField . "`n"
+		DeleteIniSection(TempFile, ThisLFD)
+		}
+	} ; ende loop
+return DeletedLFDs
+}

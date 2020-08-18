@@ -422,6 +422,7 @@ if FileExist(ProjectFileName)
 ; TempFile
 global TempFileName := ProjectName . "_Temp.ini"
 global TempFile := ProjectFolder . "\" . TempFileName
+CleanTempFile(TempFile)
 
 ; HistoryFile
 global HistoryFileName := ProjectName . "_History" . A_YYYY .  A_MM . A_DD
@@ -436,7 +437,7 @@ if !FileExist(PreloadListPath)
 else
 	FileRead, PreloadList , %PreloadListPath%
 
-; Save to TempFile
+; Save to ProjectFile
 SaveIniValue(ProjectFile, "ProjectFiles", "e_TempFile", TempFileName)
 SaveIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile", ProjectFileName)
 
