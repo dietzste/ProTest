@@ -47,6 +47,7 @@ if (Remove != "Keep")
 ShowPreloadListVariables(Menu){
 local
 global PreloadList
+global ToolTipDisplayTime
 if (PreloadList != "")
 	{
 	CurrentEditFieldText := GetCurrentEditFieldText(Menu)
@@ -77,7 +78,7 @@ if (PreloadList != "")
 			PressTabInfo := " (Drücke Tab...)"
 			MatchingVars .= PressTabInfo
 			}
-		SetToolTip(Menu, MatchingVars, "Right", -10000)
+		SetToolTip(Menu, MatchingVars, "Right", (ToolTipDisplayTime*-1))
 		}
 	} ; ende if
 MatchingVars := StrReplace(MatchingVars, PressTabInfo)

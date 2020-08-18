@@ -73,7 +73,7 @@ if (CurrentLFD != "")
 		LFDPreloads := ShorterLFDPreloads . "..."
 		}
 	LFDInfo := LinesCount . " vorhandene Preload-Werte (" . CurrentLFD . "):`n" . LFDPreloads
-	SetToolTip(GuiF8, LFDInfo, "Right", -20000)
+	SetToolTip(GuiF8, LFDInfo, "Right", (ToolTipDisplayTime*-1))
 	}
 return
 
@@ -94,7 +94,7 @@ ControlGetText, CurrentEditFieldText, Edit%CurrentEditFieldNumber%
 if (CurrentEditFieldText != "")
 	{
 	PreloadInfo := GetPreloadDetails(CurrentEditFieldText)
-	SetToolTip(GuiF8, PreloadInfo, "Right", -10000)
+	SetToolTip(GuiF8, PreloadInfo, "Right", (ToolTipDisplayTime*-1))
 	}
 return
 
