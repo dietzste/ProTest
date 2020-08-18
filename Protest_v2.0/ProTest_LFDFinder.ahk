@@ -136,10 +136,10 @@ else if (Command = "NeedPreloads")
 	++LFDCount
 	if (LFDStatus = 2)
 		{
-		SaveToHistory("VERBOSE:", "Enter LFD" . CurrentLFD)
+		SaveToHistory("VERBOSE:", "Enter LFD " . CurrentLFD)
 		Send, {Enter}
 		L_WaitUntilPreloadsLoaded()
-		LFDStatus = 3
+		LFDStatus := 3
 		}
 	global PreloadString 
 	L_ReadMultiplePreloads(CurrentLFD, PreloadString, true)
