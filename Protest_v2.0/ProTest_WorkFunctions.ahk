@@ -364,6 +364,28 @@ Loop, Parse, LFDListTempFile, "`n"
 return LFDList
 }
 
+GetPreloadDetails(Preload){
+local
+global PreloadDetailsFile 
+IniRead, PreloadSectionDetails, %PreloadDetailsFile%, %Preload%
+if (PreloadSectionDetails != "")
+	{
+	PreloadDetails := ""
+	Loop, parse, PreloadSectionDetails, `n, `r
+		{
+		; remove "we1="
+		ThisLine := RegExReplace(A_LoopField,"we\d=")
+		ThisLine := RegExReplace(ThisLine,"=",": ")
+		; add "--" infront word characters
+		ThisLine := RegExReplace(ThisLine,"^\D","--$0")
+		PreloadDetails .= ThisLine . "`n"
+		}
+	return PreloadDetails
+	}
+else
+	return "Keine Preload-Infos hinterlegt"
+}
+
 ShowSelectedLFDValues(LFDComboBoxField){
 local
 global TempFile 
