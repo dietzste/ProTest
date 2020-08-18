@@ -185,9 +185,7 @@ Einstellungen ändern:
 Scale Factor Scan: 
 Button 'Test' und die Shift-Taste gleichzeitig
 drücken. ProTest  führt eine Testung mit versch.
-Scale-Faktoren durch. Falls keine Einstellung
-die Zahlen(!) der fn richtig erkennt: ProTest
-mit F12 schließen und neu öffnen.
+Scale-Faktoren durch.
 
 Einstellungen dauerhaft speichern:
 Button 'Speichern' und die Shift-Taste gleichzeitig 
