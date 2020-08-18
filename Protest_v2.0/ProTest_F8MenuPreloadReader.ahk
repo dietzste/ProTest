@@ -64,7 +64,31 @@ Gui, 8:Add, Button,   x30  y162 w50  h25 g8GuiHelp , Hilfe
 Gui, 8:Add, Button,   x85  y162 w50  h25 g8GuiResetControls, Reset
 Gui, 8:Add, Button,   x178 y162 w80 h25 Default g8GuiPreloads , Ok
 Gui, 8:Show, x850 y480 Autosize Center, %GuiF8%
+Gosub ShowLFDValues
 Return
+
+ShowLFDValues:
+if (CurrentLFD != "")
+	{
+	IniRead, LFDPreloads, %TempFile%, LFD_%CurrentLFD%
+	Sort, LFDPreloads
+	LinesCount := StrSplit(LFDPreloads, "`n").maxindex()
+	MaxNumberPreloadValuesF8 := 10
+	if (LinesCount >= MaxNumberPreloadValuesF8)
+		{
+		ShorterLFDPreloads := ""
+		Loop, parse, LFDPreloads, `n, `r
+			{
+			if (A_Index <= MaxNumberPreloadValuesF8)
+				ShorterLFDPreloads .= A_Loopfield . "`n"
+			}
+			
+		LFDPreloads := ShorterLFDPreloads . "..."
+		}
+	LFDInfo := LinesCount . " vorhandene Preload-Werte (" . CurrentLFD . "):`n" . LFDPreloads
+	SetToolTip(GuiF8, LFDInfo, "Right", -20000)
+	}
+return
 
 8GuiClose:
 8GuiEscape:
@@ -77,12 +101,13 @@ return
 
 8Gui_Get_PL_Info:
 Gui, 8:Submit, NoHide
+Gosub RemoveToolTip
 CurrentEditFieldNumber := GetCurrentEditFieldNumber(GuiF8) - 1
 ControlGetText, CurrentEditFieldText, Edit%CurrentEditFieldNumber%
 if (CurrentEditFieldText != "")
 	{
-	PreloadInfo := GetIniSection(PreloadDetailsFile , CurrentEditFieldText)
-	SetToolTip(GuiF8, PreloadInfo, -4000)
+	PreloadInfo := GetPreloadDetails(CurrentEditFieldText)
+	SetToolTip(GuiF8, PreloadInfo, "Right", -10000)
 	}
 return
 
