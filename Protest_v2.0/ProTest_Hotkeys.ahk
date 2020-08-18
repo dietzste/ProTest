@@ -138,14 +138,16 @@ Gui 12:Submit
 If (c_DeleteHistoryFile = 1)
 	FileDelete, %HistoryFile%
 CloseCapture2Text(Captur2TextPID)
+Gui 12:Destroy
+ExitApp
 return
 
-CloseCapture2Text(Captur2TextPID){
+CloseCapture2Text(PID){
+global Captur2TextPID
 if (Captur2TextPID != 0)
 	{
 	Process, Close , %Captur2TextPID%
 	Process, WaitClose , %Captur2TextPID%
+	Captur2TextPID := 0
 	}
-Gui 12:Destroy
-ExitApp
 }
