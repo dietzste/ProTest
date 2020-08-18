@@ -138,14 +138,8 @@ CheckFileFirst := true
 
 ; Load Preloads from File? (F8)
 if (A_ThisLabel = "8GuiPreloads")
-	{
-	c_LoadSavedValues := GetIniValue(ProjectFile, "PreloadReaderMenu", "c_LoadSavedValues")
-	if (c_LoadSavedValues = 1)
-		CheckFileFirst := true
-	else
-		CheckFileFirst := false
-	}
-	
+	CheckFileFirst := false
+
 ; Load Preloads from File
 if (CheckFileFirst = true)
 	{

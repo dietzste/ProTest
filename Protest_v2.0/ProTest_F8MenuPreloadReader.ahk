@@ -25,19 +25,6 @@ e_PLN%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "e_PLN" . A_Index,
 e_PLU%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "e_PLU" . A_Index, "-")
 c_PL%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "c_PL" . A_Index, 0)
 } ; ende loop
-c_LoadSavedValues := GetIniValue(ProjectFile, PreloadReaderMenu, "c_LoadSavedValues", 0)
-
-; Show Current LFD
-if (CurrentLFD != "")
-	{
-	CurrentLFDComment := "(LFD: " . CurrentLFD . ")"
-	LoadSavedValuesDis := DisOFF
-	}
-else
-	{
-	CurrentLFDComment := ""
-	LoadSavedValuesDis := DisON
-	}
 
 ;;;;;; GUI Menü ;;;;;
 ; EDIT-FIELDs
@@ -146,7 +133,6 @@ For i, control in 8GuiControlArray
 		SaveIniValue(ProjectFile, PreloadReaderMenu, ControlName, %ControlName%)
 	} ;ende loop 9
 } ; ende for 
-SaveIniValue(ProjectFile, PreloadReaderMenu, "c_LoadSavedValues", c_LoadSavedValues)
 ListLines On
 return
 
@@ -179,26 +165,20 @@ IF (Preload != "") and (PreloadCheckBox = 1)   ; Checkbox ausgewählt
 	Conversion := GetIniValue(PreloadDetailsFile, "Converter", Preload)
 	if (Conversion != "ERROR")
 		Preload := Conversion
-	; Details abrufen
-	If (c_DetailsOnly = 1) ; nur Details
-		MsgBox,4096,%Preload%, % GetIniSection(PreloadDetailsFile , Preload)
-	else
+	; schauen ob Preload in Liste
+	CheckPreloadInPreloadList(Preload)
+	; mit/ohne Update 
+	If (PreloadUpdateValue = "-") ; read only
 		{
-		; schauen ob Preload in Liste
-		CheckPreloadInPreloadList(Preload)
-		; mit/ohne Update 
-		If (PreloadUpdateValue = "-") ; read only
-			{
-			MsgWindow("Hole Preload-Wert...")
-			PreloadOriginal := L_ReadPreload(Preload)
-			MsgWindow()
-			MsgBox, 4096 ,%Preload%, %Preload% = %PreloadOriginal%
-			}
-		else ; read and update
-			{
-			PreloadOriginal := L_UpdatePreload(Preload, PreloadUpdateValue)
-			Msgbox, 4096 ,%Preload%, %Preload% wurde von %PreloadOriginal% auf %PreloadUpdateValue% umgestellt.
-			}
+		MsgWindow("Hole Preload-Wert...")
+		PreloadOriginal := L_ReadPreload(Preload)
+		MsgWindow()
+		MsgBox, 4096 ,%Preload%, %Preload% = %PreloadOriginal%
+		}
+	else ; read and update
+		{
+		PreloadOriginal := L_UpdatePreload(Preload, PreloadUpdateValue)
+		Msgbox, 4096 ,%Preload%, %Preload% wurde von %PreloadOriginal% auf %PreloadUpdateValue% umgestellt.
 		}
 	} ;ende if
 } ; ende loop
