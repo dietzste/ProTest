@@ -134,8 +134,8 @@ else
 ControlGetText, CurrentPreloadField, Edit%CurrentFieldNumber%
 if (CurrentPreloadField != "")
 	{
-	IniRead, PreloadInfo, %PreloadDetailsFile%, %CurrentPreloadField%
-	SetToolTip(GuiF3, PreloadInfo, -4000)
+	PreloadInfo := GetPreloadDetails(CurrentPreloadField)
+	SetToolTip(GuiF3, PreloadInfo, "Right", -5000)
 	}
 return
 
