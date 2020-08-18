@@ -25,13 +25,23 @@ CurrentEditFieldNumber := GetCurrentEditFieldNumber(Menu)
 ControlSetText, Edit%CurrentEditFieldNumber%, %NewEditFieldText%, %Menu%
 }
 
-SetToolTip(Menu, Text, Remove){
-WinGetPos , MenuX, MenuY, MenuWidth,, %Menu%
-ToolTipPosX := MenuX + MenuWidth
-ToolTipPosY := MenuY
+SetToolTip(Menu, Text, Position, Remove){
+local
+WinGetPos , MenuX, MenuY, MenuWidth, MenuHeight, %Menu%
+if (Position = "Right")
+	{
+	ToolTipPosX := MenuX + MenuWidth
+	ToolTipPosY := MenuY
+	}
+else if (Position = "Under")
+	{
+	ToolTipPosX := MenuX
+	ToolTipPosY := MenuY + MenuHeight
+	}
 CoordMode, ToolTip
 ToolTip, %Text%, %ToolTipPosX% , %ToolTipPosY%, 1
-SetTimer, RemoveToolTip, %Remove%
+if (Remove != "Keep")
+	SetTimer, RemoveToolTip, %Remove%
 }
 
 ShowPreloadListVariables(Menu){
@@ -67,7 +77,7 @@ if (PreloadList != "")
 			PressTabInfo := " (Drücke Tab...)"
 			MatchingVars .= PressTabInfo
 			}
-		SetToolTip(Menu, MatchingVars, -10000)
+		SetToolTip(Menu, MatchingVars, "Right", -10000)
 		}
 	} ; ende if
 MatchingVars := StrReplace(MatchingVars, PressTabInfo)
