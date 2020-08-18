@@ -57,6 +57,16 @@ if (TabVar != "")
 	TabVar := ""
 	}
 return
+#if
+
+#if WinActive(GuiF8)
+~Tab::
+if (TabVar != "")
+	{
+	SetCurrentEditFieldText(GuiF8, TabVar)
+	TabVar := ""
+	}
+return
 #if 
 
 #if WinActive(WorkWindow)
