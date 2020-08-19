@@ -135,7 +135,7 @@ ControlGetText, CurrentPreloadField, Edit%CurrentFieldNumber%
 if (CurrentPreloadField != "")
 	{
 	PreloadInfo := GetPreloadDetails(CurrentPreloadField)
-	SetToolTip(GuiF3, PreloadInfo, "Right", -5000)
+	SetToolTip(GuiF3, PreloadInfo, "Right", ToolTipDisplayTime)
 	}
 return
 
