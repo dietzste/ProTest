@@ -112,6 +112,7 @@ MaxSkips			:= GetIniValue(BasicFile, "AdvancedSettings",  "MaxSkips")
 SkipIfPreloadZero	:= GetIniValue(BasicFile, "AdvancedSettings",  "SkipIfPreloadZero")
 MaxLengthfnValue	:= GetIniValue(BasicFile, "AdvancedSettings",  "MaxLengthfnValue")
 IgnoreLFDConflict	:= GetIniValue(BasicFile, "AdvancedSettings",  "IgnoreLFDConflict")
+ToolTipDisplayTime	:= GetIniValue(BasicFile, "AdvancedSettings",  "ToolTipDisplayTime")(*-1)
 
 ; OCR Settings
 RawOCRTestOutput	:= GetIniValue(BasicFile, "OCR",  "RawOCRTestOutput")
