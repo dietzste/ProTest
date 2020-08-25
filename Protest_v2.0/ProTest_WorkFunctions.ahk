@@ -276,7 +276,7 @@ global WorkWindow
 ListLines Off
 if !WinExist(WorkWindow)
 	{
-	Msgbox, 4096, Ups!, %WorkWindow%-Fenster nicht vorhanden!
+	Msgbox, 4096, Ups!, TeamViewer-Fenster nicht vorhanden!
 	ListLines On
 	Exit
 	}
