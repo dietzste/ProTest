@@ -181,6 +181,7 @@ else
 return
 
 ScaleFactorScan:
+AlarmIfCapture2TextIsNotRunning()
 CheckWorkWindow()
 e_scaleStatus := e_scale
 TestMessage := "Ergebnisse OHNE OCR-Korrekturen`n`n"
