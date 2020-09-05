@@ -65,18 +65,19 @@ else
 	fnComment := ""
 
 Gui, 7: +AlwaysOnTop ToolWindow
-Gui, 7:Add, Groupbox, x10 y10 w220 h140 cnavy, Lernmodus
+Gui, 7:Add, Groupbox, x10 y10 w260 h140 cnavy, Lernmodus
 Gui, 7:Add, Text, x20 y34 w50 h20, OCR-fn:
-Gui, 7:Add, Edit, x103 y32 w120 h20 ve_fnLearn,	%e_fnLearn%
+Gui, 7:Add, Edit, x103 y32 w160 h20 ve_fnLearn,	%e_fnLearn%
 Gui, 7:Add, Text, x20 y56 w70 h20, Eingabewert:
-Gui, 7:Add, Combobox, x103 y54 w120  h80 vfnValue, % ActionList
+Gui, 7:Add, Combobox, x103 y54 w160 h80 vfnValue, % ActionList
 Gui, 7:Add, Text, x20 y79 w74 h20, Kommentar:
-Gui, 7:Add, Edit, x103 y77 w120 h20 vfnComment, % fnComment
+Gui, 7:Add, Edit, x103 y77 w160 h20 vfnComment, % fnComment
 Gui, 7:Add, Text, x20 y103 w74 h20, Abschnitt:
-Gui, 7:Add, DropDownList, x103 y101 w120  h80 vdd_Section, % SectionList
+Gui, 7:Add, DropDownList, x103 y101 w160  h80 vdd_Section, % SectionList
 Gui, 7:Add, Checkbox, x20 y128 w140 h20 Checked%EnterWhileSaving% vEnterWhileSaving, beim Speichern ausführen
 Gui, 7:Add, Button, x10 y155 w75 h25 g7GuiSave, Speichern
-Gui, 7:Add, Button, x155 y155 w75 h25 Default g7GuiEnter, Ausführen
+Gui, 7:Add, Button, x90 y155 w75 h25 g7GuiDelete, Löschen
+Gui, 7:Add, Button, x195 y155 w75 h25 Default g7GuiEnter, Ausführen
 Gui, 7:Show, Autosize Center, % GuiF7
 return 
 
@@ -86,7 +87,32 @@ Gui 7:Submit, NoHide
 SaveIniValue(ProjectFile, "LernModus", "EnterWhileSaving", EnterWhileSaving)
 Gui 7:Destroy
 DeleteIniSection(TempFile, "LernModus")
-return  
+return
+
+7GuiDelete:
+Gui 7:Submit, NoHide
+if (e_fnLearn != "")
+	{
+	fnValue := GetIniValue(LibraryFile, dd_Section, e_fnLearn)
+	if (fnValue != "ERROR")
+		{
+		fnComment := ExtractfnComment(e_fnLearn, dd_Section)
+		fntoDeleteText := "fn: " . e_fnLearn . "`nEingabewert: " . fnValue . "`nKommentar: " . fnComment
+		MsgBox, 4132, Eintrag löschen?, Soll folgender Eintrag im Abschnitt %dd_Section% aus der Library gelöscht werden? `n`n%fntoDeleteText%
+		IfMsgBox, YES
+			{
+			DeleteIniValue(LibraryFile, dd_Section, e_fnLearn)
+			Msgbox, 4096, Eintrag gelöscht!, Eintrag für %e_fnLearn% erfolgreich gelöscht!
+			Gui 7:Destroy
+			Goto 7GuiSetControls
+			}
+		}
+	else
+		Msgbox, 4096, Eintrag nicht vorhanden!, Für die fn %e_fnLearn% ist kein Eintrag in der Library vorhanden!
+	}
+else
+	Msgbox, 4096, Fehlende Angaben!, Das Feld "OCR-fn" ist leer!
+return
 
 7GuiSave:
 WinActivate, %WorkWindow%
