@@ -15,6 +15,9 @@ UpdateTimeStemp :=  A_DD . "." . A_MM . "." . A_YYYY
 
 ;;; UPDATE CONTROL ;;;
 
+OverwriteSectionArray := { 1: "P41599PRE"
+, 2: "P41598PRE"}
+
 OverwriteKeysAnywayArray := { 1: "Version"
 , 2: "TimeOutMsgLFDMatch"
 , 3: "TimeOutMsgSkippedIntro"
@@ -265,6 +268,7 @@ if FileExist("ProTest_v2.0_RemoteClient.exe")
 CompareIniSections(OldFile, NewFile){
 local
 ; Get Ini-Section-List
+global OverwriteSectionArray
 OldSectionList := GetIniSectionNames(Oldfile)
 NewSectionList := GetIniSectionNames(Newfile)
 Loop, Parse, NewSectionList , "`n"
@@ -292,7 +296,21 @@ Loop, Parse, NewSectionList , "`n"
 		if (NewSectionKeys != OldSectionKeys)
 			{
 			; unterschiedliche Abschnitte
-			CompareIniKeys(OldFile, NewFile, CurrentSection, NewSectionKeys, OldSectionKeys)
+			CurrentSectionWasOverwritten := false
+			For Index, SectionName in OverwriteSectionArray
+				{
+				if (CurrentSection = SectionName)
+					{
+					DeleteIniSection(Oldfile, CurrentSection)
+					CopySection(OldFile, NewFile, CurrentSection)
+					CurrentSectionWasOverwritten := true
+					Break
+					}
+				}
+			if (CurrentSectionWasOverwritten = false)
+				{
+				CompareIniKeys(OldFile, NewFile, CurrentSection, NewSectionKeys, OldSectionKeys)
+				}
 			}
 		}
 	} ; ende loop
@@ -393,15 +411,27 @@ else
 
 CopySection(OldFile, NewFile, Section){
 local
+global OverwriteSectionArray
 IniRead, NewSectionKeys, %NewFile%, %Section%
-SaveToUpdateLog("Neuer Abschnitt: [" . Section . "]")
+OverwriteThisSection := false
+For Index, SectionName in OverwriteSectionArray
+	{
+	if (Section = SectionName)
+		{
+		OverwriteThisSection := true
+		break
+		}
+	}
+if (OverwriteThisSection = false)
+	SaveToUpdateLog("Neuer Abschnitt: [" . Section . "]")
 Loop, Parse, NewSectionKeys , "`n"
 	{
 	CurrentLine := A_LoopField
 	CurrentNewKey := Substr(CurrentLine, 1, Instr(CurrentLine, "=")-1)
 	IniRead, CurrentNewCompleteValue, %NewFile%, %Section%, %CurrentNewKey%
 	IniWrite, %CurrentNewCompleteValue%, %OldFile%, %Section%, %CurrentNewKey% 
-	SaveToUpdateLog("NEU: [" . Section . "] " . CurrentNewKey . " = " . CurrentNewCompleteValue)
+	if (OverwriteThisSection = false)
+		SaveToUpdateLog("NEU: [" . Section . "] " . CurrentNewKey . " = " . CurrentNewCompleteValue)
 	} ; ende loop
 } ; ende function
 
