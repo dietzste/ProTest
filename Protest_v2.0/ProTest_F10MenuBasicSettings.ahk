@@ -64,7 +64,7 @@ Gui, 10:Add, Text, x20 y54  w92  h20 , Library:
 Gui, 10:Add, Edit, x85 	y51  w90  h20 Disabled , Library.ini
 Gui, 10:Add, Button, x205  y27 w50  h20 g10GuiChangeBasicFile, ändern
 ; OCR Konfiguration
-Gui, 10:Add, Groupbox, x10 y85 w260 h125 cNavy, OCR Konfiguration
+Gui, 10:Add, Groupbox, x10 y85 w260 h125 cNavy, Texterkennung konfigurieren
 ;;; Position fn Start
 	;; Start X 
 	Gui, 10:Add, Text, x45 y108  w35  h20 %BasicSettingsDis%, Pos X:
