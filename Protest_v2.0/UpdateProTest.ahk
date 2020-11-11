@@ -280,6 +280,8 @@ Loop, Parse, NewSectionList , "`n"
 		{
 		; Neuer Abschnitt
 		CopySection(OldFile, NewFile, CurrentSection)
+		if (CurrentSection = "fnSkip")
+			CleanLibrary(NewFile)
 		}
 	else
 		{
@@ -481,6 +483,35 @@ DeleteIniValue(BasicFile, "BasicSettingsMenu", "c_dependent")
 DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn1")
 DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn2")
 DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn3")
+}
+
+CleanLibrary(NewFile) {
+
+; Load Sections
+IniRead, fnSkipKeys, %NewFile%, fnSkip
+IniRead, fnNagKeys, %NewFile%, fnNag
+Loop, Parse, fnSkipKeys , "`n"
+	{
+	CurrentLine := A_LoopField
+	CurrentKey := GetCleanKey(CurrentLine)
+	if Instr(fnNagKeys, CurrentLine)
+		{
+		; identische Eintragung
+		DeleteIniValue(NewFile, "fnNag", CurrentKey)
+		Continue
+		}
+	if !Instr(fnNagKeys, CurrentLine)
+		{
+		; andere Eintragung übertragen
+		IniRead, fnSkipCompleteValue, %NewFile%, fnNag, %CurrentKey%
+		IniWrite, %fnSkipCompleteValue%, %NewFile%, fnSkip, %CurrentKey%
+		DeleteIniValue(NewFile, "fnNag", CurrentKey)
+		}
+	} ; ende Loop
+; Check Keys in fnNag again
+IniRead, fnNagKeys, %NewFile%, fnNag
+if (fnNagKeys = "")
+	DeleteIniSection(NewFile, "fnNag")
 }
 
 ;;;;;;;;;;;;;;;;;;;
