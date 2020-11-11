@@ -25,7 +25,7 @@ fnValue := ""
 dd_Section := ""
 
 ; Eintrag vorhanden?
-SectionArray := ["fnIntro", "fnNag"]
+SectionArray := [fnIntro, fnSkip]
 For i, Section in SectionArray
 	{
 	if (e_fnLearn = "")
@@ -47,16 +47,16 @@ For i, Section in SectionArray
 ; Eintrag noch nicht vorhanden
 if (fnValue = "ERROR")
 	{
-	dd_Section := GetIniValue(TempFile, "LernModus", "LastSection", "fnIntro")
-	SectionList := "fnIntro||fnNag"
+	dd_Section := GetIniValue(TempFile, "LernModus", "LastSection", fnIntro)
+	SectionList := fnIntro . "||" . fnSkip
 	fnValue := ""
 	}
 else
 	{
-	if (dd_Section = "fnIntro")
-		SectionList := "fnIntro||fnNag"
+	if (dd_Section = fnIntro)
+		SectionList := fnIntro . "||" . fnSkip
 	else
-		SectionList := "fnIntro|fnNag||"
+		SectionList := fnIntro . "|" . fnSkip . "||"
 	}
 ActionList := fnValue . "||Get(sexPRE)|Get(gebtPRE/gebmPRE/gebjPRE)|Get()|Reverse(sexPRE)|Reverse()|Stop|Ende|{Enter}"
 if (fnValue != "")
@@ -65,7 +65,7 @@ else
 	fnComment := ""
 
 Gui, 7: +AlwaysOnTop ToolWindow
-Gui, 7:Add, Groupbox, x10 y10 w260 h140 cnavy, Lernmodus
+Gui, 7:Add, Groupbox, x10 y10 w260 h140 cnavy, Eingaben definieren
 Gui, 7:Add, Text, x20 y34 w50 h20, OCR-fn:
 Gui, 7:Add, Edit, x103 y32 w160 h20 ve_fnLearn,	%e_fnLearn%
 Gui, 7:Add, Text, x20 y56 w70 h20, Eingabewert:
@@ -97,8 +97,8 @@ if (e_fnLearn != "")
 	if (fnValue != "ERROR")
 		{
 		fnComment := ExtractfnComment(e_fnLearn, dd_Section)
-		fntoDeleteText := "fn: " . e_fnLearn . "`nEingabewert: " . fnValue . "`nKommentar: " . fnComment
-		MsgBox, 4132, Eintrag löschen?, Soll folgender Eintrag im Abschnitt %dd_Section% aus der Library gelöscht werden? `n`n%fntoDeleteText%
+		fntoDeleteText := "fn: " . e_fnLearn . "`nEingabewert: " . fnValue . "`nKommentar: " . fnComment . "`nAbschnitt: " . dd_Section
+		MsgBox, 4132, Eintrag löschen?, Soll folgender Eintrag gelöscht werden? `n`n%fntoDeleteText%
 		IfMsgBox, YES
 			{
 			DeleteIniValue(LibraryFile, dd_Section, e_fnLearn)
@@ -163,15 +163,15 @@ if (ExistingFnValue != "ERROR")
 else
 	{
 	; Neuer Eintrag
-	if (dd_Section = "fnIntro" and NewEntryF7fnIntro = false) or (dd_Section = "fnNag" and NewEntryF7fnNag = false)
+	if (dd_Section = fnIntro and NewEntryF7fnIntro = false) or (dd_Section = fnSkip and NewEntryF7fnSkip = false)
 		{
 		; Ersten neuen Eintrag mit Abstand + Zeitstempel einfügen
 		TimeStemp :=  A_DD . "." . A_MM . "." . A_YYYY
 		SaveIniValue(LibraryFile, dd_Section, "`n; " . ProjectName . " Neuer Eintrag " . TimeStemp . "`nNeuerEintrag", "Blank")
-		if (dd_Section = "fnIntro")
+		if (dd_Section = fnIntro)
 			NewEntryF7fnIntro := true
 		else
-			NewEntryF7fnNag := true
+			NewEntryF7fnSkip := true
 			
 		}
 	SaveIniValue(LibraryFile, dd_Section, e_fnLearn, fnValue . A_Tab . ";" . A_Space . fnComment)

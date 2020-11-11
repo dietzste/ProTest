@@ -164,10 +164,10 @@ local
 global LibraryFile
 global IntroIsOver
 ; Check in LibraryFile
-fnIntroValue := GetIniValue(LibraryFile, "fnIntro", fnOCR)
+fnIntroValue := GetIniValue(LibraryFile, fnIntro, fnOCR)
 If (fnIntroValue = "ERROR")
 	{
-	CorrectedfnOCR := AutoCorrection(fnOCR, "fnIntro", fnIntroValue)
+	CorrectedfnOCR := AutoCorrection(fnOCR, fnIntro, fnIntroValue)
 	if (CorrectedfnOCR = fnOCR) 
 		{
 		IntroIsOver := true
@@ -177,7 +177,7 @@ If (fnIntroValue = "ERROR")
 		fnOCR := CorrectedfnOCR
 	}
 ; Eingaben abrufen
-EnterfnValue(fnOCR, fnIntroValue, "Intro") 
+EnterfnValue(fnOCR, fnIntroValue, "Eingangsfrage") 
 } ; ende SkipIntro function
 
 EnterLFD(LFD){
@@ -307,9 +307,9 @@ Send, %A_DD%{Enter}%A_MM%{Enter}%A_YYYY%{Enter}
 SetKeyDelay, fast 
 }
 
-ShowfnNag(){
+ShowfnSkip(){
 global LibraryFile
-Msgbox, 4096 , fnNag ,  % GetIniSectionClean(LibraryFile, "fnNag")
+Msgbox, 4096 , %fnSkip% ,  % GetIniSectionClean(LibraryFile, fnSkip)
 }
 
 CheckPreloadInPreloadList(Preload){

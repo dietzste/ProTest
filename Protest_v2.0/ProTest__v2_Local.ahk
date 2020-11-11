@@ -55,13 +55,13 @@ if (StartAsAdmin = "true")
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
 ; Name Menüs
-GuiF2  := "Hauptmenü (F2)"
-GuiF3  := "LFD Finder (F3)"
-GuiF4  := "Erweiterte Optionen (F4)"
-GuiF7  := "LernModus (F7)"
-GuiF8  := "Preload Reader (F8)"
-GuiF10 := "ProTest Einstellungen (F10)"
-GuiF12 := "Protest beenden? (F12)"
+GuiF2  := "(F2) Hauptmenü "
+GuiF3  := "(F3) Passende LFDs finden"
+GuiF4  := "(F4) Erweiterte Optionen"
+GuiF7  := "(F7) Eingaben für Fragenummern definieren"
+GuiF8  := "(F8) Preload-Werte abrufen"
+GuiF10 := "(F10) ProTest Einstellungen "
+GuiF12 := "(F12) Protest beenden"
 
 ; ini section names
 QuickSetupMenu := "QuickSetupMenu"
@@ -69,6 +69,8 @@ LFDFinderMenu := "LFDFinderMenu"
 AdvancedSearchMenu := "AdvancedSearchMenu"
 PreloadReaderMenu := "PreloadReaderMenu"
 BasicSettingsMenu := "BasicSettingsMenu"
+fnIntro := "fnEingang"
+fnSkip := "fnSkip"
 
 ; special Menu Settings
 DisON := "Disabled1"
@@ -82,7 +84,7 @@ fast := 100
 med := 130
 TabVar := ""
 NewEntryF7fnIntro := false
-NewEntryF7fnNag := false
+NewEntryF7fnSkip := false
 global Captur2TextPID := CheckIfCapture2TextIsRunning()
 
 CheckIfCapture2TextIsRunning(){

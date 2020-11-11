@@ -180,18 +180,18 @@ return false
 CheckNagFn(fnOCR, Index){
 local
 global LibraryFile
-fnNagValue := GetIniValue(LibraryFile, "fnNag", fnOCR)
-If (fnNagValue = "ERROR")
+fnSkipValue := GetIniValue(LibraryFile, fnSkip, fnOCR)
+If (fnSkipValue = "ERROR")
 	{
 	; AutoCorrection
-	CorrectedfnOCR := AutoCorrection(fnOCR, "fnNag", fnNagValue)
+	CorrectedfnOCR := AutoCorrection(fnOCR, fnSkip, fnSkipValue)
 	if (CorrectedfnOCR = fnOCR)
 		return false
 	else
-		EnterfnValue(CorrectedfnOCR, fnNagValue, "fnNag", Index)
+		EnterfnValue(CorrectedfnOCR, fnSkipValue, fnSkip, Index)
 	}
 else
-	EnterfnValue(fnOCR, fnNagValue, "fnNag", Index)
+	EnterfnValue(fnOCR, fnSkipValue, fnSkip, Index)
 return true
 }
 

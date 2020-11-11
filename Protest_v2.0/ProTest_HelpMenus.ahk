@@ -87,7 +87,7 @@ hintereinander (=Rückwärtssuche).
 Priorität der fn-Suche:
 1) Ziel-fns (F2)
 2) Eingaben der Erweiterten Optionen (F4)
-3) fnNag (Library)
+3) fnSkip (Library)
 )
 Helptext = %2GuiHelpText%
 return 
