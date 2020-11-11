@@ -94,7 +94,7 @@ Gui, 3:Add, Button, x170 y312 w75 h20 g3GuiShowLFDValues, LFD Werte
 ; BUTTONS
 Gui, 3:Add, Button, x08 y350 w60 h25 g3GuiResetControls, Reset
 Gui, 3:Add, Button, x73 y350 w60 h25 g3GuiHelp, Hilfe
-Gui, 3:Add, Button, x170 y350 w75 h25 gAutoEdit, AutoEdit
+Gui, 3:Add, Button, x170 y350 w75 h25 gAutoEdit, Preload-Liste
 Gui, 3:Add, Button, x250 y350 w75 h25 Default g3GuiSave, Speichern
 Gui, 3:Show, Center Autosize, % F3MenuName
 Return
