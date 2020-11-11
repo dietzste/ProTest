@@ -96,8 +96,8 @@ F6		= Vorgang pausieren/fortfahren
 F12		= ProTest beenden
 Shift + F5%A_Tab%%A_Tab%= ProTest neu starten
 Shift + ESC%A_Tab%= Tastenkürzel (de-)aktivieren
-Strg + u 		= prüft auf Updates
-F9		= Remote Feedback Test
+Strg + u 		= auf Updates prüfen
+F9		= Verbindung zum Remote-Client prüfen
 
 Funktionsmenüs:
 F2		= %GuiF2%
@@ -107,7 +107,7 @@ F7		= %GuiF7%
 F8		= %GuiF8%
 F10		= %GuiF10%
 Menü offen + F1	= öffnet jeweiliges Hilfefenster
-Shift + F3/F8	= öffnet AutoEdit Menü
+Shift + F3/F8	= öffnet Menü zum Abrufen der Preload-Liste 
 
 Interaktion mit NIPO-Software:
 Strg + d 	 	= gibt aktuelles Datum ein
