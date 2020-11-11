@@ -221,6 +221,10 @@ Loop, Files, %UpdateFolderPath%\Config\*.ini
 		Continue
 		}
 	DeleteOldIniSections(OldFile)
+	if Instr(OldFile, "Library")
+		{
+		CleanLibrary(OldFile)
+		}
 	FileGetSize, UpdateSize , %UpdateFile%
 	FileGetSize, InstalledSize, %OldFile%
 	if (UpdateSize != InstalledSize)
@@ -481,6 +485,41 @@ DeleteIniValue(BasicFile, "BasicSettingsMenu", "c_dependent")
 DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn1")
 DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn2")
 DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn3")
+}
+
+CleanLibrary(OldFile){
+
+OldSectionList := GetIniSectionNames(Oldfile)
+if Instr(OldSectionList, "fnNag")
+	{
+	; Load Data of ini-File
+	FileRead, OldLibraryData, %OldFile%
+
+	; Delete the following
+	CleanLibraryData := StrReplace(OldLibraryData, ";;;;;;;;;;;;;;;;;;;;;")
+	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;    fnIntro   " . ";;;;")
+	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;;    fnNAG    " . ";;;;")
+	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;     (F2)     " . ";;;;")
+	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;;    (F2)     " . ";;;;")
+	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;; CHANGE INTRO VALUES HERE " . ";;;")
+	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;; ADD NAG FNs HERE " . ";;;")
+	CleanLibraryData := StrReplace(CleanLibraryData, "`n; kein Kommentar notwendig, aber bitte mit "";" . """ abtrennen")
+	
+	; Replace the following
+	OccurrenceCount := 0
+	Loop {
+	CleanLibraryData := StrReplace(CleanLibraryData, "`r[fn", "[fn", OccurrenceCount1)
+	CleanLibraryData := StrReplace(CleanLibraryData, "`n[fn", "[fn", OccurrenceCount2)
+	OccurrenceCount := OccurrenceCount1 +  OccurrenceCount2
+	} Until (OccurrenceCount = 0) or (A_Index = 15)
+
+	CleanLibraryData := StrReplace(CleanLibraryData, "[fn", "`n`n[fn", OccurrenceCount)
+	CleanLibraryData := StrReplace(CleanLibraryData, "[fnNag]", "[fnSkip]")
+
+	FileDelete, %OldFile%
+	FileAppend, %CleanLibraryData%, %OldFile%
+	SaveToUpdateLog("Ersetze [fnNag] mit [fnSkip]")
+	}
 }
 
 ;;;;;;;;;;;;;;;;;;;
