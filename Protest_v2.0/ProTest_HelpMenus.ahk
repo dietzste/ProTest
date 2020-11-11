@@ -63,31 +63,29 @@ if (Window = GuiF2)
 {
 2GuiHelpText =
 (
-Je nach Aktionsmodus (Intro, fn Suche, Beides)
-werden einige Aktionen (de-)aktiviert. 
-'Beide' überspringt erst das Intro, dann erfolgt
-die fn-Suche.
+Aktionsmodus:
+Je nach Aktionsmodus werden einige Einstellungen aktiviert
+oder deaktiviert. Beim Aktionsmodus 'Beides' werden zuerst
+Eingangsfragen übersprungen, anschließend wird zu einer
+gewünschten Fragenummer gesprungen.
 
-Auswahl 'Suche mit LFD-Finder' öffnet F3-Menü,
-'Erweiterte Optionen' (Ein) öfnnet das F4-Menü. 
+LFD Eingabe:
+Die Auswahl 'Suche nach passender LFD' öffnet ein weiteres
+Menü (F3), in dem die Preload-Ausprägungen für die 
+gewünschte LFD definiert werden können. Falls in der 
+aktuellen Erhebung keine LFDs vorhanden sind, muss bei 
+der Auswahl 'Keine Eingabe' die Checkbox 'LFDs vorhanden' 
+abgewählt werden.
 
-Falls die aktuelle Erhebung ohne LFDs arbeitet: Bei
-Auswahl 'Keine Eingabe' die Checkbox 'LFDs vorhanden'
-abwählen.
-
-Ziel-fn(s): 
-Eingaben können einstellig oder mehrstellig sein (z.B. 3).
-
-Skip-Button 'verweigert': drückt verweigert 
-Button. 'Clear&Back' drückt Clear und Back
-hintereinander (=Rückwärtssuche).
+Zu einer Fragenummer springen: 
+Eingaben unter 'Fragenummer(n)' können einstellig oder 
+mehrstellig sein (z.B. 3, 30, 30312 usw.). Skip-Button
+'verweigert': drückt verweigert Button. 'Clear&Back' drückt
+Clear und Back hintereinander (= Rückwärtssuche).
+Beim Auswählen von 'Erweiterte Optionen' (Ein) öffnet sich
+das F4-Menü (Erweiterte Optionen).
 
 {Enter} = drückt Enter Taste
-
-Priorität der fn-Suche:
-1) Ziel-fns (F2)
-2) Eingaben der Erweiterten Optionen (F4)
-3) fnSkip (Library)
 )
 Helptext = %2GuiHelpText%
 return 
@@ -115,7 +113,7 @@ Start LFD ist der StartPunkt für die LFD-Suche.
 Button 'LFD Werte' zeigt Werte der Start LFD an
 (Quelle: %TempFileName%). 
 
-AutoEdit: öffnet einen weiteren Editor, mit dem die 
+Preload-Liste: öffnet einen weiteren Editor, mit dem die 
 Preloadliste geladen werden kann. über den Button 
 'Hinzufügen' werden gewählte Preload-Variablen in das 
 Menü eingefügt. (Auch im Fenster F8 anwendbar)
@@ -128,15 +126,6 @@ if (Window = GuiF4)
 {
 4GuiHelpText =
 (
-Zulässig sind sind neben Zahlen 
-folgende Funktionswörter:
-Ende/Stop	-> beendet/stoppt Durchlauf 
-{Enter}	-> drückt NUR Enter
-[Button]-> drückt Button
-
-Preloadwert abrufen mit Get(Preload), für
-mehrere Get(Proload1/Preload2...) eingeben.
-
 Beispiele:
 fn	Wert
 24104	2
@@ -144,8 +133,15 @@ fn	Wert
 20103	Get(sexPRE)
 290102	[Aufgaben]
 
-X-Prüfmodul überspringen
-[Adresstool noch nicht implementiert]
+Legende:
+2	   -> gibt Wert 2 ein
+Ende	   -> beendet Durchlauf
+Get(sexPRE) -> ruft Preload sexPRE ab, gibt Wert ein
+[Aufgaben]  -> drückt Button mit dem Wort 'Aufgaben'
+
+Zum Abrufen meherer Preload-Werte 
+Get(Proload1/Preload2...) eingeben.
+
 )
 Helptext = %4GuiHelpText%
 return 
