@@ -325,7 +325,7 @@ global e_fnEndPosY := e_fnStartPosY + e_height
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ChooseProjectFile:
-ChooseProjectFileMenuName := "Projektdatei auswählen..."
+ChooseProjectFileMenuName := " ProTest " . ProTestVersion
 	
 if WinExist(ChooseProjectFileMenuName)
 	{
@@ -336,16 +336,17 @@ if WinExist(ChooseProjectFileMenuName)
 FileList := CreateProjectFilesList()
 
 if WinExist(GuiF10)
-	NoActionButton := "Back"
+	NoActionButton := "Zurück"
 else
-	NoActionButton := "Exit"
+	NoActionButton := "ProTest beenden"
 
 Gui, 11:+AlwaysOnTop -SysMenu
-Gui, 11:Add, Groupbox, x10 y5 w180 h100 cNavy, ini-Projektdateien
-gui, 11:add, listbox, x20 y28 w150 h60 vIniFileInList sort, % FileList
-gui, 11:add, button, x10 y110 w50 g11GuiCancel, % NoActionButton
-gui, 11:add, button, x65 y110 w50 g11GuiNewProjectFile, Neu
-gui, 11:add, button, x135 y110 w55 Default g11GuiIniDecision, OK
+Gui, 11:Add, Groupbox, x10 y5 w335 h115 cNavy, Projektdatei auswählen
+gui, 11:add, listbox, x20 y28 w150 h85 vIniFileInList sort, % FileList
+gui, 11:add, button, x185 y28 w150 g11GuiNewProjectFile, Neue Projektdatei erstellen
+gui, 11:add, button, x185 y53 w150 Default g11GuiIniDecision, Auswahl bestätigen
+gui, 11:add, button, x10 y128 w160 g11GuiNewProjectFile g11CheckforUpdates, Auf Updates prüfen
+gui, 11:add, button, x185 y128 w160 g11GuiCancel, % NoActionButton
 gui, 11:show, Center Autosize, %ChooseProjectFileMenuName%
 return
 
@@ -353,7 +354,7 @@ return
 11GuiClose:
 11GuiEscape:
 Gui 11:Destroy
-if (NoActionButton = "Exit")
+if (NoActionButton = "ProTest beenden")
 	{
 	CloseCapture2Text(Captur2TextPID)
 	ExitApp
@@ -361,6 +362,10 @@ if (NoActionButton = "Exit")
 else 
 	Exit
 return
+
+11CheckforUpdates:
+Gosub UpdateProTest
+return 
 
 11GuiIniDecision:
 ; Close Menus
