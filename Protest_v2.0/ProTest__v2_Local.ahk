@@ -55,13 +55,13 @@ if (StartAsAdmin = "true")
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
 ; Name Menüs
-GuiF2  := "(F2) Hauptmenü "
-GuiF3  := "(F3) Passende LFDs finden"
-GuiF4  := "(F4) Erweiterte Optionen"
-GuiF7  := "(F7) Eingaben für Fragenummern definieren"
-GuiF8  := "(F8) Preload-Werte abrufen"
-GuiF10 := "(F10) ProTest Einstellungen "
-GuiF12 := "(F12) Protest beenden"
+GuiF2  := " (F2) Hauptmenü "
+GuiF3  := " (F3) Passende LFDs finden"
+GuiF4  := " (F4) Erweiterte Optionen"
+GuiF7  := " (F7) Eingaben für Fragenummern definieren"
+GuiF8  := " (F8) Preload-Werte abrufen"
+GuiF10 := " (F10) ProTest Einstellungen "
+GuiF12 := " (F12) Protest beenden"
 
 ; ini section names
 QuickSetupMenu := "QuickSetupMenu"
@@ -156,7 +156,7 @@ if (A_IsCompiled != 1)
 			SaveIniValue("TestModus.ini", "TestModus", "LastProjectFile", LastProjectFile)
 			}
 		}
-	SettingUpProTest(LastProjectFile)
+	SettingUpProTest(LastProjectFile, "TestModus")
 	WinWaitActive, %GuiF10%
 	WinClose, %GuiF10%
 	}

@@ -382,7 +382,7 @@ if (IniFileInList != "")
 	ProjectFileName := IniFileInList
 	if (A_UserName != "Mensch")
 		SaveIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile", ProjectFileName)
-	SettingUpProTest(ProjectFileName)
+	SettingUpProTest(ProjectFileName, "Select")
 	}
 else
 	Msgbox, 4096, Ups!, Kein File ausgewählt!
@@ -403,7 +403,7 @@ else
 		}
 	else
 		{
-		SettingUpProTest(ProjectFileName)
+		SettingUpProTest(ProjectFileName, "Create")
 		}
 	}
 return 
@@ -484,13 +484,16 @@ return FileList
 
 ;;; SETTING UP PROTEST ;;;
 
-SettingUpProTest(ProjectFileName){
+SettingUpProTest(ProjectFileName, Modus){
 local
 SettingUpFiles(ProjectFileName)
 Gui 11:Destroy
 SettingUpCapture2Text()
 Gui 10:Destroy
-Send {F10}
+if (Modus = "Select")
+	Msgbox, 4096, Projektdatei ausgewählt, Projektdatei %ProjectFileName% wurde erfolgreich ausgewählt.
+else if (Modus = "Create")
+	Msgbox, 4096, Projektdatei erstellt, Projektdatei %ProjectFileName% wurde erfolgreich erstellt.
 }
 
 SettingUpCapture2Text(){
