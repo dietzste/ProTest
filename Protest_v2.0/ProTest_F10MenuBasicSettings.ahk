@@ -42,7 +42,7 @@ for i, control in 10GuiOCRPositions
 if (10GuiChange = false)
 	{
 	BasicSettingsDis := DisON
-	ChangeButtonName := "ändern"
+	ChangeButtonName := "anpassen"
 	GoButtonDis	:= DisOFF
 	}
 else
@@ -59,7 +59,7 @@ Gui, 10:+AlwaysOnTop Toolwindow
 ; INI Files
 Gui, 10:Add, Groupbox, x10 y10 w260 h73 cNavy, Dateien
 Gui, 10:Add, Text, x20 y32  w92  h20 , Projektdatei:
-Gui, 10:Add, Edit, x85 	y29  w90  h20 Disabled, % GetIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile")
+Gui, 10:Add, Edit, x85 	y29  w90  h20 Disabled, % StrReplace((GetIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile")), ".ini")
 Gui, 10:Add, Text, x20 y54  w92  h20 , Library:
 Gui, 10:Add, Edit, x85 	y51  w90  h20 Disabled , Library.ini
 Gui, 10:Add, Button, x205  y27 w50  h20 g10GuiChangeBasicFile, ändern
@@ -117,7 +117,7 @@ return
 
 10GuiChangeButton:
 Gui 1:Destroy
-if (A_GuiControl = "ändern")
+if (A_GuiControl = "anpassen")
 	10GuiChange := true
 if (A_GuiControl = "Speichern")
 	{
@@ -340,22 +340,23 @@ if WinExist(GuiF10)
 else
 	NoActionButton := "ProTest beenden"
 
-Gui, 11:+AlwaysOnTop -SysMenu
-Gui, 11:Add, Groupbox, x10 y5 w335 h115 cNavy, Projektdatei auswählen
+Gui, 11:+AlwaysOnTop -SysMenu +MinimizeBox
+Gui, 11:Add, Groupbox, x10 y5 w335 h115 cNavy, Projekt auswählen
 gui, 11:add, listbox, x20 y28 w150 h85 vIniFileInList sort, % FileList
-gui, 11:add, button, x185 y28 w150 g11GuiNewProjectFile, Neue Projektdatei erstellen
+gui, 11:add, button, x185 y28 w150 g11GuiNewProjectFile, Neues Projekt erstellen
 gui, 11:add, button, x185 y53 w150 Default g11GuiIniDecision, Auswahl bestätigen
-gui, 11:add, button, x10 y128 w160 g11GuiNewProjectFile g11CheckforUpdates, Auf Updates prüfen
-gui, 11:add, button, x185 y128 w160 g11GuiCancel, % NoActionButton
+gui, 11:add, button, x10 y128 w140 g11GuiNewProjectFile g11CheckforUpdates, Auf Updates prüfen
+gui, 11:add, button, x205 y128 w140 g11GuiCancel, % NoActionButton
 gui, 11:show, Center Autosize, %ChooseProjectFileMenuName%
 return
 
-11GuiCancel:
 11GuiClose:
 11GuiEscape:
+11GuiCancel:
 Gui 11:Destroy
 if (NoActionButton = "ProTest beenden")
 	{
+	Msgbox, 4096,ProTest, ProTest wird beendet!
 	CloseCapture2Text(Captur2TextPID)
 	ExitApp
 	}
@@ -474,10 +475,11 @@ Loop, Files, *.ini, R
 			Continue IniLoop
 		}
 	; Priorisiere LastUsedFile, falls vorhanden
+	IniFileName := StrReplace(A_LoopFileName, ".ini")
 	if (LastUsedFile = A_LoopFileName)
-		FileList .= A_LoopFileName . "||"
+		FileList .= IniFileName . "||"
 	else
-		FileList .= A_LoopFileName . "|"
+		FileList .= IniFileName . "|"
 	}
 return FileList
 }
@@ -490,10 +492,11 @@ SettingUpFiles(ProjectFileName)
 Gui 11:Destroy
 SettingUpCapture2Text()
 Gui 10:Destroy
+ThisFileName := StrReplace(ProjectFileName, ".ini")
 if (Modus = "Select")
-	Msgbox, 4096, Projektdatei ausgewählt, Projektdatei %ProjectFileName% wurde erfolgreich ausgewählt.
+	Msgbox, 4096, Projekt ausgewählt, Das Projekt %ThisFileName% wurde erfolgreich ausgewählt.
 else if (Modus = "Create")
-	Msgbox, 4096, Projektdatei erstellt, Projektdatei %ProjectFileName% wurde erfolgreich erstellt.
+	Msgbox, 4096, Projekt erstellt, Neues Projekt erstellt: %ThisFileName%.
 }
 
 SettingUpCapture2Text(){
