@@ -91,8 +91,8 @@ Gui, 10:Add, Button, x20 y180 w50 h20 g10GuiTestOCR, Test
 Gui, 10:Add, Button, x75 y180 w50 h20 %BasicSettingsDis% g10GuiShowWindow, Show
 Gui, 10:Add, Button, x195 y180 w60 h20 g10GuiHelp, Hilfe
 ; History
-Gui, 10:Add, Groupbox, x10 y215 w260 h55 cNavy, History Einstellungen
-Gui, 10:Add, CheckBox, x20 y238 w130 h20 Checked%CreateHistory% %BasicSettingsDis% vCreateHistory, History erzeugen
+Gui, 10:Add, Groupbox, x10 y215 w260 h55 cNavy, Logbuch Einstellungen
+Gui, 10:Add, CheckBox, x20 y238 w130 h20 Checked%CreateHistory% %BasicSettingsDis% vCreateHistory, Logbuch erzeugen
 ; Buttons
 Gui, 10:Add, Button,   x10  y280 w55  h25 g10GuiResetControls, Reset
 Gui, 10:Add, Button,   x70  y280 w70  h25 g10GuiChangeButton , % ChangeButtonName 
@@ -433,7 +433,7 @@ global TempFile := ProjectFolder . "\" . TempFileName
 CleanTempFile(TempFile)
 
 ; HistoryFile
-global HistoryFileName := ProjectName . "_History" . A_YYYY .  A_MM . A_DD
+global HistoryFileName := "Logbuch_" . ProjectName . A_YYYY . "_" . A_MM . "_" . A_DD
 global HistoryFile := ProjectFolder  . "\" . HistoryFileName . ".txt"
 
 ; PreloadList
