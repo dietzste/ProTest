@@ -174,9 +174,9 @@ else
 	{
 	++OCRFailedCount
 	if (OCRFailedCount = 1)
-		MsgBox, 4096, Test OCR, OCR Failed.
+		MsgBox, 4096, Test der Texterkennung, Texterkennung fehlgeschlagen.
 	else
-		MsgBox, 4096, Test OCR, OCR Failed. `n`nTipp: Überprüfe die TeamViewer-Einstellungen
+		MsgBox, 4096, Test der Texterkennung, Texterkennung fehlgeschlagen. `n`nTipp: Bitte TeamViewer-Einstellungen überprüfen.
 	}
 return
 
@@ -184,7 +184,7 @@ ScaleFactorScan:
 AlarmIfCapture2TextIsNotRunning()
 CheckWorkWindow()
 e_scaleStatus := e_scale
-TestMessage := "Ergebnisse OHNE OCR-Korrekturen`n`n"
+TestMessage := "Ergebnisse OHNE Korrektur der Texterkennung`n`n"
 e_scale := 3.5
 Loop, 16 {
 sleep, SleepAfterEnter
@@ -194,7 +194,7 @@ TestMessage .= e_scale . ": " . TestOCR . "`n"
 e_scale := e_scale + 0.1
 e_scale := Round(e_scale, 1)
 }
-TestMessage .= "`n`n Capture2Text wird jetzt neu gestartet..."
+TestMessage .= "`n`n Die Texterkennungssoftware wird jetzt neu gestartet..."
 MsgBox, 4096, Scale Factor, % TestMessage
 e_scale := e_scaleStatus
 SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "ScaleFactor", e_scale)
@@ -210,7 +210,7 @@ Gui, 10:Submit, NoHide
 SaveScaleFactor()
 if (PermanentSave = 1)
 	{
-	Msgbox, 4132, Dauerhaft Speichern?, Soll die aktuelle OCR-Konfiguration dauerhaft gespeichert werden? 
+	Msgbox, 4132, Dauerhaft Speichern?, Soll die aktuelle Konfiguration der Texterkennung dauerhaft gespeichert werden? 
 	IfMsgBox, YES
 		PermanentSave = 1
 	else
@@ -236,7 +236,7 @@ local
 global Capture2TextIniFileAppDataPath, e_scale
 if (e_scale < 0.71 Or e_scale > 5.0)
 	{
-	MsgBox, 4096, Scale Angabe korrigieren, Die Wert muss zwischen 0.71 und 5 liegen! (Default: 3.5)
+	MsgBox, 4096, Scale Angabe korrigieren, Die Wert des Scale-Faktors muss zwischen 0.71 und 5 liegen! (Default: 3.5)
 	Exit
 	}
 else
@@ -380,13 +380,14 @@ If WinExist(GuiF10)
 Gui, 11:Submit, NoHide
 if (IniFileInList != "")
 	{
-	ProjectFileName := IniFileInList
+	ProjectName := IniFileInList
+	ProjectNameFile := ProjectName . ".ini"
 	if (A_UserName != "Mensch")
-		SaveIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile", ProjectFileName)
-	SettingUpProTest(ProjectFileName, "Select")
+		SaveIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile", ProjectNameFile)
+	SettingUpProTest(ProjectNameFile, "Select")
 	}
 else
-	Msgbox, 4096, Ups!, Kein File ausgewählt!
+	Msgbox, 4096, Ups!, Kein Projekt ausgewählt!
 return
 
 11GuiNewProjectFile:
@@ -397,9 +398,9 @@ if (ErrorLevel)
 else
 	{
 	ProjectFileName := ProjectName . ".ini"
-	if Instr(FileList, ProjectFileName)
+	if Instr(FileList, ProjectName, CaseSensitive := true)
 		{
-		Msgbox, 4096, Ups!, %ProjectFileName% bereits vorhanden!
+		Msgbox, 4096, Ups!, %ProjectName% bereits vorhanden!
 		GoTo 11GuiNewProjectFile
 		}
 	else
@@ -451,7 +452,7 @@ SaveIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile", ProjectFileName)
 ; Save To History
 global CreateHistory := GetIniValue(BasicFile, "BasicSettingsMenu",  "c_History")
 if (A_IsCompiled = 1)
-	SaveToHistory("### Project File: ", ProjectFileName . " ###")
+	SaveToHistory("### Projekt: " . ProjectName . " ###")
 
 ; CurrentLFD 
 global CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", A_Space)
