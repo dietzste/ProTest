@@ -42,7 +42,7 @@ Gui, 5:Add, Button, x28 y55 w100 h20 %5GuiDis% g5GuiAddPreload, Hinzufügen
 Gui, 5:Add, Button, x28 y77 w100 h20 g5GuiLoadPreloadList, Lade Preloadliste
 Gui, 5:Add, Listbox, x152 y30 w170 h150  %5GuiDis% Sort vAutoEditResult , % PreloadListBox
 Gui, 5:Add, Text, x50 y195 w280 h20, Hinweis: Preloadliste abhängig von LFD-Eingabe
-Gui, 5:Show, x%AutoEditX% y%AutoEditY% %5GuiCenter% Autosize, Preload-Liste
+Gui, 5:Show, x%AutoEditX% y%AutoEditY% %5GuiCenter% Autosize, Preload-Liste laden
 return 
 
 5GuiClose:
@@ -59,7 +59,7 @@ CheckWorkWindow()
 FileGetSize, FileSize , %PreloadListPath%
 if (FileSize != 0 AND FileSize != "")
 	{
-	MsgBox, 4132, PreloadList vorhanden, Neue Liste Laden und alte Liste (%PreloadListName%) löschen?
+	MsgBox, 4132, PreloadList vorhanden, Neue Liste laden und alte Liste (%PreloadListName%) löschen?
 	IfMsgBox, YES
 		{
 		FileDelete, %PreloadListPath%
