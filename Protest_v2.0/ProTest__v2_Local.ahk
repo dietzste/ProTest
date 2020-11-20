@@ -26,7 +26,7 @@ LibraryFile := ConfigFolder . "\Library.ini"
 
 if !FileExist(ConfigFolder)
 	{
-	Msgbox,4096, Ups!, %ConfigFolder% existiert nicht!
+	Msgbox,4096, Ups!, %ConfigFolder% existiert nicht. ProTest wird beendet!
 	ExitApp
 	}
 	
@@ -160,7 +160,6 @@ if (A_IsCompiled != 1)
 	WinWaitActive, %GuiF10%
 	WinClose, %GuiF10%
 	}
-
 return
 
 ;______ENDE AUTO EXECUTE SECTION ______
