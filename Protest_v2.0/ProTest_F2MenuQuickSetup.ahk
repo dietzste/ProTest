@@ -73,48 +73,48 @@ if (c_StudyWithLFDs = 0)
 ;;;;;; GUI Menü ;;;;;
 ; Hauptauswahl
 Gui, 2:+AlwaysOnTop
-Gui, 2:Add, Groupbox, x10 y10 w293 h85 cNavy, Aktionsmodus auswählen
+Gui, 2:Add, Groupbox, x10 y8 w293 h85 cNavy, Aktionsmodus auswählen
 Gui, 2:Add, Radio, x20 y30 w170 h15 Checked%r_Main1% vr_Main1 gOnlyIntro, Eingangsfragen überspringen
 Gui, 2:Add, Radio, x20 y50 w170 h15 Checked%r_Main2% vr_Main2 gOnlyfnSearch, Zu einer Fragenummer springen
 Gui, 2:Add, Radio, x20 y70 w170 h15 Checked%r_Main3% vr_Main3 gboth, Beides
 ; Intro
-Gui, 2:Add, Groupbox, x10 y100 w293 h253 cNavy %IntroDis%, Eingangsfragen überspringen
+Gui, 2:Add, Groupbox, x10 y100 w293 h256 cNavy %IntroDis%, Eingangsfragen überspringen
 ; 1. Beginning
-Gui, 2:Add, Groupbox, x17 y120 w280 h93 %IntroDis% cBlack, Anfang
-Gui, 2:Add, CheckBox, x32 y135 w70  h20 %IntroDis% Checked%c_Beginning% vc_Beginning, Starten mit:
-Gui, 2:Add, Edit,    x112 y135 w160 h20 %IntroDis% ve_Beginning, %e_Beginning%
-Gui, 2:Add, CheckBox, x32 y158 w100 h20 %IntroDis% Checked%c_SendDate%  vc_SendDate, Datum eingeben
-Gui, 2:Add, Edit,    x137 y159 w20 h20 %IntroDis% Center ve_Day, %e_Day%
-Gui, 2:Add, Edit,    x162 y159 w20 h20 %IntroDis% Center ve_Month, %e_Month%
-Gui, 2:Add, Edit,    x187 y159 w35 h20 %IntroDis% Center ve_Year, %e_Year%
-Gui, 2:Add, CheckBox, x32 y184 w70 h20 %IntroDis% Checked%c_Next%  vc_Next, Weiter mit:
-Gui, 2:Add, Edit,    x112 y184 w160 h20 %IntroDis% ve_Next, %e_Next%
+Gui, 2:Add, Groupbox, x17 y120 w280 h95 %IntroDis% cBlack, Eingangsfragen ohne Fragenummer
+Gui, 2:Add, CheckBox, x32 y141 w70  h20 %IntroDis% Checked%c_Beginning% vc_Beginning, Starten mit:
+Gui, 2:Add, Edit,    x112 y141 w160 h20 %IntroDis% ve_Beginning, %e_Beginning%
+Gui, 2:Add, CheckBox, x32 y164 w100 h20 %IntroDis% Checked%c_SendDate%  vc_SendDate, Datum eingeben
+Gui, 2:Add, Edit,    x137 y165 w20 h20 %IntroDis% Center ve_Day, %e_Day%
+Gui, 2:Add, Edit,    x162 y165 w20 h20 %IntroDis% Center ve_Month, %e_Month%
+Gui, 2:Add, Edit,    x187 y165 w35 h20 %IntroDis% Center ve_Year, %e_Year%
+Gui, 2:Add, CheckBox, x32 y190 w70 h20 %IntroDis% Checked%c_Next%  vc_Next, Weiter mit:
+Gui, 2:Add, Edit,    x112 y190 w160 h20 %IntroDis% ve_Next, %e_Next%
 ; 2. LFD 
-Gui, 2:Add, Groupbox, x17 y209 w280 h90 cBlack %IntroDisLFD%, LFD Eingabe
-Gui, 2:Add, Radio, x32 y225 w40  h20 %IntroDisLFD% Checked%r_LFD1% vr_LFD1 g2GuiShowButton, LFD:
-Gui, 2:Add, Radio, x32 y247 w170 h20 %IntroDisLFD% Checked%r_LFD2% vr_LFD2 gOpenF3, Suche nach passender LFD
-Gui, 2:Add, Radio, x32 y269 w140  h20 %IntroDisLFD% Checked%r_LFD3% vr_LFD3 g2GuiShowButton, keine Eingabe
-Gui, 2:Add, ComboBox, x77 y225 w75 h100 %IntroDisLFD% Limit%LFDLimit%  vcb_UseLFD, % LFDList
-Gui, 2:Add, Button, x170 y225 w75 h20 %IntroDisLFD% g2GuiShowLFDValues, LFD Werte
-Gui, 2:Add, CheckBox, x180 y270 w100  h20 %IntroDis% Checked%c_StudyWithLFDs% vc_StudyWithLFDs g2GuiLFDsAvailable, LFDs vorhanden
+Gui, 2:Add, Groupbox, x17 y217 w280 h86 cBlack %IntroDisLFD%, LFD Eingabe
+Gui, 2:Add, Radio, x32 y235 w40  h20 %IntroDisLFD% Checked%r_LFD1% vr_LFD1 g2GuiShowButton, LFD:
+Gui, 2:Add, Radio, x32 y257 w170 h20 %IntroDisLFD% Checked%r_LFD2% vr_LFD2 gOpenF3, Suche nach passender LFD
+Gui, 2:Add, Radio, x32 y279 w140  h20 %IntroDisLFD% Checked%r_LFD3% vr_LFD3 g2GuiShowButton, keine Eingabe
+Gui, 2:Add, ComboBox, x77 y235 w75 h100 %IntroDisLFD% Limit%LFDLimit%  vcb_UseLFD, % LFDList
+Gui, 2:Add, Button, x170 y235 w75 h20 %IntroDisLFD% g2GuiShowLFDValues, LFD Werte
+Gui, 2:Add, CheckBox, x180 y280 w100  h20 %IntroDis% Checked%c_StudyWithLFDs% vc_StudyWithLFDs g2GuiLFDsAvailable, LFDs vorhanden
 ; 3. Last Part 
-Gui, 2:Add, Groupbox, x17 y295 w280 h50 %IntroDis% cBlack , Eingangsfragen mit Fragenummern
-Gui, 2:Add, CheckBox, x32 y315 w84  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, überspringen
+Gui, 2:Add, Groupbox, x17 y304 w280 h47 %IntroDis% cBlack , Eingangsfragen mit Fragenummern
+Gui, 2:Add, CheckBox, x32 y325 w84  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, überspringen
 ; fn Search
-Gui, 2:Add, Groupbox, x10 y358 w293 h108 %fnDis% cNavy, Zu einer Fragenummer springen
-Gui, 2:Add, Text, x19 y380 w90  h20 %fnDis%, Fragenummer(n):
-Gui, 2:Add, Edit, x105 y377 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Targetfn1, %e_Targetfn1%
-Gui, 2:Add, Edit, x155 y377 w46 h20 %fnDis% Limit%fnLimit% Center ve_Targetfn2, %e_Targetfn2%
-Gui, 2:Add, Edit, x205 y377 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Targetfn3, %e_Targetfn3%
-Gui, 2:Add, Text, x19 y408  w92 h20 %fnDis%, Skip-Button:
-Gui, 2:Add, DropDownList, x105 y406 w110 h70 %fnDis% AltSubmit Center Choose%dd_SkipButton% vdd_SkipButton, verweigert||Clear&Back
-Gui, 2:Add, Text, x19 y438 w135 h20 %fnDis%, Erweiterte Optionen:
-Gui, 2:Add, Radio, x130 y437 w35 h15 %fnDis% Checked%r_AdvancedON% vr_AdvancedON gOpenF4, Ein
-Gui, 2:Add, Radio, x170 y437 w35 h15 %fnDis% Checked%r_AdvancedOFF% vr_AdvancedOFF, Aus
+Gui, 2:Add, Groupbox, x10 y364 w296 h108 %fnDis% cNavy, Zu einer Fragenummer springen
+Gui, 2:Add, Text, x19 y386 w90  h20 %fnDis%, Fragenummer(n):
+Gui, 2:Add, Edit, x115 y383 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Targetfn1, %e_Targetfn1%
+Gui, 2:Add, Edit, x170 y383 w46 h20 %fnDis% Limit%fnLimit% Center ve_Targetfn2, %e_Targetfn2%
+Gui, 2:Add, Edit, x225 y383 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Targetfn3, %e_Targetfn3%
+Gui, 2:Add, Text, x19 y414  w140 h20 %fnDis%, Zum Überspringen drücke:
+Gui, 2:Add, DropDownList, x160 y412 w110 h70 %fnDis% AltSubmit Center Choose%dd_SkipButton% vdd_SkipButton, verweigert||Clear&Back
+Gui, 2:Add, Text, x19 y444 w135 h20 %fnDis%, Erweiterte Optionen:
+Gui, 2:Add, Radio, x130 y443 w35 h15 %fnDis% Checked%r_AdvancedON% vr_AdvancedON gOpenF4, Ein
+Gui, 2:Add, Radio, x170 y443 w35 h15 %fnDis% Checked%r_AdvancedOFF% vr_AdvancedOFF, Aus
 ; Abschluss
-Gui, 2:Add, Button, x10 y475 w50 h25 g2GuiHelp, Hilfe
-Gui, 2:Add, Button, x70 y475 w50 h25 g2GuiResetControls, Reset
-Gui, 2:Add, Button, x223 y475 w80 h25 g2GuiGO Default, Ok
+Gui, 2:Add, Button, x10 y481 w50 h25 g2GuiHelp, Hilfe
+Gui, 2:Add, Button, x70 y481 w50 h25 g2GuiResetControls, Reset
+Gui, 2:Add, Button, x223 y481 w80 h25 g2GuiGO Default, Ok
 Gui, 2:Show, x850 y540 Autosize Center, %GuiF2%
 if (r_LFD3 = 1 OR r_LFD2 = 1) 
 	Control, Hide ,, LFD Werte, %GuiF2%
