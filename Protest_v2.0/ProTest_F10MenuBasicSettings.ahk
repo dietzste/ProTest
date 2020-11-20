@@ -57,46 +57,46 @@ AdjustPositions()
 
 Gui, 10:+AlwaysOnTop Toolwindow
 ; INI Files
-Gui, 10:Add, Groupbox, x10 y10 w260 h73 cNavy, Dateien
-Gui, 10:Add, Text, x20 y32  w92  h20 , Projektdatei:
-Gui, 10:Add, Edit, x85 	y29  w90  h20 Disabled, % StrReplace((GetIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile")), ".ini")
-Gui, 10:Add, Text, x20 y54  w92  h20 , Library:
-Gui, 10:Add, Edit, x85 	y51  w90  h20 Disabled , Library.ini
+Gui, 10:Add, Groupbox, x10 y10 w260 h49 cNavy, Aktuelles Projekt
+Gui, 10:Add, Text, x20 y32  w92  h20 , Projekt:
+Gui, 10:Add, Edit, x65 	y29  w90  h20 Disabled, % StrReplace((GetIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile")), ".ini")
+;Gui, 10:Add, Text, x20 y54  w92  h20 , Fragenbibliothek:
+;Gui, 10:Add, Edit, x105 	y51  w90  h20 Disabled , Library.ini
 Gui, 10:Add, Button, x205  y27 w50  h20 g10GuiChangeBasicFile, ändern
 ; OCR Konfiguration
-Gui, 10:Add, Groupbox, x10 y85 w260 h125 cNavy, Texterkennung konfigurieren
+Gui, 10:Add, Groupbox, x10 y65 w260 h125 cNavy, Texterkennung konfigurieren
 ;;; Position fn Start
 	;; Start X 
-	Gui, 10:Add, Text, x45 y108  w35  h20 %BasicSettingsDis%, Pos X:
-	Gui, 10:Add, Edit, x85 y105  w50  h20 %BasicSettingsDis% Center 
+	Gui, 10:Add, Text, x45 y88  w35  h20 %BasicSettingsDis%, Pos X:
+	Gui, 10:Add, Edit, x85 y85  w50  h20 %BasicSettingsDis% Center 
 	Gui, 10:Add, UpDown,  Range0-400  ve_fnStartPosX , % e_fnStartPosX
 	;; Start Y
-	Gui, 10:Add, Text, x45 y130  w50  h20 %BasicSettingsDis%, Pos Y:
-	Gui, 10:Add, Edit, x85 y127  w50  h20 %BasicSettingsDis% Center 
+	Gui, 10:Add, Text, x45 y110  w50  h20 %BasicSettingsDis%, Pos Y:
+	Gui, 10:Add, Edit, x85 y107  w50  h20 %BasicSettingsDis% Center 
 	Gui, 10:Add, UpDown,  Range0-400  ve_fnStartPosY, % e_fnStartPosY
 ; Position Länge/Breite 
 	;; End Länge
-	Gui, 10:Add, Text, x165 y108  w30  h20 %BasicSettingsDis%, Länge:
-	Gui, 10:Add, Edit, x205 y105  w50  h20 %BasicSettingsDis%  Center
+	Gui, 10:Add, Text, x165 y88  w30  h20 %BasicSettingsDis%, Länge:
+	Gui, 10:Add, Edit, x205 y85  w50  h20 %BasicSettingsDis%  Center
 	Gui, 10:Add, UpDown,  Range0-400  ve_width, % e_width
 	;; End Breite
-	Gui, 10:Add, Text, x165 y130  w30  h20 %BasicSettingsDis%, Breite:
-	Gui, 10:Add, Edit, x205 y127  w50  h20 %BasicSettingsDis%  Center 
+	Gui, 10:Add, Text, x165 y110  w30  h20 %BasicSettingsDis%, Breite:
+	Gui, 10:Add, Edit, x205 y107  w50  h20 %BasicSettingsDis%  Center 
 	Gui, 10:Add, UpDown,  Range0-400 ve_height, % e_height
 ; Scale factor
-Gui, 10:Add, Text, x20 y155  w60  h20 %BasicSettingsDis%, Scale factor:
-Gui, 10:Add, Edit, x85 y153  w34  h20 %BasicSettingsDis% Center ve_scale, % e_scale 
+Gui, 10:Add, Text, x20 y135  w60  h20 %BasicSettingsDis%, Scale factor:
+Gui, 10:Add, Edit, x85 y133  w34  h20 %BasicSettingsDis% Center ve_scale, % e_scale 
 ; Buttons Test/Show/Hilfe
-Gui, 10:Add, Button, x20 y180 w50 h20 g10GuiTestOCR, Test
-Gui, 10:Add, Button, x75 y180 w50 h20 %BasicSettingsDis% g10GuiShowWindow, Show
-Gui, 10:Add, Button, x195 y180 w60 h20 g10GuiHelp, Hilfe
+Gui, 10:Add, Button, x20 y160 w50 h20 g10GuiTestOCR, Test
+Gui, 10:Add, Button, x75 y160 w50 h20 %BasicSettingsDis% g10GuiShowWindow, Show
+Gui, 10:Add, Button, x195 y160 w60 h20 g10GuiHelp, Hilfe
 ; History
-Gui, 10:Add, Groupbox, x10 y215 w260 h55 cNavy, Logbuch Einstellungen
-Gui, 10:Add, CheckBox, x20 y238 w130 h20 Checked%CreateHistory% %BasicSettingsDis% vCreateHistory, Logbuch erzeugen
+Gui, 10:Add, Groupbox, x10 y195 w260 h55 cNavy, Logbuch Einstellungen
+Gui, 10:Add, CheckBox, x20 y218 w130 h20 Checked%CreateHistory% %BasicSettingsDis% vCreateHistory, Logbuch erzeugen
 ; Buttons
-Gui, 10:Add, Button,   x10  y280 w55  h25 g10GuiResetControls, Reset
-Gui, 10:Add, Button,   x70  y280 w70  h25 g10GuiChangeButton , % ChangeButtonName 
-Gui, 10:Add, Button,   x190 y280 w80 h25 Default g10Go %GoButtonDis%, OK
+Gui, 10:Add, Button,   x10  y260 w55  h25 g10GuiResetControls, Reset
+Gui, 10:Add, Button,   x70  y260 w70  h25 g10GuiChangeButton , % ChangeButtonName 
+Gui, 10:Add, Button,   x190 y260 w80 h25 Default g10Go %GoButtonDis%, OK
 Gui, 10:Show, x850 y480 Autosize Center, %GuiF10%
 Return
 
