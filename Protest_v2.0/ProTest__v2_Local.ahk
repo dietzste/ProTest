@@ -69,7 +69,7 @@ LFDFinderMenu := "LFDFinderMenu"
 AdvancedSearchMenu := "AdvancedSearchMenu"
 PreloadReaderMenu := "PreloadReaderMenu"
 BasicSettingsMenu := "BasicSettingsMenu"
-fnIntro := "fnEingang"
+fnIntro := "fnIntro"
 fnSkip := "fnSkip"
 
 ; special Menu Settings
@@ -157,8 +157,6 @@ if (A_IsCompiled != 1)
 			}
 		}
 	SettingUpProTest(LastProjectFile, "TestModus")
-	WinWaitActive, %GuiF10%
-	WinClose, %GuiF10%
 	}
 return
 
