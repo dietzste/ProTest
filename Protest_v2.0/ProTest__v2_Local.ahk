@@ -51,6 +51,48 @@ if (StartAsAdmin = "true")
 		}
 	;MsgBox A_IsAdmin: %A_IsAdmin%`nCommand line: %full_command_line%
 	}
+else
+	{
+	global PIDTeamViewer := GetPID("TeamViewer.exe")
+	if (PIDTeamViewer != 0)
+		{
+		; TeamViewer is running
+		if (ProcessIsElevated(PIDTeamViewer) = 1)
+			{
+			; TeamViewer has elevated rights
+			; Set StartAsAdmin to true and restart
+			SaveIniValue(BasicFile, "AdvancedSettings", "StartAsAdmin", "true")
+			try
+				{
+				if A_IsCompiled
+					Run *RunAs "%A_ScriptFullPath%" /restart
+				else
+					Run *RunAs "%A_AhkPath%" /restart "%A_ScriptFullPath%"
+				}
+			ExitApp
+			} ; ende if
+		} ; ende if
+	} ; ende else
+
+ProcessIsElevated(vPID)
+{
+;PROCESS_QUERY_LIMITED_INFORMATION := 0x1000
+if !(hProc := DllCall("kernel32\OpenProcess", "UInt",0x1000, "Int",0, "UInt",vPID, "Ptr"))
+	return -1
+;TOKEN_QUERY := 0x8
+hToken := 0
+if !(DllCall("advapi32\OpenProcessToken", "Ptr",hProc, "UInt",0x8, "Ptr*",hToken))
+{
+	DllCall("kernel32\CloseHandle", "Ptr",hProc)
+	return -1
+}
+;TokenElevation := 20
+vIsElevated := vSize := 0
+vRet := (DllCall("advapi32\GetTokenInformation", "Ptr",hToken, "Int",20, "UInt*",vIsElevated, "UInt",4, "UInt*",vSize))
+DllCall("kernel32\CloseHandle", "Ptr",hToken)
+DllCall("kernel32\CloseHandle", "Ptr",hProc)
+return vRet ? vIsElevated : -1
+}
 
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
@@ -85,13 +127,11 @@ med := 130
 TabVar := ""
 NewEntryF7fnIntro := false
 NewEntryF7fnSkip := false
-global Captur2TextPID := CheckIfCapture2TextIsRunning()
+global Captur2TextPID := GetPID("Capture2Text.exe")
 
-CheckIfCapture2TextIsRunning(){
-Process, Exist , Capture2Text.exe
-return Captur2TextPID := ErrorLevel
-; Capture2Text not running -> ErrorLevel = 0
-; Captur2Text is running, -> ErrorLevel = PID
+GetPID(ProgramName){
+Process, Exist , %ProgramName%
+return PID := ErrorLevel
 }
 
 ; Version
