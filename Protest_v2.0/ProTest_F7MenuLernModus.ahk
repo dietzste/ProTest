@@ -65,8 +65,8 @@ else
 	fnComment := ""
 
 Gui, 7: +AlwaysOnTop ToolWindow
-Gui, 7:Add, Groupbox, x10 y10 w260 h140 cnavy, Eingaben definieren
-Gui, 7:Add, Text, x20 y34 w50 h20, OCR-fn:
+Gui, 7:Add, Groupbox, x10 y10 w260 h140 cnavy, Antworten definieren
+Gui, 7:Add, Text, x20 y34 w70 h20, Fragenummer:
 Gui, 7:Add, Edit, x103 y32 w160 h20 ve_fnLearn,	%e_fnLearn%
 Gui, 7:Add, Text, x20 y56 w70 h20, Eingabewert:
 Gui, 7:Add, Combobox, x103 y54 w160 h80 vfnValue, % ActionList
