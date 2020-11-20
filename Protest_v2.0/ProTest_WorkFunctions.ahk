@@ -97,12 +97,12 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		} Until (IntroIsOver = true)
 		if (TimeOutMsgSkippedIntro > 0)
 			MsgBox, 4096, Intro übersprungen! , Intro übersprungen! (No match for fn: "%fnOCR%"), %TimeOutMsgSkippedIntro%
-		SaveToHistory("### ENDE INTRO ###")
+		SaveToHistory("### ENDE Eingangsfragen ###")
 		}
 	}
 If (r_Main2 = 1 OR r_Main3 = 1)
 	{
-	SaveToHistory("### START fn-Suche ###")
+	SaveToHistory("### Zu einer Fragenummer springen ###")
 	Sleep, DefaultSleep
 	CheckWorkWindow()
 	AlarmIfCapture2TextIsNotRunning()
