@@ -99,7 +99,7 @@ Gui, 2:Add, Button, x170 y235 w75 h20 %IntroDisLFD% g2GuiShowLFDValues, LFD Wert
 Gui, 2:Add, CheckBox, x180 y280 w100  h20 %IntroDis% Checked%c_StudyWithLFDs% vc_StudyWithLFDs g2GuiLFDsAvailable, LFDs vorhanden
 ; 3. Last Part 
 Gui, 2:Add, Groupbox, x17 y304 w280 h47 %IntroDis% cBlack , Eingangsfragen mit Fragenummern
-Gui, 2:Add, CheckBox, x32 y325 w84  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, überspringen
+Gui, 2:Add, CheckBox, x32 y325 w210  h20 %IntroDis% Checked%c_SkipLastPart% vc_SkipLastPart, überspringe definierte Fragenummern
 ; fn Search
 Gui, 2:Add, Groupbox, x10 y364 w296 h108 %fnDis% cNavy, Zu einer Fragenummer springen
 Gui, 2:Add, Text, x19 y386 w90  h20 %fnDis%, Fragenummer(n):
@@ -114,7 +114,7 @@ Gui, 2:Add, Radio, x170 y443 w35 h15 %fnDis% Checked%r_AdvancedOFF% vr_AdvancedO
 ; Abschluss
 Gui, 2:Add, Button, x10 y481 w50 h25 g2GuiHelp, Hilfe
 Gui, 2:Add, Button, x70 y481 w50 h25 g2GuiResetControls, Reset
-Gui, 2:Add, Button, x223 y481 w80 h25 g2GuiGO Default, Ok
+Gui, 2:Add, Button, x223 y481 w80 h25 g2GuiGO Default, Start
 Gui, 2:Show, x850 y540 Autosize Center, %GuiF2%
 if (r_LFD3 = 1 OR r_LFD2 = 1) 
 	Control, Hide ,, LFD Werte, %GuiF2%
