@@ -141,7 +141,7 @@ if (A_ThisLabel = "8GuiPreloads")
 	CheckFileFirst := false
 
 ; Load Preloads from File
-if (CheckFileFirst = true)
+if (CheckFileFirst = true and CurrentLFD != "")
 	{
 	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload)
 	if (PreloadValue != "ERROR" AND PreloadValue != "")
@@ -155,9 +155,11 @@ if (PreloadValue = "false")
 	Msgbox, 4096 ,%Preload%, "%Preload%" nicht vorhanden.
 	Exit
 	}
-CheckLFDSectionNames(CurrentLFD)
 if (CurrentLFD != "")
+	{
+	CheckLFDSectionNames(CurrentLFD)
 	SaveIniValue(TempFile, "LFD_" . CurrentLFD , Preload, PreloadValue)
+	}
 return PreloadValue
 }
 
