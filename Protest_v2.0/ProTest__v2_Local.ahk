@@ -100,7 +100,7 @@ return vRet ? vIsElevated : -1
 GuiF2  := " (F2) Hauptmenü "
 GuiF3  := " (F3) Passende LFDs finden"
 GuiF4  := " (F4) Erweiterte Optionen"
-GuiF7  := " (F7) Eingaben für Fragenummern definieren"
+GuiF7  := " (F7) Antworten für Fragenummern definieren"
 GuiF8  := " (F8) Preload-Werte abrufen"
 GuiF10 := " (F10) ProTest Einstellungen "
 GuiF12 := " (F12) Protest beenden"
