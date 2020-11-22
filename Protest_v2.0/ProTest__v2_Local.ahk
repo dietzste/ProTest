@@ -11,7 +11,7 @@ ListLines Off
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen
 ; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte Übereinstimmung
+; 3 = exakte ï¿½bereinstimmung
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Folder/File Management ;;;
@@ -96,11 +96,11 @@ return vRet ? vIsElevated : -1
 
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
-; Name Menüs
-GuiF2  := " (F2) Hauptmenü "
+; Name Menï¿½s
+GuiF2  := " (F2) Hauptmenï¿½ "
 GuiF3  := " (F3) Passende LFDs finden"
 GuiF4  := " (F4) Erweiterte Optionen"
-GuiF7  := " (F7) Antworten für Fragenummern definieren"
+GuiF7  := " (F7) Antworten fï¿½r Fragenummern definieren"
 GuiF8  := " (F8) Preload-Werte abrufen"
 GuiF10 := " (F10) ProTest Einstellungen "
 GuiF12 := " (F12) Protest beenden"
@@ -123,7 +123,7 @@ ultrafast := 30
 fast := 100
 med := 130
 TabVar := ""
-NewEntryF7 := false
+NewEntryF7 := true
 global Captur2TextPID := GetPID("Capture2Text.exe")
 
 GetPID(ProgramName){
@@ -242,7 +242,7 @@ return
 #Include Protest_LFDFinder.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;  INTERAKTIONS-MENÜS  ;;;;;;;;;;;;;;
+;;;;;;;;;;  INTERAKTIONS-MENï¿½S  ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_F2MenuQuickSetup.ahk
@@ -253,7 +253,7 @@ return
 #Include Protest_F10MenuBasicSettings.ahk
 #Include ProTest_AutoEdit.ahk
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;     Hilfe-Texte Menüs      ;;;;;;;;
+;;;;;;     Hilfe-Texte Menï¿½s      ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_HelpMenus.ahk

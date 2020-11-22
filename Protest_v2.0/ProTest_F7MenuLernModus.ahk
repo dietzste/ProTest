@@ -22,62 +22,39 @@ if (F7MousePosX != "")
 	MouseMove, F7MousePosX, F7MousePosY
 
 fnValue := ""
-dd_Section := ""
-
 ; Eintrag vorhanden?
-SectionArray := [fnIntro, fnSkip]
-For i, Section in SectionArray
+if (e_fnLearn != "")
 	{
-	if (e_fnLearn = "")
-		break
-	dd_Section := Section
-	fnValue := GetIniValue(LibraryFile, Section, e_fnLearn)
+	fnValue := GetIniValue(LibraryFile, fnBib, e_fnLearn)
 	if (fnValue = "ERROR")
 		{
-		CorrectedfnOCR := AutoCorrection(e_fnLearn, Section, fnValue)
+		CorrectedfnOCR := AutoCorrection(e_fnLearn, fnBib, fnValue)
 		if (CorrectedfnOCR != e_fnLearn)
-			{
 			e_fnLearn := CorrectedfnOCR
-			break
-			}
 		}
-	else
-		break
 	}
 ; Eintrag noch nicht vorhanden
 if (fnValue = "ERROR")
-	{
-	dd_Section := GetIniValue(TempFile, "LernModus", "LastSection", fnIntro)
-	SectionList := fnIntro . "||" . fnSkip
 	fnValue := ""
-	}
-else
-	{
-	if (dd_Section = fnIntro)
-		SectionList := fnIntro . "||" . fnSkip
-	else
-		SectionList := fnIntro . "|" . fnSkip . "||"
-	}
+
 ActionList := fnValue . "||Get(sexPRE)|Get(gebtPRE/gebmPRE/gebjPRE)|Get()|Reverse(sexPRE)|Reverse()|Stop|Ende|{Enter}"
 if (fnValue != "")
-	fnComment := ExtractfnComment(e_fnLearn, dd_Section)
+	fnComment := ExtractfnComment(e_fnLearn)
 else
 	fnComment := ""
 
 Gui, 7: +AlwaysOnTop ToolWindow
-Gui, 7:Add, Groupbox, x10 y10 w260 h140 cnavy, Antworten definieren
+Gui, 7:Add, Groupbox, x10 y10 w260 h115 cnavy, Antworten definieren
 Gui, 7:Add, Text, x20 y34 w70 h20, Fragenummer:
 Gui, 7:Add, Edit, x103 y32 w160 h20 ve_fnLearn,	%e_fnLearn%
 Gui, 7:Add, Text, x20 y56 w70 h20, Eingabewert:
 Gui, 7:Add, Combobox, x103 y54 w160 h80 vfnValue, % ActionList
 Gui, 7:Add, Text, x20 y79 w74 h20, Kommentar:
 Gui, 7:Add, Edit, x103 y77 w160 h20 vfnComment, % fnComment
-Gui, 7:Add, Text, x20 y103 w74 h20, Abschnitt:
-Gui, 7:Add, DropDownList, x103 y101 w160  h80 vdd_Section, % SectionList
-Gui, 7:Add, Checkbox, x20 y128 w140 h20 Checked%EnterWhileSaving% vEnterWhileSaving, beim Speichern ausführen
-Gui, 7:Add, Button, x10 y155 w75 h25 g7GuiSave, Speichern
-Gui, 7:Add, Button, x90 y155 w75 h25 g7GuiDelete, Löschen
-Gui, 7:Add, Button, x195 y155 w75 h25 Default g7GuiEnter, Ausführen
+Gui, 7:Add, Checkbox, x20 y103 w140 h20 Checked%EnterWhileSaving% vEnterWhileSaving, beim Speichern ausführen
+Gui, 7:Add, Button, x10 y130 w75 h25 g7GuiSave, Speichern
+Gui, 7:Add, Button, x90 y130 w75 h25 g7GuiDelete, Löschen
+Gui, 7:Add, Button, x195 y130 w75 h25 Default g7GuiEnter, Ausführen
 Gui, 7:Show, Autosize Center, % GuiF7
 return 
 
@@ -86,32 +63,31 @@ return
 Gui 7:Submit, NoHide
 SaveIniValue(ProjectFile, "LernModus", "EnterWhileSaving", EnterWhileSaving)
 Gui 7:Destroy
-DeleteIniSection(TempFile, "LernModus")
 return
 
 7GuiDelete:
 Gui 7:Submit, NoHide
 if (e_fnLearn != "")
 	{
-	fnValue := GetIniValue(LibraryFile, dd_Section, e_fnLearn)
+	fnValue := GetIniValue(LibraryFile, fnBib, e_fnLearn)
 	if (fnValue != "ERROR")
 		{
-		fnComment := ExtractfnComment(e_fnLearn, dd_Section)
-		fntoDeleteText := "fn: " . e_fnLearn . "`nEingabewert: " . fnValue . "`nKommentar: " . fnComment . "`nAbschnitt: " . dd_Section
+		fnComment := ExtractfnComment(e_fnLearn)
+		fntoDeleteText := "fn: " . e_fnLearn . "`nEingabewert: " . fnValue . "`nKommentar: " . fnComment
 		MsgBox, 4132, Eintrag löschen?, Soll folgender Eintrag gelöscht werden? `n`n%fntoDeleteText%
 		IfMsgBox, YES
 			{
-			DeleteIniValue(LibraryFile, dd_Section, e_fnLearn)
+			DeleteIniValue(LibraryFile, fnBib, e_fnLearn)
 			Msgbox, 4096, Eintrag gelöscht!, Eintrag für %e_fnLearn% erfolgreich gelöscht!
 			Gui 7:Destroy
 			Goto 7GuiSetControls
 			}
 		}
 	else
-		Msgbox, 4096, Eintrag nicht vorhanden!, Für die fn %e_fnLearn% ist kein Eintrag in der Library vorhanden!
+		Msgbox, 4096, Eintrag nicht vorhanden!, Für die fn %e_fnLearn% ist kein Eintrag in der %fnBib% vorhanden!
 	}
 else
-	Msgbox, 4096, Fehlende Angaben!, Das Feld "OCR-fn" ist leer!
+	Msgbox, 4096, Fehlende Angaben!, Das Feld "Fragenummer" ist leer!
 return
 
 7GuiSave:
@@ -129,11 +105,11 @@ if Instr(fnComment, ";")
 	Msgbox, 4096, Korrektur erforderlich, Bitte kein Semikolon ";" im Kommentar verwenden! 
 	return
 	}
-ExistingFnValue := GetIniValue(LibraryFile, dd_Section, e_fnLearn)
+ExistingFnValue := GetIniValue(LibraryFile, fnBib, e_fnLearn)
 if (ExistingFnValue != "ERROR")
 	{
 	; ja - Eintrag bereits vorhanden
-	IniRead, ExistingFnValue, %LibraryFile%, %dd_Section%, %e_fnLearn%
+	IniRead, ExistingFnValue, %LibraryFile%, %fnBib%, %e_fnLearn%
 	OldEntry := e_fnLearn . " = " . ExistingFnValue
 	NewEntry := e_fnLearn . " = " . fnValue . A_Tab . ";" . A_Space . fnComment
 	; Vergleich ohne Tabs
@@ -144,7 +120,7 @@ if (ExistingFnValue != "ERROR")
 		; Neuer Eintrag hat sich geändert
 		MsgBoxText = 
 		(
-		Im Abschnitt %dd_Section% ist bereits folgender Eintrag vorhanden: 
+		Es ist bereits folgender Eintrag vorhanden: 
 		`n%OldEntry%
 		`nSoll der Eintrag wie folgt überschrieben werden?
 		`n%NewEntry%
@@ -153,7 +129,7 @@ if (ExistingFnValue != "ERROR")
 		IfMsgBox, YES
 			{
 			; Eintrag überschrieben
-			SaveIniValue(LibraryFile, dd_Section, e_fnLearn, fnValue . A_Tab . ";" . A_Space . fnComment)
+			SaveIniValue(LibraryFile, fnBib, e_fnLearn, fnValue . A_Tab . ";" . A_Space . fnComment)
 			SaveToHistory("Neuer Eintrag:", NewEntry, "überschrieben")
 			}
 		else
@@ -163,22 +139,17 @@ if (ExistingFnValue != "ERROR")
 else
 	{
 	; Neuer Eintrag
-	if (dd_Section = fnIntro and NewEntryF7fnIntro = false) or (dd_Section = fnSkip and NewEntryF7fnSkip = false)
+	if (NewEntryF7 = true)
 		{
 		; Ersten neuen Eintrag mit Abstand + Zeitstempel einfügen
 		TimeStemp :=  A_DD . "." . A_MM . "." . A_YYYY
-		SaveIniValue(LibraryFile, dd_Section, "`n; " . ProjectName . " Neuer Eintrag " . TimeStemp . "`nNeuerEintrag", "Blank")
-		if (dd_Section = fnIntro)
-			NewEntryF7fnIntro := true
-		else
-			NewEntryF7fnSkip := true
-			
+		SaveIniValue(LibraryFile, fnBib, "`n; " . ProjectName . " Neuer Eintrag " . TimeStemp . "`nNeuerEintrag", "Blank")
+		NewEntryF7 := false
 		}
-	SaveIniValue(LibraryFile, dd_Section, e_fnLearn, fnValue . A_Tab . ";" . A_Space . fnComment)
-	SaveIniValue(TempFile, "LernModus", "LastSection" , dd_Section)
+	SaveIniValue(LibraryFile, fnBib, e_fnLearn, fnValue . A_Tab . ";" . A_Space . fnComment)
 	NewEntry := e_fnLearn . " = " . fnValue . A_Tab . ";" . A_Space . fnComment
 	SaveToHistory("Neuer Eintrag: " . NewEntry)
-	DeleteIniValue(LibraryFile, dd_Section, "NeuerEintrag")
+	DeleteIniValue(LibraryFile, fnBib, "NeuerEintrag")
 	}
 Gui 7:Destroy
 if (EnterWhileSaving = 1)
@@ -202,17 +173,17 @@ if (e_fnLearn != "" and fnValue != "")
 	}
 else
 	{
-	Msgbox, 4096, Fehlende Angaben, Eintragungen für OCR-fn oder fnEingabewert fehlen!
+	Msgbox, 4096, Fehlende Angaben, Eintragungen der Fragenummer oder Eingabewert fehlen!
 	return
 	}
 SaveIniValue(ProjectFile, "LernModus", "EnterWhileSaving", EnterWhileSaving)
 Goto 7GuiSetControls
 return 
 
-ExtractfnComment(fn, Section){
+ExtractfnComment(fn){
 local
-global LibraryFile
-IniRead, Comment, %LibraryFile%, %Section%, %fn%
+global LibraryFile, fnBib
+IniRead, Comment, %LibraryFile%, %fnBib%, %fn%
 if (Comment = "ERROR")
 	fnComment := ""
 else
