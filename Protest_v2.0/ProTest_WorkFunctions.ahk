@@ -244,7 +244,7 @@ SaveToHistory(Info, params*){
 local
 global HistoryFile
 global CreateHistory, VerboseHistory
-;ListLines Off
+ListLines Off
 TimeStemp := A_DDD . A_Space . A_DD . "." A_MMM . A_Space . A_Hour . ":" . A_Min . ":" . A_Sec 
 if (Strlen(Info) <= 4)
 	Spacing := A_Tab
@@ -260,6 +260,7 @@ else if (params.MaxIndex() = 2)
 else if (params.MaxIndex() = 3)	
 	SendHistory := BasicHistory . Spacing . params[1] . A_Space . "(" . params[2] . " - " . params[3] . ")"
 
+ListLines On
 if (CreateHistory = 1) ; true
 	{
 	; Verbose-Kommentare (nicht) mit speichern
