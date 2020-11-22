@@ -11,7 +11,7 @@ ListLines Off
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen
 ; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte ï¿½bereinstimmung
+; 3 = exakte Übereinstimmung
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Folder/File Management ;;;
@@ -96,11 +96,11 @@ return vRet ? vIsElevated : -1
 
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
-; Name Menï¿½s
-GuiF2  := " (F2) Hauptmenï¿½ "
+; Name Menüs
+GuiF2  := " (F2) Hauptmenü "
 GuiF3  := " (F3) Passende LFDs finden"
 GuiF4  := " (F4) Erweiterte Optionen"
-GuiF7  := " (F7) Antworten fï¿½r Fragenummern definieren"
+GuiF7  := " (F7) Antworten für Fragenummern definieren"
 GuiF8  := " (F8) Preload-Werte abrufen"
 GuiF10 := " (F10) ProTest Einstellungen "
 GuiF12 := " (F12) Protest beenden"
@@ -159,6 +159,9 @@ AllowAlphas			:= GetIniValue(BasicFile, "OCR",  "AllowAlphas")
 SleepWhileOCREmpty	:= GetIniValue(BasicFile, "OCR",  "SleepWhileOCREmpty")
 RemoveLastAlpha		:= GetIniValue(BasicFile, "OCR",  "RemoveLastAlpha", "true")
 ReplaceLast6witha	:= GetIniValue(BasicFile, "OCR",  "ReplaceLast6witha", "true")
+
+; Logbuch
+CreateHistory := GetIniValue(BasicFile, BasicSettingsMenu, "c_History")
 
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea
@@ -239,7 +242,7 @@ return
 #Include Protest_LFDFinder.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;  INTERAKTIONS-MENï¿½S  ;;;;;;;;;;;;;;
+;;;;;;;;;;  INTERAKTIONS-MENÜS  ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_F2MenuQuickSetup.ahk
@@ -250,7 +253,7 @@ return
 #Include Protest_F10MenuBasicSettings.ahk
 #Include ProTest_AutoEdit.ahk
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;     Hilfe-Texte Menï¿½s      ;;;;;;;;
+;;;;;;     Hilfe-Texte Menüs      ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_HelpMenus.ahk
