@@ -28,15 +28,6 @@ if (10GuiReset = true)
 
 e_scaleBasic 	:= GetIniValue(BasicFile, BasicSettingsMenu, "e_scale")
 e_scale 		:= GetIniValue(ProjectFile, BasicSettingsMenu, "e_scale", e_scaleBasic)
-CreateHistory := GetIniValue(BasicFile, BasicSettingsMenu, "c_History")
-
-10GuiOCRPositions := ["e_fnStartPosX", "e_fnStartPosY", "e_width", "e_height"]
-for i, control in 10GuiOCRPositions
-	{
-	%control% := GetIniValue(ProjectFile, BasicSettingsMenu, control)
-	If (%control% = "ERROR")
-		%control% := GetIniValue(BasicFile, BasicSettingsMenu, control, 0)
-	}
 
 ; Change Button
 if (10GuiChange = false)
@@ -53,6 +44,7 @@ else
 	}
 
 ; CACLCULATE POSITIONS
+Gosub SetOCRPositions
 AdjustPositions()
 
 Gui, 10:+AlwaysOnTop Toolwindow
@@ -62,7 +54,7 @@ Gui, 10:Add, Text, x20 y32  w92  h20 , Projekt:
 Gui, 10:Add, Edit, x65 	y29  w90  h20 Disabled, % StrReplace((GetIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile")), ".ini")
 ;Gui, 10:Add, Text, x20 y54  w92  h20 , Fragenbibliothek:
 ;Gui, 10:Add, Edit, x105 	y51  w90  h20 Disabled , Library.ini
-Gui, 10:Add, Button, x205  y27 w50  h20 g10GuiChangeBasicFile, ändern
+Gui, 10:Add, Button, x175  y27 w80  h20 g10GuiChangeBasicFile, ändern
 ; OCR Konfiguration
 Gui, 10:Add, Groupbox, x10 y65 w260 h125 cNavy, Texterkennung konfigurieren
 ;;; Position fn Start
@@ -267,7 +259,6 @@ return
 
 #if WinExist("ShowOCRWindow")
 CTRL & LButton::
-~x::
 WinActivate, %WorkWindow%
 CoordMode, Mouse , Window
 MouseGetPos , MousePosX, MousePosY
@@ -319,6 +310,16 @@ global e_fnStartPosX, e_fnStartPosY
 global e_fnEndPosX := e_fnStartPosX + e_width
 global e_fnEndPosY := e_fnStartPosY + e_height
 }
+
+SetOCRPositions:
+10GuiOCRPositions := ["e_fnStartPosX", "e_fnStartPosY", "e_width", "e_height"]
+for i, control in 10GuiOCRPositions
+	{
+	%control% := GetIniValue(ProjectFile, BasicSettingsMenu, control)
+	If (%control% = "ERROR")
+		%control% := GetIniValue(BasicFile, BasicSettingsMenu, control, 0)
+	}
+return
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;    Choose Project File    ;;;;;;
@@ -458,6 +459,9 @@ if (A_IsCompiled = 1)
 global CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", A_Space)
 DeleteIniValue(ProjectFile, "ProjectFiles", "CurrentLFD")
 
+; Set OCR Positions
+Gosub SetOCRPositions
+AdjustPositions()
 ListLines On
 }
 
