@@ -11,7 +11,7 @@ ListLines Off
 SetTitleMatchMode, 2
 ; 1 = wintitle muss mit Titel beginnen
 ; 2 = wintitle muss Titel irgendwo enthalten
-; 3 = exakte Übereinstimmung
+; 3 = exakte ï¿½bereinstimmung
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Folder/File Management ;;;
@@ -22,7 +22,7 @@ ConfigFolder := A_ScriptDir . "\Config"
 BasicFile := ConfigFolder . "\BasicSettings.ini"
 PreloadDetailsFile := ConfigFolder . "\PreloadDetails.ini"
 HeartPicture := ConfigFolder . "\Heart.png"
-LibraryFile := ConfigFolder . "\Library.ini"
+LibraryFile := ConfigFolder . "\Fragenbibliothek.ini"
 
 if !FileExist(ConfigFolder)
 	{
@@ -96,11 +96,11 @@ return vRet ? vIsElevated : -1
 
 ;;; GLOBALE VARIABLEN DEFINIEREN ;;;
 
-; Name Menüs
-GuiF2  := " (F2) Hauptmenü "
+; Name Menï¿½s
+GuiF2  := " (F2) Hauptmenï¿½ "
 GuiF3  := " (F3) Passende LFDs finden"
 GuiF4  := " (F4) Erweiterte Optionen"
-GuiF7  := " (F7) Antworten für Fragenummern definieren"
+GuiF7  := " (F7) Antworten fï¿½r Fragenummern definieren"
 GuiF8  := " (F8) Preload-Werte abrufen"
 GuiF10 := " (F10) ProTest Einstellungen "
 GuiF12 := " (F12) Protest beenden"
@@ -111,8 +111,6 @@ LFDFinderMenu := "LFDFinderMenu"
 AdvancedSearchMenu := "AdvancedSearchMenu"
 PreloadReaderMenu := "PreloadReaderMenu"
 BasicSettingsMenu := "BasicSettingsMenu"
-fnIntro := "fnIntro"
-fnSkip := "fnSkip"
 
 ; special Menu Settings
 DisON := "Disabled1"
@@ -125,8 +123,7 @@ ultrafast := 30
 fast := 100
 med := 130
 TabVar := ""
-NewEntryF7fnIntro := false
-NewEntryF7fnSkip := false
+NewEntryF7 := false
 global Captur2TextPID := GetPID("Capture2Text.exe")
 
 GetPID(ProgramName){
@@ -242,7 +239,7 @@ return
 #Include Protest_LFDFinder.ahk
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;  INTERAKTIONS-MENÜS  ;;;;;;;;;;;;;;
+;;;;;;;;;;  INTERAKTIONS-MENï¿½S  ;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_F2MenuQuickSetup.ahk
@@ -253,7 +250,7 @@ return
 #Include Protest_F10MenuBasicSettings.ahk
 #Include ProTest_AutoEdit.ahk
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;     Hilfe-Texte Menüs      ;;;;;;;;
+;;;;;;     Hilfe-Texte Menï¿½s      ;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #Include Protest_HelpMenus.ahk
