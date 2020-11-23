@@ -20,8 +20,8 @@ if (LastFn = fnOCR)
 	static SameFn := false
 	if (SameFn = true)
 		{
-		Msgbox, 4096, Gleiche Fn erkannt!, Die Fn %fnOCR% war im letzten Durchgang bereits vorhanden. Der Durchlauf wird vorsichtshalber gestoppt! (SleepAfterEnter: %SleepAfterEnter% ms)
-		SaveToHistory("Gleiche Fn erkannt! Durchlauf abgebrochen.")
+		Msgbox, 4096, Gleiche Fn erkannt!, Die Fragenummer %fnOCR% war im letzten Durchgang bereits vorhanden. Der Durchlauf wird vorsichtshalber gestoppt!
+		SaveToHistory("Gleiche Fragenummer erkannt! Durchlauf abgebrochen.")
 		Exit
 		}
 	SameFn := true
