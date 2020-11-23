@@ -31,8 +31,8 @@ c_XModul := GetIniValue(ProjectFile, AdvancedSearchMenu, "c_XModul", 1)
 ;;;;;; GUI Menü ;;;;;
 ; EDIT-FIELDs
 Gui, 4:+AlwaysOnTop ToolWindow
-Gui, 4:Add, Groupbox, x10 y14 w247 h160 cNavy Center, Werte für fn(s) vergeben...
-Gui, 4:Add, Groupbox, x17 y35 w77 h130 Center, fn
+Gui, 4:Add, Groupbox, x10 y14 w247 h160 cNavy Center, Werte für Fragenummer(n) vergeben...
+Gui, 4:Add, Groupbox, x17 y35 w77 h130 Center, Fragenummer
 Gui, 4:Add, Groupbox, x99 y35 w150 h130 Center , Wert
 Gui, 4:Add, Edit, x25  y50 w62  h20 Center Limit%fnLimit% 	ve_fnN1, %e_fnN1%
 Gui, 4:Add, Edit, x106 y50 w135 h20 Center	   		   		ve_fnV1, %e_fnV1%
