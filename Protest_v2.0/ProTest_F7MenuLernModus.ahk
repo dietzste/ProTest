@@ -28,7 +28,7 @@ if (e_fnLearn != "")
 	fnValue := GetIniValue(LibraryFile, fnBib, e_fnLearn)
 	if (fnValue = "ERROR")
 		{
-		CorrectedfnOCR := AutoCorrection(e_fnLearn, fnBib, fnValue)
+		CorrectedfnOCR := AutoCorrection(e_fnLearn, fnValue)
 		if (CorrectedfnOCR != e_fnLearn)
 			e_fnLearn := CorrectedfnOCR
 		}

@@ -159,15 +159,15 @@ if (UpcomingFnName != "ERROR")
 } ; ende loop
 } ; ende function
 
-SkipIntro(fnOCR){
+SkipIntro(byref fnOCR){
 local
-global LibraryFile
+global LibraryFile, fnBib
 global IntroIsOver
 ; Check in LibraryFile
 fnIntroValue := GetIniValue(LibraryFile, fnBib, fnOCR)
 If (fnIntroValue = "ERROR")
 	{
-	CorrectedfnOCR := AutoCorrection(fnOCR, fnBib, fnIntroValue)
+	CorrectedfnOCR := AutoCorrection(fnOCR, fnIntroValue)
 	if (CorrectedfnOCR = fnOCR) 
 		{
 		IntroIsOver := true

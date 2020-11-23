@@ -179,12 +179,12 @@ return false
 
 CheckfnBib(fnOCR, Index){
 local
-global LibraryFile
+global LibraryFile, fnBib
 fnSkipValue := GetIniValue(LibraryFile, fnBib, fnOCR)
 If (fnSkipValue = "ERROR")
 	{
 	; AutoCorrection
-	CorrectedfnOCR := AutoCorrection(fnOCR, fnBib, fnSkipValue)
+	CorrectedfnOCR := AutoCorrection(fnOCR, fnSkipValue)
 	if (CorrectedfnOCR = fnOCR)
 		return false
 	else

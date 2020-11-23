@@ -144,15 +144,15 @@ return OCR
 ;;;;  OCR CORRECTION  ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-AutoCorrection(fnOCR, Section, ByRef fnValue){
+AutoCorrection(fnOCR, ByRef fnValue){
 local
-global LibraryFile
+global LibraryFile, fnBib
 
 ; RemoveLastAlpha
 fnOCRWithoutAlpha := fnCorrectionRemoveLastAlpha(fnOCR)
 if (fnOCRWithoutAlpha != fnOCR)
 	{
-	fnValue := GetIniValue(LibraryFile, Section, fnOCRWithoutAlpha)
+	fnValue := GetIniValue(LibraryFile, fnBib, fnOCRWithoutAlpha)
 	if (fnValue != "ERROR")
 		return fnOCRWithoutAlpha
 	}
@@ -161,7 +161,7 @@ if (fnOCRWithoutAlpha != fnOCR)
 fnOCR6a := fnCorrectionReplaceLast6witha(fnOCR)
 if (fnOCR6a != fnOCR)
 	{
-	fnValue := GetIniValue(LibraryFile, Section, fnOCR6a)
+	fnValue := GetIniValue(LibraryFile, fnBib , fnOCR6a)
 	if (fnValue != "ERROR")
 		return fnOCR6a
 	}
