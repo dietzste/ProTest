@@ -33,11 +33,11 @@ global c_CheckAgain := GetIniValue(ProjectFile, LFDFinderMenu, "c_CheckAgain", 1
 global c_AbortSearch := GetIniValue(ProjectFile, LFDFinderMenu, "c_AbortSearch", 1)
 global CurrentLFD := GetIniValue(ProjectFile, LFDFinderMenu, "cb_StartLFD")
 
-; (3) Pre-Check existing LFDs in TempFile
-global c_CheckTempFileFirst := GetIniValue(ProjectFile, "LFDFinderMenu", "c_CheckTempFileFirst", 1)
-if (c_CheckTempFileFirst = 1)
+; (3) Pre-Check existing LFDs im LFD-Speicher
+global c_CheckLFDSpeicherFirst := GetIniValue(ProjectFile, "LFDFinderMenu", "c_CheckLFDSpeicherFirst", 1)
+if (c_CheckLFDSpeicherFirst = 1)
 	{
-	CreateLFDsInTempFileArray()
+	CreateLFDsInLFDSpeicherArray()
 	MsgWindow("Durchsuche LFD-Speicher...")
 	LFDFound := CheckExistingLFDPreloads()
 	MsgWindow()
@@ -376,31 +376,31 @@ SaveToHistory("VERBOSE:", CurrentLFD . ": Kriterien nicht  erfüllt", "Loop: " . 
 
 ;;; Pre-Checking Existing LFD's 
 
-; (1) CreateLFDsInTempFileArray
-CreateLFDsInTempFileArray(){
+; (1) CreateLFDsInLFDSpeicherArray
+CreateLFDsInLFDSpeicherArray(){
 local
-global TempFile
-global LFDsInTempFileArray := {}
-LFDListTempFile := GetIniSectionNames(TempFile)
-Loop, Parse, LFDListTempFile, "`n"
+global LFDSpeicherPfad
+global LFDsInLFDSpeicherArray := {}
+LFDListLFDSpeicher := GetIniSectionNames(LFDSpeicherPfad)
+Loop, Parse, LFDListLFDSpeicher, "`n"
 	{
 	if Instr(A_LoopField, "LFD_")
 		{
 		; Bsp. LFD_71100001
 		LFD := Substr(A_LoopField, 5)
-		LFDsInTempFileArray[LFD] := A_Index	
+		LFDsInLFDSpeicherArray[LFD] := A_Index	
 		}
 	} ; ende loop
-LFDsInTempFile := LFDsInTempFileArray.Count()
-SaveToHistory("VERBOSE:", LFDsInTempFile . " LFDs im TempFile")
+LFDsInLFDSpeicher := LFDsInLFDSpeicherArray.Count()
+SaveToHistory("VERBOSE:", LFDsInLFDSpeicher . " LFDs im LFDSpeicher")
 } ; ende function
 
 ; (2) CheckExistingLFDPreloads
 CheckExistingLFDPreloads(){
 local 
-global LFDsInTempFileArray
+global LFDsInLFDSpeicherArray
 SaveToHistory("Durchsuche existierende LFDs")
-for LFD, i in LFDsInTempFileArray
+for LFD, i in LFDsInLFDSpeicherArray
 	{
 	MissingPreloads := CreateLFDPreloadArray(LFD)
 	global LFDCount := 0
@@ -416,14 +416,14 @@ for LFD, i in LFDsInTempFileArray
 ; (2.1) CreateLFDPreloadArray
 CreateLFDPreloadArray(CurrentLFD){
 local
-global TempFile
+global LFDSpeicherPfad
 global PreloadOrderArray
 global LFDPreloadArray := {}
 global MissingPreloads := 0
 global PreloadString := ""
 for Index, Preload in PreloadOrderArray
 	{
-	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload, "Missing")
+	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload, "Missing")
 	LFDPreloadArray[Preload] := PreloadValue
 	if (PreloadValue = "Missing")
 		{

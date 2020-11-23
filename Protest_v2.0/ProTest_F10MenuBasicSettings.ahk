@@ -470,7 +470,7 @@ local
 global BasicFile
 global LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
 FileList := ""
-ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Library", "_Temp", "PreloadDetails"]
+ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Fragenbibliothek", "LFD_Speicher", "Library", "_Temp", "PreloadDetails"]
 IniLoop:
 Loop, Files, *.ini, R
 	{
