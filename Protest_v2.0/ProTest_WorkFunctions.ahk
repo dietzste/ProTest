@@ -96,7 +96,7 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 			LastFn := fnOCR
 		} Until (IntroIsOver = true)
 		if (TimeOutMsgSkippedIntro > 0)
-			MsgBox, 4096, Intro ï¿½bersprungen! , Intro ï¿½bersprungen! (No match for fn: "%fnOCR%"), %TimeOutMsgSkippedIntro%
+			MsgBox, 4096, Intro übersprungen! , Intro übersprungen! (No match for fn: "%fnOCR%"), %TimeOutMsgSkippedIntro%
 		SaveToHistory("### ENDE Eingangsfragen ###")
 		}
 	}
@@ -164,10 +164,10 @@ local
 global LibraryFile
 global IntroIsOver
 ; Check in LibraryFile
-fnIntroValue := GetIniValue(LibraryFile, fnIntro, fnOCR)
+fnIntroValue := GetIniValue(LibraryFile, fnBib, fnOCR)
 If (fnIntroValue = "ERROR")
 	{
-	CorrectedfnOCR := AutoCorrection(fnOCR, fnIntro, fnIntroValue)
+	CorrectedfnOCR := AutoCorrection(fnOCR, fnBib, fnIntroValue)
 	if (CorrectedfnOCR = fnOCR) 
 		{
 		IntroIsOver := true
@@ -209,7 +209,7 @@ else
 OCRIsEmpty(){
 local 
 Gui, 99:+AlwaysOnTop +ToolWindow
-gui, 99:add, Text, x10 y10 w200 Center, Jetzt manuelle Eingabe tï¿½tigen?
+gui, 99:add, Text, x10 y10 w200 Center, Jetzt manuelle Eingabe tätigen?
 gui, 99:add, button, x10 y30 w50 g99GuiYes, Ja
 gui, 99:add, button, x65 y30 w50 g99GuiCancel, nein 
 gui, 99:add, button, x130 y30 w80 Default g99GuiRetryOCR, Retry OCR
@@ -221,20 +221,20 @@ return Result
 99GuiEscape:
 99GuiCancel:
 99GuiClose:
-SaveToHistory("Keine fn gefunden. Eigene Aktion durchfï¿½hren? Nein")
+SaveToHistory("Keine fn gefunden. Eigene Aktion durchführen? Nein")
 Result := "Exit"
 Gui 99:Destroy
 return 
 
 99GuiRetryOCR:
-SaveToHistory("Keine fn gefunden. Eigene Aktion durchfï¿½hren? Retry OCR")
+SaveToHistory("Keine fn gefunden. Eigene Aktion durchführen? Retry OCR")
 Result := "Retry"
 Gui 99:Destroy
 return 
 
 99GuiYes:
-SaveToHistory("Keine fn gefunden. Eigene Aktion durchfï¿½hren? Ja")
-Msgbox, 4096, Skript pausiert!, Skript ist pausiert. Eingabe tï¿½tigen, dann mit F6 fortfahren!
+SaveToHistory("Keine fn gefunden. Eigene Aktion durchführen? Ja")
+Msgbox, 4096, Skript pausiert!, Skript ist pausiert. Eingabe tätigen, dann mit F6 fortfahren!
 Result := "Pause"
 Gui 99:Destroy
 return 
@@ -393,7 +393,7 @@ if (ShowLFD != "")
 	if (ShowLFDValues != "")
 		MsgBox, 4096, %ShowLFD% , %ShowLFDValues%
 	else
-		MsgBox, 4096, %ShowLFD% , Fï¿½r "%ShowLFD%" sind noch keine Werte vorhanden!
+		MsgBox, 4096, %ShowLFD% , Für "%ShowLFD%" sind noch keine Werte vorhanden!
 	}
 else
 	MsgBox, 4096, ShowLFD, Eingabe ist leer!
@@ -420,7 +420,7 @@ else
 					( LTrim Join
 					Im TempFile (%TempFileName%) beginnen die LFDs mit %CurrentTempFileDigits% (z.B. %LFDCheck%), die
 					%A_Space%aktuelle LFD ist jedoch %CurrentLFD%. Wahrscheinlich passt die aktuelle Projektdatei nicht
-					%A_Space%zur aktuellen Studie. Der aktuelle Durchlauf wird deshalb beendet. Bitte Projektdatei ï¿½ber das F10 Menï¿½ ï¿½ndern!
+					%A_Space%zur aktuellen Studie. Der aktuelle Durchlauf wird deshalb beendet. Bitte Projektdatei über das F10 Menü ändern!
 					)
 					MsgBox, 4096, LFD Konflikt!, % LFDConflictText
 					Exit
@@ -530,7 +530,7 @@ If (LFDSections != "ERROR")
 			}
 		; InputBox, OutputVar , Title, Prompt, HIDE, Width, Height, X, Y, Locale, Timeout, Default
 		InputBoxTitle := "LFD Konflikt erkannt!"
-		InputBoxText := "Im TempFile starten LFDs mit unterschiedlichen Zahlen:`n" . LFDTypeList . "`nMit welchen zwei Zahlen beginnen die LFDs, die gelï¿½scht werden sollen? (Schleife " . A_Index . "/" . LFDDigitsCount-1 . ")"
+		InputBoxText := "Im TempFile starten LFDs mit unterschiedlichen Zahlen:`n" . LFDTypeList . "`nMit welchen zwei Zahlen beginnen die LFDs, die gelöscht werden sollen? (Schleife " . A_Index . "/" . LFDDigitsCount-1 . ")"
 		ShowThisInputBox:
 		InputBox, CleanupDigit , %InputBoxTitle% , %InputBoxText%,, 250, 300,,,,,%InputBoxDefault%
 		if (ErrorLevel = 1) or (ErrorLevel = 0 And CleanupDigit = "")
@@ -538,8 +538,8 @@ If (LFDSections != "ERROR")
 			AbbruchText =
 			( LTrim Join
 			Die Bereinigung des TempFiles wurde abgebrochen! 
-			%A_Space%Um die Bereinigung zu wiederholen, bitte die aktuelle Projektdatei ï¿½ber das F10-Menï¿½ erneut auswï¿½hlen.
-			%A_Space%Das TempFile enthï¿½lt weiterhin fehlerhafte Eintragungen.
+			%A_Space%Um die Bereinigung zu wiederholen, bitte die aktuelle Projektdatei über das F10-Menü erneut auswählen.
+			%A_Space%Das TempFile enthält weiterhin fehlerhafte Eintragungen.
 			)
 			MsgBox, 4096, Bereinigung abgebrochen!, %AbbruchText%
 			Break
@@ -553,7 +553,7 @@ If (LFDSections != "ERROR")
 			{
 			; Bereinigung TempFile
 			DeletedLFDs := CleanUpTempFile(TempFile, LFDList, CleanupDigit)
-			MsgBox, 4096, Bereinigung durchgefï¿½hrt!, TempFile erfolgreich bereinigt! Gelï¿½schte LFDs:`n%DeletedLFDs%
+			MsgBox, 4096, Bereinigung durchgeführt!, TempFile erfolgreich bereinigt! Gelöschte LFDs:`n%DeletedLFDs%
 			LFDDigitsArray.Delete(CleanupDigit)
 			}
 		} ; CleanupLoop 

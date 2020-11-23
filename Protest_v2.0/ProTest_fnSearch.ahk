@@ -99,12 +99,12 @@ if (r_AdvancedON = 1 AND UpcomingFnIndex != 0)
 		return fnSearchIsOver := false
 	}
 	
-; MATCH with NagFn?
-MatchNagFn := CheckNagFn(fnOCR, Index)
-if (MatchNagFn = true)
+; MATCH with fnBib?
+MatchfnBib := CheckfnBib(fnOCR, Index)
+if (MatchfnBib = true)
 	return fnSearchIsOver := false
 
-SaveToHistory("VERBOSE:", fnOCR . " KEINE Ziel-fn, Upcoming-fn, Nag-fn")
+SaveToHistory("VERBOSE:", fnOCR . " KEINE Ziel-fn, Upcoming-fn, Bib-fn")
 
 ; Clicking Buttons
 ClickSkippButton(fnOCR)
@@ -177,21 +177,21 @@ For UpcomingFnName, UpcomingFnValue in UpcomingFnArray
 return false
 } ; ende function	
 
-CheckNagFn(fnOCR, Index){
+CheckfnBib(fnOCR, Index){
 local
 global LibraryFile
-fnSkipValue := GetIniValue(LibraryFile, fnSkip, fnOCR)
+fnSkipValue := GetIniValue(LibraryFile, fnBib, fnOCR)
 If (fnSkipValue = "ERROR")
 	{
 	; AutoCorrection
-	CorrectedfnOCR := AutoCorrection(fnOCR, fnSkip, fnSkipValue)
+	CorrectedfnOCR := AutoCorrection(fnOCR, fnBib, fnSkipValue)
 	if (CorrectedfnOCR = fnOCR)
 		return false
 	else
-		EnterfnValue(CorrectedfnOCR, fnSkipValue, fnSkip, Index)
+		EnterfnValue(CorrectedfnOCR, fnSkipValue, fnBib, Index)
 	}
 else
-	EnterfnValue(fnOCR, fnSkipValue, fnSkip, Index)
+	EnterfnValue(fnOCR, fnSkipValue, fnBib, Index)
 return true
 }
 
