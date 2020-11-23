@@ -108,7 +108,7 @@ Gui, 2:Add, Edit, x170 y383 w46 h20 %fnDis% Limit%fnLimit% Center ve_Targetfn2, 
 Gui, 2:Add, Edit, x225 y383 w46 h20 %fnDis% Limit%fnLimit% Center  ve_Targetfn3, %e_Targetfn3%
 Gui, 2:Add, Text, x19 y414  w140 h20 %fnDis%, Zum Überspringen drücke:
 Gui, 2:Add, DropDownList, x160 y412 w110 h70 %fnDis% AltSubmit Center Choose%dd_SkipButton% vdd_SkipButton, verweigert||Clear&Back
-Gui, 2:Add, Text, x19 y444 w135 h20 %fnDis%, Erweiterte Optionen:
+Gui, 2:Add, Text, x19 y444 w135 h20 %fnDis%, Erweiterte Eingaben:
 Gui, 2:Add, Radio, x130 y443 w35 h15 %fnDis% Checked%r_AdvancedON% vr_AdvancedON gOpenF4, Ein
 Gui, 2:Add, Radio, x170 y443 w35 h15 %fnDis% Checked%r_AdvancedOFF% vr_AdvancedOFF, Aus
 ; Abschluss
