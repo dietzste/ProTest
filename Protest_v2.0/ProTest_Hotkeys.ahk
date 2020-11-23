@@ -83,7 +83,7 @@ L_RestartQ()
 SaveToHistory("########### RESTART ###########")
 return
 
-F9::
++F9::
 L_RemoteFeedbackTest()
 return
 #if
@@ -97,7 +97,6 @@ F12		= ProTest beenden
 Shift + F5%A_Tab%%A_Tab%= ProTest neu starten
 Shift + ESC%A_Tab%= Tastenkürzel (de-)aktivieren
 Strg + u 		= auf Updates prüfen
-F9		= Verbindung zum Remote-Client prüfen
 
 Funktionsmenüs:
 F2		= %GuiF2%
