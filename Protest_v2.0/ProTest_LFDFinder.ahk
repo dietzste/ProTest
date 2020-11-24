@@ -13,7 +13,7 @@ global DefinedPreloadsArray := {}
 global DefinedPreloads := ProcessingF3MenuInput()
 if (DefinedPreloads != 0)
 	{
-	SaveToHistory("START: Suche passende LFD")
+	SaveToHistory("## Suche passende LFD ##")
 	SaveToHistory(DefinedPreloads . " Preload(s) definiert:")
 	for Preload, DefinedValue in DefinedPreloadsArray
 		{

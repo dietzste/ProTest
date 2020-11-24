@@ -18,11 +18,11 @@ global StudyWithLFDs := GetIniValue(ProjectFile, "QuickSetupMenu", "c_StudyWithL
 global AdvancedSearchMenu
 global LastFn := ""
 CheckWorkWindow()
-SaveToHistory("####  F2  ####")
 WinKill, %HistoryFileName%
 If (r_Main1 = 1) OR (r_Main3 = 1)
 	{
 	;;; INTRO
+	SaveToHistory("### Eingangsfragen überspringen ###")
 	SetKeyDelay, fast 
 	if (c_Beginning = 1)
 		{
@@ -139,7 +139,7 @@ for i, TargetFn in TargetFnControlArray
 		}
 	}
 if (TargetFnString != "")
-	SaveToHistory("Ziel-Fn: " . TargetFnString )
+	SaveToHistory("gesuchte Fragenummer(n): " . TargetFnString )
 }
 
 PrepareUpComingFn(){
@@ -154,7 +154,7 @@ if (UpcomingFnName != "ERROR")
 	UpcomingFnValue := GetIniValue(ProjectFile,"AdvancedSearchMenu", "e_fnV" . A_Index)
 	UpcomingFnArray[UpcomingFnName] := UpcomingFnValue 
 	++UpcomingFnIndex
-	SaveToHistory(UpcomingFnName, "= " . UpcomingFnValue,"F4")
+	SaveToHistory("Erweiterte Eingaben: ", UpcomingFnName " = " . UpcomingFnValue)
 	}
 } ; ende loop
 } ; ende function
