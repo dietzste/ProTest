@@ -84,7 +84,7 @@ Gui, 10:Add, Button, x75 y160 w50 h20 %BasicSettingsDis% g10GuiShowWindow, Show
 Gui, 10:Add, Button, x195 y160 w60 h20 g10GuiHelp, Hilfe
 ; History
 Gui, 10:Add, Groupbox, x10 y195 w260 h55 cNavy, Logbuch Einstellungen
-Gui, 10:Add, CheckBox, x20 y218 w130 h20 Checked%CreateHistory% %BasicSettingsDis% vCreateHistory, Logbuch erzeugen
+Gui, 10:Add, CheckBox, x20 y218 w130 h20 Checked%CreateHistory% %BasicSettingsDis% vCreateHistory, Logbuch erstellen
 ; Buttons
 Gui, 10:Add, Button,   x10  y260 w55  h25 g10GuiResetControls, Reset
 Gui, 10:Add, Button,   x70  y260 w70  h25 g10GuiChangeButton , % ChangeButtonName 
