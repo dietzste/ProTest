@@ -13,7 +13,7 @@ global DefinedPreloadsArray := {}
 global DefinedPreloads := ProcessingF3MenuInput()
 if (DefinedPreloads != 0)
 	{
-	SaveToHistory("STARTE LFD-Suche")
+	SaveToHistory("START: Suche passende LFD")
 	SaveToHistory(DefinedPreloads . " Preload(s) definiert:")
 	for Preload, DefinedValue in DefinedPreloadsArray
 		{
@@ -38,12 +38,12 @@ global c_CheckTempFileFirst := GetIniValue(ProjectFile, "LFDFinderMenu", "c_Chec
 if (c_CheckTempFileFirst = 1)
 	{
 	CreateLFDsInTempFileArray()
-	MsgWindow("Durchsuche TempFile...")
+	MsgWindow("Durchsuche LFD-Speicher...")
 	LFDFound := CheckExistingLFDPreloads()
 	MsgWindow()
 	if (LFDFound = true)
 		{
-		SaveToHistory("Passende LFD im TempFile: " . CurrentLFD)
+		SaveToHistory("Passende LFD im LFD-Speicher: " . CurrentLFD)
 		ShowMatchLFDMessage()
 		EnterLFD(CurrentLFD)
 		L_WaitUntilPreloadsLoaded()
