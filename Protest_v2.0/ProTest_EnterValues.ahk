@@ -159,12 +159,16 @@ global SkipIfPreloadZero
 global CurrentLFD
 
 ;(1) Pre-Processing
-RealPreloadString := StrReplace(PreloadString, "/" , "|")
+RealPreloadString := StrReplace(PreloadString, "\" , "|")
+RealPreloadString := StrReplace(RealPreloadString, "/" , "|")
+StrReplace(RealPreloadString, "|", "|", Count)
+PreloadCount := Count + 1
 
 ;(2) Remote Preloads needed?
 L_ReadMultiplePreloads(CurrentLFD, RealPreloadString, false)
 
 ;(3) Enter Preloads
+EnterTheseValues := ""
 Loop, Parse, RealPreloadString, "|"
 	{
 	Preload := A_LoopField
@@ -181,12 +185,21 @@ Loop, Parse, RealPreloadString, "|"
 			{
 			Send, {PgUp}
 			sleep, med
+			if (A_Index = PreloadCount)
+				EnterTheseValues .= "verweigert"
+			else
+				EnterTheseValues .= "verweigert/"
 			Continue
 			}
 		}
 	SetKeyDelay, med
 	Send, %PreloadValue%{Enter}
+	if (A_Index = PreloadCount)
+		EnterTheseValues .= PreloadValue
+	else
+		EnterTheseValues .= PreloadValue . "/"
 	}
 SetKeyDelay, fast
+SaveToHistory(fnOCR, "= " . EnterTheseValues, PreloadString)
 Sleep, DefaultSleep
 }
