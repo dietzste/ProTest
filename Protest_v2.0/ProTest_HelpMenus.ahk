@@ -57,7 +57,7 @@ local
 global x_ADDToStartfnX, x_ADDToStartfnY
 global GuiF2, GuiF3, GuiF4, GuiF8, GuiF10
 global ProjectFile, BasicFile, LibraryFile
-global ProjectName, TempFileName
+global ProjectName, LFDSpeicherName
 
 if (Window = GuiF2)
 {
@@ -111,7 +111,7 @@ Bsp. 3: Suche Preload (sexPRE), Wert darf nicht leer sein.
 Start LFD ist der StartPunkt für die LFD-Suche.
 
 Button 'LFD Werte' zeigt Werte der Start LFD an
-(Quelle: %TempFileName%). 
+(Quelle: %LFDSpeicherName%). 
 
 Preload-Liste: öffnet einen weiteren Editor, mit dem die 
 Preloadliste geladen werden kann. über den Button 

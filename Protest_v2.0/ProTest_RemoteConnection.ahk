@@ -132,7 +132,7 @@ SendWait(">LoadingPreloads", true)
 L_ReadPreload(Preload){
 local
 global CurrentLFD
-global TempFile, ProjectFile
+global LFDSpeicherPfad, ProjectFile
 SaveToHistory("VERBOSE:","Get Preload", Preload)
 CheckFileFirst := true
 
@@ -143,7 +143,7 @@ if (A_ThisLabel = "8GuiPreloads")
 ; Load Preloads from File
 if (CheckFileFirst = true and CurrentLFD != "")
 	{
-	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload)
+	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload)
 	if (PreloadValue != "ERROR" AND PreloadValue != "")
 		return PreloadValue
 	}
@@ -158,7 +158,7 @@ if (PreloadValue = "false")
 if (CurrentLFD != "")
 	{
 	CheckLFDSectionNames(CurrentLFD)
-	SaveIniValue(TempFile, "LFD_" . CurrentLFD , Preload, PreloadValue)
+	SaveIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload, PreloadValue)
 	}
 return PreloadValue
 }
@@ -228,7 +228,7 @@ return Result ; Result: "false" / "true"
 
 L_ReadMultiplePreloads(CurrentLFD, PreloadString, PreTested:=true){
 local
-global TempFile
+global LFDSpeicherPfad
 global MissingPreloadString := ""
 
 ; (1) PreTested?
@@ -260,7 +260,7 @@ Loop, Parse, MissingPreloadString, "|"
 				if (CurrentLFD != "")
 					{
 					CheckLFDSectionNames(CurrentLFD)
-					SaveIniValue(TempFile, "LFD_" . CurrentLFD, Preload, PreloadValue)
+					SaveIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD, Preload, PreloadValue)
 					}
 				}
 			else
@@ -276,7 +276,7 @@ Loop, Parse, MissingPreloadString, "|"
 
 CheckingLFDValues(CurrentLFD, PreloadString){
 local
-global TempFile
+global LFDSpeicherPfad
 global MultiplePreloadArray
 NMissingPreloads := 0
 MissingPreloadString := ""
@@ -284,7 +284,7 @@ MissingPreloadString := ""
 Loop, Parse, PreloadString , "|"
 	{
 	Preload := A_Loopfield
-	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload, "Missing")
+	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload, "Missing")
 	if (PreloadValue = "Missing")
 		{
 		++NMissingPreloads
@@ -297,8 +297,8 @@ Loop, Parse, PreloadString , "|"
 		SaveToHistory("VERBOSE:", Preload . " bereits vorhanden", "Wert: " . PreloadValue)
 	} ; ende for loop
 if (NMissingPreloads = 0)
-	SaveToHistory("VERBOSE:", "Alle Preloads in TempFile")
+	SaveToHistory("VERBOSE:", "Alle Preloads im LFDSpeicher")
 else
-	SaveToHistory("VERBOSE:", "fehlende Preloadwerte in TempFile:" . NMissingPreloads)
+	SaveToHistory("VERBOSE:", "fehlende Preloadwerte im LFDSpeicher:" . NMissingPreloads)
 return MissingPreloadString
 }

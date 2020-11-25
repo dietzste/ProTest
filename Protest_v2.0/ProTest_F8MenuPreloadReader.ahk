@@ -57,7 +57,7 @@ Return
 ShowLFDValues:
 if (CurrentLFD != "")
 	{
-	IniRead, LFDPreloads, %TempFile%, LFD_%CurrentLFD%
+	IniRead, LFDPreloads, %LFDSpeicherPfad%, LFD_%CurrentLFD%
 	Sort, LFDPreloads
 	LinesCount := StrSplit(LFDPreloads, "`n").maxindex()
 	MaxNumberPreloadValuesF8 := 10
