@@ -95,15 +95,36 @@ WinActivate, %WorkWindow%
 MouseGetPos, F7MousePosX, F7MousePosY
 Gui 7:Submit, NoHide
 ; check if fnValue/Comment exists
+; keine leeren Eingaben
 if (fnValue = "" or fnComment = "")
 	{
 	Msgbox, 4096, Fehlende Angaben, Eintragungen für Eingabewert oder Kommentar fehlen!
 	return
 	}
+; kein Semikolon
 if Instr(fnComment, ";")
 	{
 	Msgbox, 4096, Korrektur erforderlich, Bitte kein Semikolon ";" im Kommentar verwenden! 
 	return
+	}
+; keine doppelten Klammern
+ActionCount := 0
+StrReplace(fnValue, "(", "(", Count)
+ActionCount += Count
+StrReplace(fnValue, ")", ")", Count)
+ActionCount += Count
+if (ActionCount = 1 or ActionCount > 2) 
+	{
+	Msgbox, 4096, Korrektur erforderlich, Der Eingabewert "%fnValue%" enthält zu viele Klammern!
+	return
+	}
+else if (ActionCount = 2 or ActionCount = 1)
+	{
+	if (Instr(fnValue, "{") or Instr(fnValue, "}"))
+		{
+		Msgbox, 4096, Korrektur erforderlich, Der Eingabewert "%fnValue%" ist ungültig. Es dürfen nur runde ODER eckige Klammern verwendet werden!
+		return
+		}
 	}
 ExistingFnValue := GetIniValue(LibraryFile, fnBib, e_fnLearn)
 if (ExistingFnValue != "ERROR")
