@@ -60,7 +60,7 @@ if (OCR != "")
 			}
 		if (OCRVariation != "")
 			{
-			OCRRemark := "Erkannt wurde " . OCR . ". In der Library wird auch nach " . OCRVariation . " gesucht (AutoKorrektur)."
+			OCRRemark := "Erkannt wurde " . OCR . ". In der Fragenbibliothek wird auch nach " . OCRVariation . " gesucht (AutoKorrektur)."
 			return OCRRemark
 			}
 		}
