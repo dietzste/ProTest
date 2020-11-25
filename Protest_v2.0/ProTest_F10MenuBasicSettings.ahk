@@ -428,10 +428,14 @@ if FileExist(ProjectFileName)
 		FileMove, ProjectFileName, ProjectFolder
 	}
 
-; TempFile
-global TempFileName := ProjectName . "_Temp.ini"
-global TempFile := ProjectFolder . "\" . TempFileName
-CleanTempFile(TempFile)
+; LFDSpeicher
+global LFDSpeicherName := "LFDSpeicher_" . ProjectName . ".ini"
+global LFDSpeicherPfad := ProjectFolder . "\" . LFDSpeicherName
+; CleanUp
+OldTempFilePath := ProjectFolder . "\" .ProjectName . "_Temp.ini"
+if FileExist(OldTempFilePath)
+	FileMove, %OldTempFilePath%, %LFDSpeicherPfad% 
+CleanLFDSpeicher(LFDSpeicherPfad)
 
 ; HistoryFile
 global HistoryFileName := "Logbuch_" . ProjectName . A_YYYY . "_" . A_MM . "_" . A_DD
@@ -447,7 +451,7 @@ else
 	FileRead, PreloadList , %PreloadListPath%
 
 ; Save to ProjectFile
-SaveIniValue(ProjectFile, "ProjectFiles", "e_TempFile", TempFileName)
+SaveIniValue(ProjectFile, "ProjectFiles", "e_LFDSpeicher", LFDSpeicherName)
 SaveIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile", ProjectFileName)
 
 ; Save To History
@@ -470,7 +474,7 @@ local
 global BasicFile
 global LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
 FileList := ""
-ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Fragenbibliothek", "LFD_Speicher", "Library", "_Temp", "PreloadDetails"]
+ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Fragenbibliothek", "LFDSpeicher", "Library", "_Temp", "PreloadDetails"]
 IniLoop:
 Loop, Files, *.ini, R
 	{
