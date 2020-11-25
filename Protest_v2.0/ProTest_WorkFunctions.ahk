@@ -328,8 +328,8 @@ if (PreloadList != "")
 
 CreateLFDList(Menu){
 local
-global ProjectFile, TempFile
-LFDListTempFile := GetIniSectionNames(TempFile)
+global ProjectFile, LFDSpeicherPfad
+LFDListLFDSpeicher := GetIniSectionNames(LFDSpeicherPfad)
 cb_UseLFD := GetIniValue(ProjectFile, "QuickSetupMenu", "cb_UseLFD", A_Space)
 cb_StartLFD := GetIniValue(ProjectFile, "LFDFinderMenu", "cb_StartLFD", A_Space) 
 if (Menu = "F2")
@@ -349,7 +349,7 @@ else if (Menu = "F3")
 		LFDList := FirstEntry . "||"
 	}
 
-Loop, Parse, LFDListTempFile, "`n"
+Loop, Parse, LFDListLFDSpeicher, "`n"
 	{
 	if Instr(A_LoopField, "LFD_")
 		{
@@ -384,12 +384,12 @@ else
 
 ShowSelectedLFDValues(LFDComboBoxField){
 local
-global TempFile 
+global LFDSpeicherPfad 
 GuiControlGet, ShowLFD ,, % LFDComboBoxField
 if (ShowLFD != "")
 	{ 
 	LFDSection := "LFD_" . ShowLFD
-	ShowLFDValues := GetIniSection(TempFile, LFDSection)
+	ShowLFDValues := GetIniSection(LFDSpeicherPfad, LFDSection)
 	if (ShowLFDValues != "")
 		MsgBox, 4096, %ShowLFD% , %ShowLFDValues%
 	else
@@ -401,26 +401,26 @@ else
 
 CheckLFDSectionNames(CurrentLFD){
 local
-global TempFile, TempFileName, IgnoreLFDConflict
+global LFDSpeicherPfad, LFDSpeicherName, IgnoreLFDConflict
 If (IgnoreLFDConflict = "true")
 	return
 else
 	{
-	LFDListTempFile := GetIniSectionNames(TempFile)
-	Loop, parse, LFDListTempFile, `n, `r
+	LFDListLFDSpeicher := GetIniSectionNames(LFDSpeicherPfad)
+	Loop, parse, LFDListLFDSpeicher, `n, `r
 			{
 			if (Instr(A_LoopField, "LFD_"))
 				{
 				LFDCheck := StrReplace(A_LoopField, "LFD_")
-				CurrentTempFileDigits := SubStr(LFDCheck, 1 , 2)
+				CurrentLFDSpeicherDigits := SubStr(LFDCheck, 1 , 2)
 				CurrentLFDDigits := SubStr(CurrentLFD, 1 , 2)
-				if (CurrentTempFileDigits != CurrentLFDDigits)
+				if (CurrentLFDSpeicherDigits != CurrentLFDDigits)
 					{
 					LFDConflictText = 
 					( LTrim Join
-					Im TempFile (%TempFileName%) beginnen die LFDs mit %CurrentTempFileDigits% (z.B. %LFDCheck%), die
-					%A_Space%aktuelle LFD ist jedoch %CurrentLFD%. Wahrscheinlich passt die aktuelle Projektdatei nicht
-					%A_Space%zur aktuellen Studie. Der aktuelle Durchlauf wird deshalb beendet. Bitte Projektdatei über das F10 Menü ändern!
+					Im LFDSpeicher des Projekts beginnen die LFDs mit %CurrentLFDSpeicherDigits% (z.B. %LFDCheck%), die
+					%A_Space%aktuelle LFD ist jedoch %CurrentLFD%. Wahrscheinlich passt das aktuelle Projekt nicht
+					%A_Space%zur aktuellen Studie. Der aktuelle Durchlauf wird deshalb beendet. Bitte Projekt über das F10 Menü ändern!
 					)
 					MsgBox, 4096, LFD Konflikt!, % LFDConflictText
 					Exit
@@ -482,12 +482,12 @@ return
 ;;;;  TEMP FILE Cleaning   ;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-CleanTempFile(TempFile){
+CleanLFDSpeicher(LFDSpeicherPfad){
 local
-FalseEntry := GetIniSection(TempFile, "LFD_")
+FalseEntry := GetIniSection(LFDSpeicherPfad, "LFD_")
 if (FalseEntry != "ERROR")
-	DeleteIniSection(TempFile, "LFD_")
-LFDSections := GetIniSectionNames(TempFile)
+	DeleteIniSection(LFDSpeicherPfad, "LFD_")
+LFDSections := GetIniSectionNames(LFDSpeicherPfad)
 LFDDigitsArray := {}
 LFDList := ""
 If (LFDSections != "ERROR")
@@ -530,16 +530,16 @@ If (LFDSections != "ERROR")
 			}
 		; InputBox, OutputVar , Title, Prompt, HIDE, Width, Height, X, Y, Locale, Timeout, Default
 		InputBoxTitle := "LFD Konflikt erkannt!"
-		InputBoxText := "Im TempFile starten LFDs mit unterschiedlichen Zahlen:`n" . LFDTypeList . "`nMit welchen zwei Zahlen beginnen die LFDs, die gelöscht werden sollen? (Schleife " . A_Index . "/" . LFDDigitsCount-1 . ")"
+		InputBoxText := "Im LFDSpeicher starten LFDs mit unterschiedlichen Zahlen:`n" . LFDTypeList . "`nMit welchen zwei Zahlen beginnen die LFDs, die gelöscht werden sollen? (Schleife " . A_Index . "/" . LFDDigitsCount-1 . ")"
 		ShowThisInputBox:
 		InputBox, CleanupDigit , %InputBoxTitle% , %InputBoxText%,, 250, 300,,,,,%InputBoxDefault%
 		if (ErrorLevel = 1) or (ErrorLevel = 0 And CleanupDigit = "")
 			{
 			AbbruchText =
 			( LTrim Join
-			Die Bereinigung des TempFiles wurde abgebrochen! 
+			Die Bereinigung des LFDSpeichers wurde abgebrochen! 
 			%A_Space%Um die Bereinigung zu wiederholen, bitte die aktuelle Projektdatei über das F10-Menü erneut auswählen.
-			%A_Space%Das TempFile enthält weiterhin fehlerhafte Eintragungen.
+			%A_Space%Der LFDSpeicher enthält weiterhin fehlerhafte Eintragungen.
 			)
 			MsgBox, 4096, Bereinigung abgebrochen!, %AbbruchText%
 			Break
@@ -551,9 +551,9 @@ If (LFDSections != "ERROR")
 			}
 		else
 			{
-			; Bereinigung TempFile
-			DeletedLFDs := CleanUpTempFile(TempFile, LFDList, CleanupDigit)
-			MsgBox, 4096, Bereinigung durchgeführt!, TempFile erfolgreich bereinigt! Gelöschte LFDs:`n%DeletedLFDs%
+			; Bereinigung LFDSpeicher
+			DeletedLFDs := CleanUpLFDSpeicher(LFDSpeicherPfad, LFDList, CleanupDigit)
+			MsgBox, 4096, Bereinigung durchgeführt!, LFDSpeicher erfolgreich bereinigt! Gelöschte LFDs:`n%DeletedLFDs%
 			LFDDigitsArray.Delete(CleanupDigit)
 			}
 		} ; CleanupLoop 
@@ -561,7 +561,7 @@ If (LFDSections != "ERROR")
 	} ; ende if LFDSections
 } ; ende function
 
-CleanUpTempFile(TempFile, LFDList , CleanupDigit){
+CleanUpLFDSpeicher(LFDSpeicherPfad, LFDList , CleanupDigit){
 local
 DeletedLFDs := ""
 Loop, parse, LFDList , `n, `r
@@ -570,7 +570,7 @@ Loop, parse, LFDList , `n, `r
 		{
 		ThisLFD := "LFD_" . A_LoopField
 		DeletedLFDs .= A_LoopField . "`n"
-		DeleteIniSection(TempFile, ThisLFD)
+		DeleteIniSection(LFDSpeicherPfad, ThisLFD)
 		}
 	} ; ende loop
 return DeletedLFDs
