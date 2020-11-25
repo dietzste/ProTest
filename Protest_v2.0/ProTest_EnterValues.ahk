@@ -153,7 +153,7 @@ return InputValue
 
 EnterMultiplePreloadValues(fnOCR, PreloadString){
 local 
-global TempFile
+global LFDSpeicherPfad
 global fast, med, DefaultSleep
 global SkipIfPreloadZero
 global CurrentLFD
@@ -172,7 +172,7 @@ EnterTheseValues := ""
 Loop, Parse, RealPreloadString, "|"
 	{
 	Preload := A_LoopField
-	PreloadValue := GetIniValue(TempFile, "LFD_" . CurrentLFD , Preload)
+	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload)
 	if (PreloadValue = 0) and (Preload = "gebtPRE" or Preload = "gebmPRE" or Preload = "gebjPRE")
 		{
 		SaveToHistory("VERBOSE:", fnOCR . " Preload-Angabe ungültig! " . Preload . "=0")
