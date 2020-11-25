@@ -257,8 +257,11 @@ Loop, Parse, MissingPreloadString, "|"
 			PreloadValue := A_LoopField
 			if (PreloadValue != "false")
 				{
-				CheckLFDSectionNames(CurrentLFD)
-				SaveIniValue(TempFile, "LFD_" . CurrentLFD, Preload, PreloadValue)
+				if (CurrentLFD != "")
+					{
+					CheckLFDSectionNames(CurrentLFD)
+					SaveIniValue(TempFile, "LFD_" . CurrentLFD, Preload, PreloadValue)
+					}
 				}
 			else
 				{
