@@ -89,24 +89,25 @@ return
 #if
 
 F1::
-MsgBox, 4096 , Überblick Tastenkürzel (F1) - Version: %ProTestVersion%, 
+MsgBox, 4096 , (F1) Überblick Tastenkürzel - Version: %ProTestVersion%, 
 (
-Interaktion mit  ProTest:
+Interaktion mit ProTest:
 F6		= Vorgang pausieren/fortfahren
 F12		= ProTest beenden
 Shift + F5%A_Tab%%A_Tab%= ProTest neu starten
-Shift + ESC%A_Tab%= Tastenkürzel (de-)aktivieren
+Shift + ESC%A_Tab%= alle ProTest-Tastenkürzel (de-)aktivieren
 Strg + u 		= auf Updates prüfen
 
-Funktionsmenüs:
-F2		= %GuiF2%
+Funktionen und Menüs:
+F2		=  (F2) Eingangsfragen überspringen
+F2		=  (F2) Zu einer Fragenummer
 F3		= %GuiF3%
 F4		= %GuiF4%
 F7		= %GuiF7%
 F8		= %GuiF8%
 F10		= %GuiF10%
-Menü offen + F1	= öffnet jeweiliges Hilfefenster
-Shift + F3/F8	= öffnet Menü zum Abrufen der Preload-Liste 
+Menü offen + F1	= Hilfefenster des Menüs
+Shift + F3/F8	= Menü zum Abrufen der Preload-Liste 
 
 Interaktion mit NIPO-Software:
 Strg + d 	 	= gibt aktuelles Datum ein
