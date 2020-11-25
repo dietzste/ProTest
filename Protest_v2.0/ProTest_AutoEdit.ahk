@@ -2,6 +2,8 @@
 AutoEdit:
 Gosub RemoveToolTip
 ; Fenster richtig darstellen
+AutoEditMenuName := " Preload-Liste laden"
+
 if WinExist(GuiF3) OR WinExist(GuiF8)
 	{
 	if WinExist(GuiF3)
@@ -38,11 +40,11 @@ else
 Gui, 5:+AlwaysOnTop ToolWindow
 Gui, 5:Add, Groupbox, x9 y10 w322 h180 cNavy, Hinterlegte Preloads durchsuchen
 Gui, 5:Add, Edit, x16 y30 w120 h20 %5GuiDis% ve_SearchEdit g5GuiSearchEdit
-Gui, 5:Add, Button, x28 y55 w100 h20 %5GuiDis% g5GuiAddPreload, Hinzufügen
-Gui, 5:Add, Button, x28 y77 w100 h20 g5GuiLoadPreloadList, Lade Preloadliste
+Gui, 5:Add, Button, x22 y55 w106 h20 %5GuiDis% g5GuiAddPreload, Hinzufügen
+Gui, 5:Add, Button, x22 y77 w106 h20 g5GuiLoadPreloadList, Preload-Liste laden
 Gui, 5:Add, Listbox, x152 y30 w170 h150  %5GuiDis% Sort vAutoEditResult , % PreloadListBox
 Gui, 5:Add, Text, x50 y195 w280 h20, Hinweis: Preloadliste abhängig von LFD-Eingabe
-Gui, 5:Show, x%AutoEditX% y%AutoEditY% %5GuiCenter% Autosize, Preload-Liste laden
+Gui, 5:Show, x%AutoEditX% y%AutoEditY% %5GuiCenter% Autosize, %AutoEditMenuName%
 return 
 
 5GuiClose:
