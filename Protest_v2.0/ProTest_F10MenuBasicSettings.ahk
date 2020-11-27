@@ -438,7 +438,7 @@ if FileExist(OldTempFilePath)
 CleanLFDSpeicher(LFDSpeicherPfad)
 
 ; HistoryFile
-global HistoryFileName := "Logbuch_" . ProjectName . A_YYYY . "_" . A_MM . "_" . A_DD
+global HistoryFileName := "Logbuch_" . ProjectName . "_" . A_YYYY . "_" . A_MM . "_" . A_DD
 global HistoryFile := ProjectFolder  . "\" . HistoryFileName . ".txt"
 
 ; PreloadList
