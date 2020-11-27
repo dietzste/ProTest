@@ -158,17 +158,17 @@ if (TestOCR != "")
 	; Calculate Show area
 	ShowArea := e_width*e_height
 	if (ShowArea < 400)
-		MsgBox, 4096, Test OCR, %TestOCR% `n`nTipp: Die Fläche darf auch größer sein.
+		MsgBox, 4096, Testergebnis, %TestOCR% `n`nTipp: Die Fläche darf auch größer sein.
 	else
-		MsgBox, 4096, Test OCR, %TestOCR%
+		MsgBox, 4096, Testergebnis, %TestOCR%
 	}
 else
 	{
 	++OCRFailedCount
 	if (OCRFailedCount = 1)
-		MsgBox, 4096, Test der Texterkennung, Texterkennung fehlgeschlagen.
+		MsgBox, 4096, Testergebnis , Texterkennung fehlgeschlagen.
 	else
-		MsgBox, 4096, Test der Texterkennung, Texterkennung fehlgeschlagen. `n`nTipp: Bitte TeamViewer-Einstellungen überprüfen.
+		MsgBox, 4096, Testergebnis, Texterkennung fehlgeschlagen. `n`nTipp: Bitte TeamViewer-Einstellungen überprüfen.
 	}
 return
 
@@ -176,7 +176,7 @@ ScaleFactorScan:
 AlarmIfCapture2TextIsNotRunning()
 CheckWorkWindow()
 e_scaleStatus := e_scale
-TestMessage := "Ergebnisse OHNE Korrektur der Texterkennung`n`n"
+TestMessage := "Ergebnisse der Texterkennung (ohne Korrektur) `n`n"
 e_scale := 3.5
 Loop, 16 {
 sleep, SleepAfterEnter
@@ -187,7 +187,7 @@ e_scale := e_scale + 0.1
 e_scale := Round(e_scale, 1)
 }
 TestMessage .= "`n`n Die Texterkennungssoftware wird jetzt neu gestartet..."
-MsgBox, 4096, Scale Factor, % TestMessage
+MsgBox, 4096, Ergebnis Scale Factor Scan, % TestMessage
 e_scale := e_scaleStatus
 SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "ScaleFactor", e_scale)
 CloseCapture2Text(Captur2TextPID)
@@ -499,13 +499,13 @@ SettingUpProTest(ProjectFileName, Modus){
 local
 SettingUpFiles(ProjectFileName)
 Gui 11:Destroy
-SettingUpCapture2Text()
-Gui 10:Destroy
 ThisFileName := StrReplace(ProjectFileName, ".ini")
 if (Modus = "Select")
 	Msgbox, 4096, Projekt ausgewählt, Das Projekt %ThisFileName% wurde erfolgreich ausgewählt.
 else if (Modus = "Create")
 	Msgbox, 4096, Projekt erstellt, Neues Projekt erstellt: %ThisFileName%.
+SettingUpCapture2Text()
+Gui 10:Destroy
 }
 
 SettingUpCapture2Text(){
