@@ -79,7 +79,7 @@ if (fnOCR = LastFn and fnOCR != "")
 			}
 		else
 			{
-			Msgbox, 4096, Das Überspringen von Fragenummern wurde beendet!, Für die aktuelle Fragenummer ist keine Eingabe definiert. Um das Überspringen fortzuführen, bitte manuelle Eingabe tätigen und über die F2-Taste das Überspringen erneut starten. `n`nEs wurden %Index% Fragen übersprungen. 
+			Msgbox, 4096, Das Überspringen von Fragenummern wurde beendet!, Für die aktuelle Fragenummer ist keine Eingabe definiert. Um das Überspringen fortzuführen, bitte eine manuelle Eingabe tätigen und über die F2-Taste das Überspringen erneut starten. `n`nEs wurden %Index% Fragen übersprungen. 
 			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe für Fragenummer definieren? Nein")
 			Exit
 			}
