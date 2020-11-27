@@ -10,6 +10,7 @@ global TriedXModulSkip
 global SleepWhileOCREmpty
 global LastFn
 global MaxSkips 
+global GuiF7
 SetKeyDelay, fast
 
 ; fnOCR empty?
@@ -67,17 +68,19 @@ if (fnOCR = LastFn and fnOCR != "")
 	if (SameFn = MaxSkips)
 		{
 		; wenn gleiche fn MaxSkips-mal...
-		Msgbox, 4132, Kein verweigert Button vorhanden (fn: %fnOCR%)!, Jetzt manuelle Eingabe tätigen? (Danach und mit 'F6' fortfahren)
+		Msgbox, 4132, Kein verweigert Button vorhanden (fn: %fnOCR%)!, Soll für die aktuelle Fragenummer ein Wert definiert werden? 
 		IfMsgBox, Yes
 			{
-			SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? JA")
-			SaveToHistory("PAUSE")
-			Send, {F6}
+			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe für Fragenummer definieren? Ja")
+			Send, {F7}
+			WinWaitActive, %GuiF7%
+			WinWaitClose, %GuiF7%
 			return fnSearchIsOver := false
 			}
 		else
 			{
-			SaveToHistory("Kein verweigert-Button vorhanden. Eigene Aktion durchführen? Nein")
+			Msgbox, 4096, Das Überspringen von Fragenummern wurde beendet!, Für die aktuelle Fragenummer ist keine Eingabe definiert. Um das Überspringen fortzuführen, bitte manuelle Eingabe tätigen und über die F2-Taste das Überspringen erneut starten. `n`nEs wurden %Index% Fragen übersprungen. 
+			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe für Fragenummer definieren? Nein")
 			Exit
 			}
 		}
