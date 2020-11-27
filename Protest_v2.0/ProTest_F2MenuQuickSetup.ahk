@@ -199,7 +199,20 @@ for i, control in 2GuiControlArray
 	if (%control% = GetIniValue(BasicFile, QuickSetupMenu, control))
 		DeleteIniValue(ProjectFile, QuickSetupMenu, control)
 	else
-		SaveIniValue(ProjectFile, QuickSetupMenu, control, %control%)
+		{
+		if (control != "cb_UseLFD")
+			SaveIniValue(ProjectFile, QuickSetupMenu, control, %control%)
+		else if (%control% != "")
+			{
+			if (StrLen(%control%) != LFDLimit)
+				{
+				MsgBox, 4096, Zu wenig Stellen!, Diese LFD hat zu wenig Stellen!
+				Exit
+				}
+			else
+				SaveIniValue(ProjectFile, QuickSetupMenu, control, %control%)
+			} ; ende else
+		} ; ende else
 	}
 ; Datumseingaben speichern
 SaveIniValue(ProjectFile, QuickSetupMenu, "e_Day", e_Day)
