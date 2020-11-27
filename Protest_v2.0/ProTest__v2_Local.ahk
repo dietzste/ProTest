@@ -98,7 +98,7 @@ return vRet ? vIsElevated : -1
 
 ; Name Menüs
 GuiF2  := " (F2) Hauptmenü "
-GuiF3  := " (F3) Passende LFDs finden"
+GuiF3  := " (F3) Nach einer passenden LFD suchen"
 GuiF4  := " (F4) Erweiterte Eingaben"
 GuiF7  := " (F7) Antworten für Fragenummern definieren"
 GuiF8  := " (F8) Preload-Werte abrufen"
