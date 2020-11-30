@@ -125,7 +125,7 @@ fast := 100
 med := 130
 TabVar := ""
 NewEntryF7 := true
-global Captur2TextPID := GetPID("Capture2Text.exe")
+global Capture2TextPID := GetPID("Capture2Text.exe")
 
 GetPID(ProgramName){
 Process, Exist , %ProgramName%
