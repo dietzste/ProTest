@@ -190,7 +190,7 @@ TestMessage .= "`n`n Die Texterkennungssoftware wird jetzt neu gestartet..."
 MsgBox, 4096, Ergebnis Scale Factor Scan, % TestMessage
 e_scale := e_scaleStatus
 SaveIniValue(Capture2TextIniFileAppDataPath, "OCR", "ScaleFactor", e_scale)
-CloseCapture2Text(Captur2TextPID)
+CloseCapture2Text(Capture2TextPID)
 WinSet, AlwaysOnTop, Off, %GuiF10%
 SettingUpCapture2Text()
 WinSet, AlwaysOnTop, On, %GuiF10%
@@ -358,7 +358,7 @@ Gui 11:Destroy
 if (NoActionButton = "ProTest beenden")
 	{
 	Msgbox, 4096,ProTest, ProTest wird beendet!
-	CloseCapture2Text(Captur2TextPID)
+	CloseCapture2Text(Capture2TextPID)
 	ExitApp
 	}
 else 
@@ -546,10 +546,10 @@ else
 	FileCopy, %ConfigFolder%\Capture2Text.ini, %Capture2TextIniFileAppDataPath%
 
 ; Start Capture2Text if not running
-global Captur2TextPID
-if (Captur2TextPID = 0) ; Capture2Text not running
+global Capture2TextPID
+if (Capture2TextPID = 0) ; Capture2Text not running
 	{
 	Run, Capture2Text.exe , %Capture2TextWorkDir% ,, PID
-	global Captur2TextPID := PID
+	global Capture2TextPID := PID
 	}
 }
