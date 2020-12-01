@@ -286,6 +286,8 @@ MissingPreloadString := ""
 Loop, Parse, PreloadString , "|"
 	{
 	Preload := A_Loopfield
+	if Preload is digit
+		Continue
 	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload, "Missing")
 	if (PreloadValue = "Missing")
 		{

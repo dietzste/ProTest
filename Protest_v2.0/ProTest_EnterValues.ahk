@@ -165,6 +165,18 @@ EnterTheseValues := ""
 Loop, Parse, RealPreloadString, "|"
 	{
 	Preload := A_LoopField
+	if Preload is digit
+		{
+		; Zahlen 
+		fnValue := Preload
+		Send, %fnValue%{Enter}
+		Sleep, SleepAfterEnter
+		if (A_Index = PreloadCount)
+			EnterTheseValues .= fnValue
+		else
+			EnterTheseValues .= fnValue . "/"
+		Continue
+		}
 	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload)
 	if (PreloadValue = 0) and (Preload = "gebtPRE" or Preload = "gebmPRE" or Preload = "gebjPRE")
 		{
