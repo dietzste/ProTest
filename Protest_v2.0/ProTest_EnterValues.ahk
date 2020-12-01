@@ -15,25 +15,18 @@ if StrLen(fnValue) > MaxLengthfnValue
 	
 SaveToHistory("VERBOSE:", fnOCR . " fnValue: " fnValue)
 
-if (LastFn = fnOCR)
-	{
-	static SameFn := false
-	if (SameFn = true)
-		{
-		Msgbox, 4096, Gleiche Fn erkannt!, Die Fragenummer %fnOCR% war im letzten Durchgang bereits vorhanden. Der Durchlauf wird vorsichtshalber gestoppt!
-		SaveToHistory("Gleiche Fragenummer erkannt! Durchlauf abgebrochen.")
-		Exit
-		}
-	SameFn := true
-	Sleep, SleepAfterEnter
-	return 
-	}
-
 ; Check Index
 if (params.MaxIndex() = 1)
 	{
 	Index := params[1]
 	MsgboxZusatz := "Es wurden " . Index . " Fragen übersprungen."
+	}
+
+if (LastFn = fnOCR)
+	{
+	Msgbox, 4096, Gleiche Fragenummer erkannt!, Die Fragenummer %fnOCR% war im letzten Durchgang bereits vorhanden. Der Durchlauf wird vorsichtshalber gestoppt! `n`n%MsgboxZusatz%
+	SaveToHistory("Gleiche Fragenummer erkannt! Durchlauf abgebrochen.")
+	Exit
 	}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
