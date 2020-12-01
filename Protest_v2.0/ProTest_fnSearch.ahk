@@ -65,7 +65,7 @@ if (fnOCR = LastFn and fnOCR != "")
 	if (SameFnCount >= MaxSkips)
 		{
 		; wenn gleiche fn MaxSkips-mal...
-		Msgbox, 4132, Kein verweigert-Button vorhanden (fn: %fnOCR%)!, Soll für die aktuelle Fragenummer ein Wert definiert werden? 
+		Msgbox, 4132, Kein verweigert-Button vorhanden (fn: %fnOCR%)!, Soll für die aktuelle Fragenummer eine Eingabe definiert werden? 
 		IfMsgBox, Yes
 			{
 			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe für Fragenummer definieren? Ja")
