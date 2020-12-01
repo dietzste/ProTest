@@ -82,8 +82,8 @@ Eingaben unter 'Fragenummer(n)' können einstellig oder
 mehrstellig sein (z.B. 3, 30, 30312 usw.). Skip-Button
 'verweigert': drückt verweigert Button. 'Clear&Back' drückt
 Clear und Back hintereinander (= Rückwärtssuche).
-Beim Auswählen von 'Erweiterte Optionen' (Ein) öffnet sich
-das F4-Menü (Erweiterte Optionen).
+Beim Auswählen von 'Erweiterte Eingaben' (Ein) öffnet sich
+das F4-Menü (Erweiterte Eingaben).
 
 {Enter} = drückt Enter Taste
 )
@@ -113,7 +113,7 @@ Start LFD ist der StartPunkt für die LFD-Suche.
 Button 'LFD Werte' zeigt Werte der Start LFD an
 (Quelle: %LFDSpeicherName%). 
 
-Preload-Liste: öffnet einen weiteren Editor, mit dem die 
+Preload-Liste: öffnet einen weiteres Menü, mit dem die 
 Preloadliste geladen werden kann. über den Button 
 'Hinzufügen' werden gewählte Preload-Variablen in das 
 Menü eingefügt. (Auch im Fenster F8 anwendbar)
@@ -135,11 +135,11 @@ fn	Wert
 
 Legende:
 2	   -> gibt Wert 2 ein
-Ende	   -> beendet Durchlauf
 Get(sexPRE) -> ruft Preload sexPRE ab, gibt Wert ein
 [Aufgaben]  -> drückt Button mit dem Wort 'Aufgaben'
+Ende	   -> beendet Durchlauf
 
-Zum Abrufen meherer Preload-Werte 
+Zum Abrufen mehrerer Preload-Werte 
 Get(Proload1/Preload2...) eingeben.
 
 )
@@ -168,7 +168,6 @@ Breite		= Breite des Suchfensters (in Pixel)
 Der Button 'Show' zeigt den (ungefähren) Bereich
 an, in der die Texterkennung sucht. Der Button 
 'Test' führt eine Testung der Einstellungen durch.
-Scale factor (Default: 4.0)
 
 Einstellungen ändern:
 1) Button ändern drücken
