@@ -206,7 +206,7 @@ Result := L_TryClickingButton("&Clear", 1)
 if (Result = "false")
 	{
 	SaveToHistory("VERBOSE:", "Xmodul: Kein Clear-Button vorhanden (=XModul?)")
-	Msgbox, 4132, XModul, Soll versucht werden jetzt das Xmodul zu überspringen?
+	Msgbox, 4132, XModul, Soll versucht werden, jetzt das X-Modul zu überspringen?
 	IfMsgBox, Yes
 		{
 		SaveToHistory("XModul überspringen?", "Ja")
