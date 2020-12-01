@@ -22,7 +22,7 @@ WinKill, %HistoryFileName%
 If (r_Main1 = 1) OR (r_Main3 = 1)
 	{
 	;;; INTRO
-	SaveToHistory("### Eingangsfragen ï¿½berspringen ###")
+	SaveToHistory("### Eingangsfragen überspringen ###")
 	SetKeyDelay, fast 
 	if (c_Beginning = 1)
 		{
@@ -94,7 +94,7 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 			LastFn := fnOCR
 		} Until (IntroIsOver = true)
 		if (TimeOutMsgSkippedIntro > 0)
-			MsgBox, 4096, Eingangsfragen ï¿½bersprungen!, Es wurden alle definierten Eingangsfragen ï¿½bersprungen! `n`nFï¿½r die Fragenummer "%fnOCR%" ist keine Eingabe definiert., %TimeOutMsgSkippedIntro%
+			MsgBox, 4096, Eingangsfragen übersprungen!, Es wurden alle definierten Eingangsfragen übersprungen! `n`nFür die Fragenummer "%fnOCR%" ist keine Eingabe definiert., %TimeOutMsgSkippedIntro%
 		SaveToHistory("### ENDE Eingangsfragen ###")
 		}
 	}
@@ -206,15 +206,15 @@ else
 
 OCRIsEmpty(){
 local
-Msgbox, 4132, Keine Fragenummer vorhanden!, Es konnte keine Fragenummer ausgelesen werden. Falls eine Fragenummer im aktuellen Fenster vorhanden ist: Soll die Texterkennung noch einmal durchgefï¿½hrt werden?
+Msgbox, 4132, Keine Fragenummer vorhanden!, Es konnte keine Fragenummer ausgelesen werden. Falls eine Fragenummer im aktuellen Fenster vorhanden ist: Soll die Texterkennung noch einmal durchgeführt werden?
 IfMsgBox, Yes
 	{
-	SaveToHistory("Keine Fragenummer vorhanden. Texterkennung erneut durchfï¿½hren? Ja")
+	SaveToHistory("Keine Fragenummer vorhanden. Texterkennung erneut durchführen? Ja")
 	return Result := "Retry"
 	}
 else
 	{
-	SaveToHistory("Keine Fragenummer vorhanden. Texterkennung erneut durchfï¿½hren? Nein")
+	SaveToHistory("Keine Fragenummer vorhanden. Texterkennung erneut durchführen? Nein")
 	return Result := "Exit"
 	}
 }
@@ -372,7 +372,7 @@ if (ShowLFD != "")
 	if (ShowLFDValues != "")
 		MsgBox, 4096, %ShowLFD% , %ShowLFDValues%
 	else
-		MsgBox, 4096, %ShowLFD% , Fï¿½r "%ShowLFD%" sind noch keine Werte vorhanden!
+		MsgBox, 4096, %ShowLFD% , Für "%ShowLFD%" sind noch keine Werte vorhanden!
 	}
 else
 	MsgBox, 4096, ShowLFD, Eingabe ist leer!
@@ -399,7 +399,7 @@ else
 					( LTrim Join
 					Im LFDSpeicher des Projekts beginnen die LFDs mit %CurrentLFDSpeicherDigits% (z.B. %LFDCheck%), die
 					%A_Space%aktuelle LFD ist jedoch %CurrentLFD%. Wahrscheinlich passt das aktuelle Projekt nicht
-					%A_Space%zur aktuellen Studie. Der aktuelle Durchlauf wird deshalb beendet. Bitte Projekt ï¿½ber das F10 Menï¿½ ï¿½ndern!
+					%A_Space%zur aktuellen Studie. Der aktuelle Durchlauf wird deshalb beendet. Bitte Projekt über das F10 Menü ändern!
 					)
 					MsgBox, 4096, LFD Konflikt!, % LFDConflictText
 					Exit
@@ -509,7 +509,7 @@ If (LFDSections != "ERROR")
 			}
 		; InputBox, OutputVar , Title, Prompt, HIDE, Width, Height, X, Y, Locale, Timeout, Default
 		InputBoxTitle := "LFD Konflikt erkannt!"
-		InputBoxText := "Im LFDSpeicher starten LFDs mit unterschiedlichen Zahlen:`n" . LFDTypeList . "`nMit welchen zwei Zahlen beginnen die LFDs, die gelï¿½scht werden sollen? (Schleife " . A_Index . "/" . LFDDigitsCount-1 . ")"
+		InputBoxText := "Im LFDSpeicher starten LFDs mit unterschiedlichen Zahlen:`n" . LFDTypeList . "`nMit welchen zwei Zahlen beginnen die LFDs, die gelöscht werden sollen? (Schleife " . A_Index . "/" . LFDDigitsCount-1 . ")"
 		ShowThisInputBox:
 		InputBox, CleanupDigit , %InputBoxTitle% , %InputBoxText%,, 250, 300,,,,,%InputBoxDefault%
 		if (ErrorLevel = 1) or (ErrorLevel = 0 And CleanupDigit = "")
@@ -517,8 +517,8 @@ If (LFDSections != "ERROR")
 			AbbruchText =
 			( LTrim Join
 			Die Bereinigung des LFDSpeichers wurde abgebrochen! 
-			%A_Space%Um die Bereinigung zu wiederholen, bitte die aktuelle Projektdatei ï¿½ber das F10-Menï¿½ erneut auswï¿½hlen.
-			%A_Space%Der LFDSpeicher enthï¿½lt weiterhin fehlerhafte Eintragungen.
+			%A_Space%Um die Bereinigung zu wiederholen, bitte die aktuelle Projektdatei über das F10-Menü erneut auswählen.
+			%A_Space%Der LFDSpeicher enthält weiterhin fehlerhafte Eintragungen.
 			)
 			MsgBox, 4096, Bereinigung abgebrochen!, %AbbruchText%
 			Break
@@ -532,7 +532,7 @@ If (LFDSections != "ERROR")
 			{
 			; Bereinigung LFDSpeicher
 			DeletedLFDs := CleanUpLFDSpeicher(LFDSpeicherPfad, LFDList, CleanupDigit)
-			MsgBox, 4096, Bereinigung durchgefï¿½hrt!, LFDSpeicher erfolgreich bereinigt! Gelï¿½schte LFDs:`n%DeletedLFDs%
+			MsgBox, 4096, Bereinigung durchgeführt!, LFDSpeicher erfolgreich bereinigt! Gelöschte LFDs:`n%DeletedLFDs%
 			LFDDigitsArray.Delete(CleanupDigit)
 			}
 		} ; CleanupLoop 

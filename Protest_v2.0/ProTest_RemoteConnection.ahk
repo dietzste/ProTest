@@ -126,7 +126,9 @@ SendWait(">Restart", true)
 
 L_WaitUntilPreloadsLoaded(){
 local
+MsgWindow("Lade Preload-Informationen...")
 SendWait(">LoadingPreloads", true)
+MsgWindow()
 }
 
 L_ReadPreload(Preload){
