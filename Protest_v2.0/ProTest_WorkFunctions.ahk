@@ -70,8 +70,6 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		{
 		ListLines On
 		Sleep, DefaultSleep
-		if (CurrentLFD = "" and StudyWithLFDs = 1)
-			CurrentLFD := InputBoxLFD()
 		global IntroIsOver := false
 		Index := 0
 		loop {
