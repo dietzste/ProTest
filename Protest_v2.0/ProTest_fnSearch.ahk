@@ -30,7 +30,7 @@ if (fnOCR = "")
 		}
 	else
 		{
-		; Prï¿½fmodul ï¿½berspringen?
+		; Prüfmodul überspringen?
 		SleepWhileOCREmpty := SleepWhileOCREmpty-50
 		global ProjectFile, r_AdvancedON
 		if (r_AdvancedON = 1 AND GetIniValue(ProjectFile, "AdvancedSearchMenu", "c_XModul", 1) = 1)
@@ -46,8 +46,6 @@ if (fnOCR = "")
 					Result := OCRIsEmpty()
 					if (Result = "Exit")
 						Exit
-					else if (Result = "Pause")
-						Pause
 					}
 				else
 					return fnSearchIsOver := false
@@ -57,8 +55,6 @@ if (fnOCR = "")
 	Result := OCRIsEmpty()
 	if (Result = "Exit")
 		Exit
-	else if (Result = "Pause")
-		Pause
 	}
 
 ; Check - Doppelte Schleife?
@@ -69,10 +65,10 @@ if (fnOCR = LastFn and fnOCR != "")
 	if (SameFnCount >= MaxSkips)
 		{
 		; wenn gleiche fn MaxSkips-mal...
-		Msgbox, 4132, Kein verweigert-Button vorhanden (fn: %fnOCR%)!, Soll fï¿½r die aktuelle Fragenummer ein Wert definiert werden? 
+		Msgbox, 4132, Kein verweigert-Button vorhanden (fn: %fnOCR%)!, Soll für die aktuelle Fragenummer ein Wert definiert werden? 
 		IfMsgBox, Yes
 			{
-			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe fï¿½r Fragenummer definieren? Ja")
+			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe für Fragenummer definieren? Ja")
 			Send, {F7}
 			WinWaitActive, %GuiF7%
 			WinWaitClose, %GuiF7%
@@ -81,8 +77,8 @@ if (fnOCR = LastFn and fnOCR != "")
 		else
 			{
 			RealIndex := Index - SameFnCount
-			Msgbox, 4096, Das ï¿½berspringen von Fragenummern wurde beendet!, Fï¿½r die aktuelle Fragenummer ist keine Eingabe definiert. Um das ï¿½berspringen fortzufï¿½hren, bitte eine manuelle Eingabe tï¿½tigen und ï¿½ber die F2-Taste das ï¿½berspringen erneut starten. `n`nEs wurden %RealIndex% Fragen ï¿½bersprungen. 
-			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe fï¿½r Fragenummer definieren? Nein")
+			Msgbox, 4096, Das Überspringen von Fragenummern wurde beendet!, Für die aktuelle Fragenummer ist keine Eingabe definiert. Um das Überspringen fortzuführen, bitte eine manuelle Eingabe tätigen und über die F2-Taste das Überspringen erneut starten. `n`nEs wurden %RealIndex% Fragen übersprungen. 
+			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe für Fragenummer definieren? Nein")
 			Exit
 			}
 		}
@@ -144,8 +140,8 @@ for i, TargetFn in TargetFnArray
 	CompareFn := SubStr(fnOCR, 1 , TargetfnLength)
 	if (CompareFn = TargetFn)
 		{
-		Msgbox, 4096, Durchlauf beendet!, Ziel-fn "%TargetFn%" erreicht! Es wurden %Index% Fragen ï¿½bersprungen.
-		SaveToHistory(fnOCR, " MATCH mit Ziel-fn: " . TargetFn, Index " Frage(n) ï¿½bersprungen")
+		Msgbox, 4096, Durchlauf beendet!, Ziel-fn "%TargetFn%" erreicht! Es wurden %Index% Fragen übersprungen.
+		SaveToHistory(fnOCR, " MATCH mit Ziel-fn: " . TargetFn, Index " Frage(n) übersprungen")
 		return true
 		}
 	}
@@ -206,26 +202,26 @@ return true
 TrySkipXModul(){
 local
 ; keine fn/ verweigert Button vorhanden 
-; Test ob Pï¿½fmodul X (hat kein clear-Button)
+; Test ob Püfmodul X (hat kein clear-Button)
 Result := L_TryClickingButton("&Clear", 1)
 if (Result = "false")
 	{
 	SaveToHistory("VERBOSE:", "Xmodul: Kein Clear-Button vorhanden (=XModul?)")
-	Msgbox, 4132, XModul, Soll versucht werden, jetzt das X-Modul zu ï¿½berspringen?
+	Msgbox, 4132, XModul, Soll versucht werden, jetzt das X-Modul zu überspringen?
 	IfMsgBox, Yes
 		{
-		SaveToHistory("XModul ï¿½berspringen?", "Ja")
+		SaveToHistory("XModul überspringen?", "Ja")
 		; kein Clear-Button vorhanden, wahrscheinlich Xmodul
 		if (L_SkipXModul() = "true")
 			{
-			SaveToHistory("# XPrï¿½fmodul ï¿½bersprungen #")
+			SaveToHistory("# XPrüfmodul übersprungen #")
 			return true
 			}
 		else
-			Msgbox, 4096, Ups!, Versuch XModul zu ï¿½bersprungen ist gescheitert!
+			Msgbox, 4096, Ups!, Versuch XModul zu übersprungen ist gescheitert!
 		}
 	else
-		SaveToHistory("XModul ï¿½berspringen?", "Nein")
+		SaveToHistory("XModul überspringen?", "Nein")
 	}
 else
 	SaveToHistory("VERBOSE:", "Xmodul: Clear-Button vorhanden (= Nicht XModul)")
