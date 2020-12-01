@@ -53,7 +53,9 @@ If (r_Main1 = 1) OR (r_Main3 = 1)
 		EnterLFD(cb_UseLFD)
 		CurrentLFD := cb_UseLFD
 		SaveToHistory("LFD Eingabe: " . CurrentLFD)
+		MsgWindow("Lade Preload-Informationen...")
 		L_WaitUntilPreloadsLoaded()
+		MsgWindow()
 		Sleep, DefaultSleep
 		}
 	if (r_LFD2 = 1)
