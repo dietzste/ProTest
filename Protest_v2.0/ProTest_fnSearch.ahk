@@ -62,11 +62,11 @@ if (fnOCR = "")
 	}
 
 ; Check - Doppelte Schleife?
-Static SameFn := 0
+Static SameFnCount := 0
 if (fnOCR = LastFn and fnOCR != "")
 	{
-	++SameFn
-	if (SameFn = MaxSkips)
+	++SameFnCount
+	if (SameFnCount >= MaxSkips)
 		{
 		; wenn gleiche fn MaxSkips-mal...
 		Msgbox, 4132, Kein verweigert Button vorhanden (fn: %fnOCR%)!, Soll f�r die aktuelle Fragenummer ein Wert definiert werden? 
@@ -80,14 +80,15 @@ if (fnOCR = LastFn and fnOCR != "")
 			}
 		else
 			{
-			Msgbox, 4096, Das �berspringen von Fragenummern wurde beendet!, F�r die aktuelle Fragenummer ist keine Eingabe definiert. Um das �berspringen fortzuf�hren, bitte eine manuelle Eingabe t�tigen und �ber die F2-Taste das �berspringen erneut starten. `n`nEs wurden %Index% Fragen �bersprungen. 
+			RealIndex := Index - SameFnCount
+			Msgbox, 4096, Das �berspringen von Fragenummern wurde beendet!, F�r die aktuelle Fragenummer ist keine Eingabe definiert. Um das �berspringen fortzuf�hren, bitte eine manuelle Eingabe t�tigen und �ber die F2-Taste das �berspringen erneut starten. `n`nEs wurden %RealIndex% Fragen �bersprungen. 
 			SaveToHistory("Kein verweigert-Button vorhanden. Eingabe f�r Fragenummer definieren? Nein")
 			Exit
 			}
 		}
 	}
 else
-	SameFn := 0
+	SameFnCount := 0
 
 TriedAnywaySkip := false
 ; MATCH with Target Fn?
