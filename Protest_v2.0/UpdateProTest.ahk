@@ -14,7 +14,6 @@ UpdateLogFile := "UpdateLog_" . A_YYYY .  A_MM . A_DD . ".txt"
 UpdateTimeStemp :=  A_DD . "." . A_MM . "." . A_YYYY
 
 ;;; UPDATE CONTROL ;;;
-
 OverwriteSectionArray := { 1: "P41599PRE"
 , 2: "P41598PRE"}
 
@@ -168,24 +167,31 @@ return
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
 ; (4) Soft Update
-Softupdate:
+SoftUpdate:
 ; (4.1) Compare Files
-FilestoCompareCount := CompareFiles()
-SaveToUpdateLog(FilestoCompareCount . " ini-Datei(en) unterschiedlich")
+CompareIniFilesArray := []
+IniFilestoCompareCount := CompareIniFiles()
+SaveToUpdateLog(IniFilestoCompareCount . " ini-Datei(en) unterschiedlich")
 ; (4.2) Update Changes
 WaitingProcessWindow(LatestVersion, "Vergleiche ini-Dateien")
-For Index, Filename in CompareFilesArray
+For Index, Filename in CompareIniFilesArray
 	{
 	OldFile := ConfigFolder . "\" . Filename
 	Newfile := UpdateFolderPath . "\Config\" . Filename
-	SaveToUpdateLog( Index . "/" . FilestoCompareCount .  " ### Update " . Filename . " ###")
 	if (Filename = "Capture2Text.ini")
 		{
 		FileCopy, %Newfile%, %OldFile%, 1
 		Continue
 		}
+	SaveToUpdateLog( Index . "/" . IniFilestoCompareCount .  " ### Update " . Filename . " ###")
 	CompareIniSections(OldFile, NewFile)
 	}
+; Integrate Old Library
+WaitingProcessWindow(LatestVersion, "Integriere alte Library")
+OldLibraryFile := ConfigFolder . "\Library.ini"
+CleanOldLibrary(OldLibraryFile)
+IntegrateOldLibrary(OldLibraryFile)
+; Überschreibe Exe-Dateien
 WaitingProcessWindow(LatestVersion, "Überschreibe exe-Dateien")
 OverwriteExeFiles()
 WaitingProcessWindow(LatestVersion, "Entferne Update-Ordner")
@@ -193,69 +199,67 @@ SaveToUpdateLog("Update auf Version " . LatestVersion . " abgeschlossen!")
 FileRemoveDir, %UpdateFolderPath% , 1
 Gosub 15GuiClose
 MsgBox, 4096, Update erfolgreich!, Update auf Version %LatestVersion% abgeschlossen!
-;if (RemoteClientChanged = true)
-;	MsgBox, 4096, RemoteClient Info, Der RemoteClient wurde erneuert! Bitte RemoteClient (auf dem Remote- Rechner) ersetzen!
-;else
-;	MsgBox, 4096, RemoteClient Info, Der RemoteClient ist gleich geblieben. Kein Austausch nötig.
 RunProTest()
 ExitApp
 return 
 
 ;;;;;; SOFT UPDATE FUNCTIONS ;;;;;;;;;;
 
-CompareFiles(){
+CompareIniFiles(){
 local
 global ConfigFolder
 global UpdateFolderPath
-global CompareFilesArray := []
+global CompareIniFilesArray
 FilesCount := 0
 Loop, Files, %UpdateFolderPath%\Config\*.ini
 	{
 	UpdateFile := UpdateFolderPath . "\Config\" . A_LoopFileName
 	OldFile := ConfigFolder . "\" . A_LoopFileName
-	if Instr(OldFile, "BasicSettings")
+	if Instr(OldFile, "BasicSettings.ini")
 		{
-		DeleteOldSettings()
+		DeleteOldKeys(OldFile)
 		DeleteOldIniSections(OldFile)
-		CompareFilesArray[++FilesCount] := A_LoopFileName
+		CompareIniFilesArray[++FilesCount] := A_LoopFileName
 		Continue
-		}
-	DeleteOldIniSections(OldFile)
-	if Instr(OldFile, "Library")
-		{
-		CleanLibrary(OldFile)
 		}
 	FileGetSize, UpdateSize , %UpdateFile%
 	FileGetSize, InstalledSize, %OldFile%
 	if (UpdateSize != InstalledSize)
 		{
-		CompareFilesArray[++FilesCount] := A_LoopFileName
 		if (InstalledSize = "")
 			{
+			; File noch nicht vorhanden
 			FileCopy, %UpdateFile%, %OldFile%
 			SaveToUpdateLog("Neue Datei: " . A_LoopFileName)
 			}
+		else
+			CompareIniFilesArray[++FilesCount] := A_LoopFileName
 		}
 	} ; ende Loop
-return CompareFilesArray.Count()
+return CompareIniFilesArray.Count()
 }
 
 OverwriteExeFiles(){
 local
 global UpdateFolderPath
-global RemoteClientChanged := false
 
 ; Did RemoteClient change?
 NewRemoteClientPath := UpdateFolderPath . "\ProTest_RemoteClient.exe"
-FileGetVersion, OldRemoteClientVersion, ProTest_RemoteClient.exe
-FileGetVersion, NewRemoteClientVersion, %NewRemoteClientPath%
-if (NewRemoteClientVersion = OldRemoteClientVersion)
+OldRemoteClientPath := A_ScriptDir . "\ProTest_RemoteClient.exe"
+RemoteClientPathArray := [NewRemoteClientPath, OldRemoteClientPath]
+
+For Index, RemoteClientPath in RemoteClientPathArray
+	{
+   ; r = read File, "cp0" - system default ANSI code page
+   file := FileOpen(RemoteClientPath, "r", "cp0")
+   ; read binary data
+   file.RawRead(buff%A_Index%,  len%A_Index% := file.Length)
+   file.Close()
+	}
+if (len1 = len2 and !DllCall("msvcrt\memcmp", "Ptr", &buff1, "Ptr", &buff2, "Ptr", len1) )
 	SaveToUpdateLog("RemoteClient: unverändert")
 else
-	{
 	SaveToUpdateLog("RemoteClient: geändert")
-	RemoteClientChanged := true
-	}
 
 ProTestExeFiles := ["ProTest.exe", "ProTest_RemoteClient.exe"]
 For i, ExeFile in ProTestExeFiles
@@ -263,10 +267,7 @@ For i, ExeFile in ProTestExeFiles
 	NewFile := UpdateFolderPath . "\" . ExeFile
 	FileCopy, %NewFile%, %ExeFile%, 1
 	}
-if FileExist("ProTest_v2.0.exe")
-	FileDelete, ProTest_v2.0.exe
-if FileExist("ProTest_v2.0_RemoteClient.exe")
-	FileDelete, ProTest_v2.0_RemoteClient.exe
+DeleteOldExeFiles()
 }
 
 CompareIniSections(OldFile, NewFile){
@@ -313,14 +314,14 @@ Loop, Parse, NewSectionList , "`n"
 				}
 			if (CurrentSectionWasOverwritten = false)
 				{
-				CompareIniKeys(OldFile, NewFile, CurrentSection, NewSectionKeys, OldSectionKeys)
+				CompareIniKeys(OldFile, NewFile, CurrentSection, NewSectionKeys, OldSectionKeys, "Update")
 				}
 			}
 		}
 	} ; ende loop
 } ; ende function
 
-CompareIniKeys(OldFile, NewFile, CurrentSection, NewSectionKeys, OldSectionKeys){
+CompareIniKeys(OldFile, NewFile, CurrentSection, NewSectionKeys, OldSectionKeys, Mode){
 local
 global UpdateTimeStemp
 NewKeyEntry := false
@@ -346,7 +347,7 @@ Loop, Parse, NewSectionKeys , "`n"
 			if (NewKeyEntry = false)
 				{
 				; ersten neuen Eintrag mit Abstand einfügen
-				SaveIniValue(OldFile, CurrentSection, "`n;;; Update " . UpdateTimeStemp . "`nUpdate", "Update")
+				SaveIniValue(OldFile, CurrentSection, "`n;;; " . Mode . " " . UpdateTimeStemp . "`nUpdate", "Update")
 				NewKeyEntry := true 
 				}
 			; (weiterer) neuer Key
@@ -358,14 +359,14 @@ Loop, Parse, NewSectionKeys , "`n"
 		else
 			{
 			; andere Eintragung vorhanden
-			ChangeKeyEntry(OldFile, NewFile, CurrentSection, CurrentNewKey, OldCompleteValue, NewCompleteValue)
+			ChangeKeyEntry(OldFile, NewFile, CurrentSection, CurrentNewKey, OldCompleteValue, NewCompleteValue, "Update")
 			} ; ende else
 		} ; ende if
 	} ; ende loop
 } ; ende 
 ; Veränderter Eingabewert
 
-ChangeKeyEntry(OldFile, NewFile, CurrentSection, CurrentNewKey, OldCompleteValue, NewCompleteValue){
+ChangeKeyEntry(OldFile, NewFile, CurrentSection, CurrentNewKey, OldCompleteValue, NewCompleteValue, Mode){
 local
 global OverwriteKeysAnywayArray
 global OverwriteValuesArray
@@ -385,7 +386,7 @@ else
 		if (ChangeKey = CurrentNewKey)
 			{
 			;Change Key Value
-			NewCompleteValue := NewCompleteValue . " `; (Update " . UpdateTimeStemp . ")" 
+			NewCompleteValue := NewCompleteValue . " `; (" . Mode . " " . UpdateTimeStemp . ")" 
 			IniWrite, %NewCompleteValue%, %OldFile%, %CurrentSection%, %CurrentNewKey%
 			SaveToUpdateLog("Geändert: [" . CurrentSection . "] " . CurrentNewKey . " = " . NewCompleteValue)
 			ValueOverwritten := true
@@ -449,6 +450,30 @@ if Instr(CurrentKey, A_Tab)
 return CurrentKey
 }
 
+;;;;;;;;;;;;;;;;;;;
+;;;;  CleanUp  ;;;;
+;;;;;;;;;;;;;;;;;;;
+
+; Delete old Keys
+DeleteOldKeys(OldFile){
+DeleteIniValue(OldFile, "ChangableSettings", "MsgDurationLFDMatch")
+DeleteIniValue(OldFile, "ChangableSettings", "MsgDurationSkippedIntro")
+DeleteIniValue(OldFile, "ChangableSettings", "CreateHistory")
+DeleteIniValue(OldFile, "AdvancedSettings", "CreatHistory")
+DeleteIniValue(OldFile, "BasicSettingsMenu", "e_Input1")
+DeleteIniValue(OldFile, "BasicSettingsMenu", "e_Input2")
+DeleteIniValue(OldFile, "BasicSettingsMenu", "e_Input3")
+DeleteIniValue(OldFile, "BasicSettingsMenu", "e_BirthDay")
+DeleteIniValue(OldFile, "BasicSettingsMenu", "e_BirthMonth")
+DeleteIniValue(OldFile, "BasicSettingsMenu", "e_BirthYear")
+DeleteIniValue(OldFile, "BasicSettingsMenu", "e_sex")
+DeleteIniValue(OldFile, "BasicSettingsMenu", "c_dependent")
+DeleteIniValue(OldFile, "QuickSetupMenu", "e_Stopfn1")
+DeleteIniValue(OldFile, "QuickSetupMenu", "e_Stopfn2")
+DeleteIniValue(OldFile, "QuickSetupMenu", "e_Stopfn3")
+}
+
+; Delete old Sections
 DeleteOldIniSections(FilePath){
 local 
 if Instr(FilePath, "Library.ini")
@@ -467,59 +492,78 @@ if Instr(FilePath, "BasicSettings.ini")
 	DeleteIniSection(FilePath, "PositionParameterF10")
 }
 
-; (0) Deleting Old Sections/Keys
-DeleteOldSettings(){
-global BasicFile
-DeleteIniValue(BasicFile, "ChangableSettings", "MsgDurationLFDMatch")
-DeleteIniValue(BasicFile, "ChangableSettings", "MsgDurationSkippedIntro")
-DeleteIniValue(BasicFile, "ChangableSettings", "CreateHistory")
-DeleteIniValue(BasicFile, "AdvancedSettings", "CreatHistory")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input1")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input2")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_Input3")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthDay")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthMonth")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_BirthYear")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "e_sex")
-DeleteIniValue(BasicFile, "BasicSettingsMenu", "c_dependent")
-DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn1")
-DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn2")
-DeleteIniValue(BasicFile, "QuickSetupMenu", "e_Stopfn3")
+CleanOldLibrary(OldLibraryFile){
+
+; Delete Old Entrys
+DeleteOldIniSections(OldLibraryFile)
+
+; Load Data of ini-File
+FileRead, OldLibraryData, %OldLibraryFile%
+
+; Delete the following lines
+CleanLibraryData := StrReplace(OldLibraryData, ";;;;;;;;;;;;;;;;;;;;;")
+CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;    fnIntro   " . ";;;;")
+CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;;    fnNAG    " . ";;;;")
+CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;     (F2)     " . ";;;;")
+CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;;    (F2)     " . ";;;;")
+CleanLibraryData := StrReplace(CleanLibraryData, "`n;;; CHANGE INTRO VALUES HERE " . ";;;")
+CleanLibraryData := StrReplace(CleanLibraryData, "`n;;; ADD NAG FNs HERE " . ";;;")
+CleanLibraryData := StrReplace(CleanLibraryData, "`n; kein Kommentar notwendig, aber bitte mit "";" . """ abtrennen")
+
+; Clear all Whitespaces
+OccurrenceCount := 0
+Loop {
+CleanLibraryData := StrReplace(CleanLibraryData, "`r[fn", "[fn", OccurrenceCount1)
+CleanLibraryData := StrReplace(CleanLibraryData, "`n[fn", "[fn", OccurrenceCount2)
+OccurrenceCount := OccurrenceCount1 +  OccurrenceCount2
+} Until (OccurrenceCount = 0) or (A_Index = 15)
+
+; Delete Old Section Names
+OldSectionList := GetIniSectionNames(OldLibraryFile)
+Loop, Parse, OldSectionList, "`n"
+	{
+	ThisSection := "[" . A_LoopField . "]"
+	CleanLibraryData := StrReplace(CleanLibraryData, ThisSection)
+	}
+	
+; alten Inhalt mit FileDelete + FileAppend überschreiben
+CleanLibraryData := "[Fragenbibliothek]`n" . CleanLibraryData
+FileDelete, %OldLibraryFile%
+FileAppend, %CleanLibraryData%, %OldLibraryFile%
+
+; Delete Keys
+DeleteIniValue(OldLibraryFile, "Fragenbibliothek", "20401b")
+DeleteIniValue(OldLibraryFile, "Fragenbibliothek", "20401c")
+DeleteIniValue(OldLibraryFile, "Fragenbibliothek", "204016")
+DeleteIniValue(OldLibraryFile, "Fragenbibliothek", "01103")
+
+SaveToUpdateLog("Library.ini bereinigt")
 }
 
-CleanLibrary(OldFile){
+DeleteOldExeFiles(){
+if FileExist("ProTest_v2.0.exe")
+	FileDelete, ProTest_v2.0.exe
+if FileExist("ProTest_v2.0_RemoteClient.exe")
+	FileDelete, ProTest_v2.0_RemoteClient.exe
+}
 
-OldSectionList := GetIniSectionNames(Oldfile)
-if Instr(OldSectionList, "fnNag")
-	{
-	; Load Data of ini-File
-	FileRead, OldLibraryData, %OldFile%
+IntegrateOldLibrary(OldLibraryFile){
+RenamedOldLibraryFile := A_ScriptDir . "\Config\Library_old.ini"
+if FileExist(RenamedOldLibraryFile)
+	return
+NewLibraryFile := A_ScriptDir . "\Config\Fragenbibliothek.ini"
 
-	; Delete the following
-	CleanLibraryData := StrReplace(OldLibraryData, ";;;;;;;;;;;;;;;;;;;;;")
-	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;    fnIntro   " . ";;;;")
-	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;;    fnNAG    " . ";;;;")
-	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;     (F2)     " . ";;;;")
-	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;;;    (F2)     " . ";;;;")
-	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;; CHANGE INTRO VALUES HERE " . ";;;")
-	CleanLibraryData := StrReplace(CleanLibraryData, "`n;;; ADD NAG FNs HERE " . ";;;")
-	CleanLibraryData := StrReplace(CleanLibraryData, "`n; kein Kommentar notwendig, aber bitte mit "";" . """ abtrennen")
-	
-	; Replace the following
-	OccurrenceCount := 0
-	Loop {
-	CleanLibraryData := StrReplace(CleanLibraryData, "`r[fn", "[fn", OccurrenceCount1)
-	CleanLibraryData := StrReplace(CleanLibraryData, "`n[fn", "[fn", OccurrenceCount2)
-	OccurrenceCount := OccurrenceCount1 +  OccurrenceCount2
-	} Until (OccurrenceCount = 0) or (A_Index = 15)
+; Load Sections
+IniRead, OldLibraryKeys, %OldLibraryFile%, OldLibrary
+IniRead, FragenbibliothekKeys, %NewLibraryFile%, Fragenbibliothek
 
-	CleanLibraryData := StrReplace(CleanLibraryData, "[fn", "`n`n[fn", OccurrenceCount)
-	CleanLibraryData := StrReplace(CleanLibraryData, "[fnNag]", "[fnSkip]")
+; Compare Sections
+;CompareIniSections(OldFile, NewFile)
+CompareIniSections(NewLibraryFile, OldLibraryFile)
+;CompareIniKeys(OldLibraryFile, NewLibraryFile, "Fragenbibliothek", OldLibraryKeys, FragenbibliothekKeys, "Integrate Old Library")
 
-	FileDelete, %OldFile%
-	FileAppend, %CleanLibraryData%, %OldFile%
-	SaveToUpdateLog("Ersetze [fnNag] mit [fnSkip]")
-	}
+; Rename Old Library
+FileMove, %OldLibraryFile%, %RenamedOldLibraryFile%, 1
 }
 
 ;;;;;;;;;;;;;;;;;;;
