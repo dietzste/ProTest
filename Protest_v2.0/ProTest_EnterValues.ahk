@@ -19,7 +19,7 @@ SaveToHistory("VERBOSE:", fnOCR . " fnValue: " fnValue)
 if (params.MaxIndex() = 1)
 	{
 	Index := params[1]
-	MsgboxZusatz := "Es wurden " . Index . " Fragen übersprungen."
+	MsgboxZusatz := "Es wurden " . Index . " Fragen ï¿½bersprungen."
 	}
 
 if (LastFn = fnOCR)
@@ -43,7 +43,7 @@ if fnValue is digit
 	}
 else if fnValue is alpha
 	{
-	; Wörter
+	; Wï¿½rter
 	if (fnValue = "Ende")
 		{
 		Msgbox, 4096, Durchlauf beendet!, Ende des Interviews (fn: %fnOCR%)! %MsgboxZusatz%
@@ -86,7 +86,7 @@ else if (InStr(fnValue, "["))
 		Result := L_TryClickingButton(ButtonName, 1)
 		If (Result != "true")
 			{
-			Msgbox, 4096, Durchlauf beendet..., ...da der für fn "%fnOCR%" vorgesehene Button ("%ButtonName%") nicht vorhanden ist!
+			Msgbox, 4096, Durchlauf beendet..., ...da der fï¿½r fn "%fnOCR%" vorgesehene Button ("%ButtonName%") nicht vorhanden ist!
 			Exit
 			}
 		}
@@ -147,19 +147,39 @@ return InputValue
 EnterMultiplePreloadValues(fnOCR, PreloadString){
 local 
 global LFDSpeicherPfad
+global LibraryFile, fnBib
 global fast, med, DefaultSleep
 global SkipIfPreloadZero
 global CurrentLFD
 
 ;(1) Pre-Processing
-RealPreloadString := StrReplace(PreloadString, "\" , "|")
-RealPreloadString := StrReplace(RealPreloadString, "/" , "|")
+RealPreloadString := CleanPreloadString(PreloadString)
 StrReplace(RealPreloadString, "|", "|", Count)
 PreloadCount := Count + 1
 
 ;(2) Remote Preloads needed?
-L_ReadMultiplePreloads(CurrentLFD, RealPreloadString, false)
-
+PreloadNotExisting := L_ReadMultiplePreloads(CurrentLFD, RealPreloadString, PreTested := false)
+if (PreloadNotExisting != "")
+	{
+	PreloadIsMissing := true
+	; Duplicate Value defined?
+	DuplicateValue := GetIniValue(LibraryFile, "Duplicates", fnOCR)
+	if (DuplicateValue != "ERROR")
+		{
+		PreloadIsMissing := false
+		DuplicatePreloadString := GetValueBetweenRoundBrackets(DuplicateValue)
+		RealPreloadString := CleanPreloadString(DuplicatePreloadString)
+		PreloadNotExisting := L_ReadMultiplePreloads(CurrentLFD, RealPreloadString, PreTested := false)
+		if (PreloadNotExisting != "")
+			PreloadIsMissing := true
+		}
+	if (PreloadIsMissing = true)
+		{
+		Msgbox, 4096, Ups!, Preload "%PreloadNotExisting%" war nicht vorhanden. LFD-Suche wird beendet.
+		SaveToHistory("Preload " . PreloadNotExisting . " gab es nicht!")
+		Exit
+		}
+	}
 ;(3) Enter Preloads
 EnterTheseValues := ""
 Loop, Parse, RealPreloadString, "|"
@@ -180,10 +200,10 @@ Loop, Parse, RealPreloadString, "|"
 	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload)
 	if (PreloadValue = 0) and (Preload = "gebtPRE" or Preload = "gebmPRE" or Preload = "gebjPRE")
 		{
-		SaveToHistory("VERBOSE:", fnOCR . " Preload-Angabe ungültig! " . Preload . "=0")
+		SaveToHistory("VERBOSE:", fnOCR . " Preload-Angabe ungï¿½ltig! " . Preload . "=0")
 		if (SkipIfPreloadZero = "false")
 			{
-			Msgbox, 4096, Ups! , Preloadangabe unvollständig! Wert für %Preload% ist Null! Durchlauf wird beendet.
+			Msgbox, 4096, Ups! , Preloadangabe unvollstï¿½ndig! Wert fï¿½r %Preload% ist Null! Durchlauf wird beendet.
 			Exit
 			}
 		else

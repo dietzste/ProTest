@@ -142,7 +142,13 @@ else if (Command = "NeedPreloads")
 		LFDStatus := 3
 		}
 	global PreloadString 
-	L_ReadMultiplePreloads(CurrentLFD, PreloadString, true)
+	PreloadNotExisting := L_ReadMultiplePreloads(CurrentLFD, PreloadString, PreTested := true)
+	if (PreloadNotExisting != "")
+		{
+		Msgbox, 4096, Ups!, Preload "%PreloadNotExisting%" war nicht vorhanden. LFD-Suche wird beendet.
+		SaveToHistory("VERBOSE:", "Preload " . PreloadNotExisting . " gab es nicht!")
+		Exit
+		}
 	return 
 	}
 else if (Command = "Finish")

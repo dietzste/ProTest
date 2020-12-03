@@ -228,7 +228,7 @@ Result := RemoteExtraction(SendValue, Detection)
 return Result ; Result: "false" / "true"
 }
 
-L_ReadMultiplePreloads(CurrentLFD, PreloadString, PreTested:=true){
+L_ReadMultiplePreloads(CurrentLFD, PreloadString, PreTested := true){
 local
 global LFDSpeicherPfad
 global MissingPreloadString := ""
@@ -266,11 +266,7 @@ Loop, Parse, MissingPreloadString, "|"
 					}
 				}
 			else
-				{
-				Msgbox, 4096, Ups!, Preload "%Preload%" war nicht vorhanden. LFD-Suche wird beendet.
-				SaveToHistory("VERBOSE:", "Preload " . Preload . " gab es nicht!")
-				Exit
-				}
+				return PreloadNotExisting := Preload
 			}
 		} ; ende inner loop
 	} ; end outer loop
