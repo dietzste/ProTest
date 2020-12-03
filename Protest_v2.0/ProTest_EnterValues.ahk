@@ -19,7 +19,7 @@ SaveToHistory("VERBOSE:", fnOCR . " fnValue: " fnValue)
 if (params.MaxIndex() = 1)
 	{
 	Index := params[1]
-	MsgboxZusatz := "Es wurden " . Index . " Fragen ï¿½bersprungen."
+	MsgboxZusatz := "Es wurden " . Index . " Fragen übersprungen."
 	}
 
 if (LastFn = fnOCR)
@@ -43,7 +43,7 @@ if fnValue is digit
 	}
 else if fnValue is alpha
 	{
-	; Wï¿½rter
+	; Wörter
 	if (fnValue = "Ende")
 		{
 		Msgbox, 4096, Durchlauf beendet!, Ende des Interviews (fn: %fnOCR%)! %MsgboxZusatz%
@@ -86,7 +86,7 @@ else if (InStr(fnValue, "["))
 		Result := L_TryClickingButton(ButtonName, 1)
 		If (Result != "true")
 			{
-			Msgbox, 4096, Durchlauf beendet..., ...da der fï¿½r fn "%fnOCR%" vorgesehene Button ("%ButtonName%") nicht vorhanden ist!
+			Msgbox, 4096, Durchlauf beendet..., ...da der für fn "%fnOCR%" vorgesehene Button ("%ButtonName%") nicht vorhanden ist!
 			Exit
 			}
 		}
@@ -200,10 +200,10 @@ Loop, Parse, RealPreloadString, "|"
 	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload)
 	if (PreloadValue = 0) and (Preload = "gebtPRE" or Preload = "gebmPRE" or Preload = "gebjPRE")
 		{
-		SaveToHistory("VERBOSE:", fnOCR . " Preload-Angabe ungï¿½ltig! " . Preload . "=0")
+		SaveToHistory("VERBOSE:", fnOCR . " Preload-Angabe ungültig! " . Preload . "=0")
 		if (SkipIfPreloadZero = "false")
 			{
-			Msgbox, 4096, Ups! , Preloadangabe unvollstï¿½ndig! Wert fï¿½r %Preload% ist Null! Durchlauf wird beendet.
+			Msgbox, 4096, Ups! , Preloadangabe unvollständig! Wert für %Preload% ist Null! Durchlauf wird beendet.
 			Exit
 			}
 		else
@@ -227,4 +227,10 @@ Loop, Parse, RealPreloadString, "|"
 SetKeyDelay, fast
 SaveToHistory(fnOCR, "= " . EnterTheseValues, PreloadString)
 Sleep, DefaultSleep
+}
+
+CleanPreloadString(PreloadString){
+RealPreloadString := StrReplace(PreloadString, "\" , "|")
+RealPreloadString := StrReplace(RealPreloadString, "/" , "|")
+return RealPreloadString
 }
