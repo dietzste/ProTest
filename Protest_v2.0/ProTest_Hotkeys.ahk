@@ -80,6 +80,7 @@ return
 
 ^r::
 L_RestartQ()
+CurrentLFD := ""
 SaveToHistory("########### RESTART ###########")
 return
 
