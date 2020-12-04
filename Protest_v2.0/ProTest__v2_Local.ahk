@@ -179,25 +179,30 @@ Menu, Tray, Add , Update, UpdateProTest
 
 if (A_IsCompiled = 1)
 	{
+	WorkModus := "WorkModus"
 	Goto ChooseProjectFile
 	}
 if (A_IsCompiled != 1)
 	{
 	; Test Section
+	WorkModus := "TestModus"
 	WorkWindow := GetIniValue("TestModus.ini", "TestModus", "WorkWindow", "TeamViewer")
-	LastProjectFile := GetIniValue("TestModus.ini", "TestModus", "LastProjectFile")
-	if (LastProjectFile = "Error")
+	LastIniFileInTestModus := GetIniValue("TestModus.ini", "TestModus", "LastIniFileInTestModus")
+	if (LastIniFileInTestModus = "Error")
 		{
-		InputBox, EnteredIniFile, Enter Ini-File,,,150,120
+		InputBox, EnteredIniFile, TestModus: Name des Ini-Files eingeben!,,,150,120
 		if (ErrorLevel = 1)
 			ExitApp
 		else
 			{
-			LastProjectFile := EnteredIniFile . ".ini"
-			SaveIniValue("TestModus.ini", "TestModus", "LastProjectFile", LastProjectFile)
+			LastIniFileInTestModus := EnteredIniFile
+			if !Instr(EnteredIniFile, ".ini")
+				LastIniFileInTestModus := EnteredIniFile . ".ini"
+			SaveIniValue("TestModus.ini", "TestModus", "LastIniFileInTestModus", LastIniFileInTestModus)
 			}
 		}
-	SettingUpProTest(LastProjectFile, "TestModus")
+	CreateProjectFilesList()
+	SettingUpProTest(LastIniFileInTestModus, "TestModus")
 	}
 return
 
