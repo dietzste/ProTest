@@ -382,10 +382,8 @@ Gui, 11:Submit, NoHide
 if (IniFileInList != "")
 	{
 	ProjectName := IniFileInList
-	ProjectNameFile := ProjectName . ".ini"
-	if (A_UserName != "Mensch")
-		SaveIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile", ProjectNameFile)
-	SettingUpProTest(ProjectNameFile, "Select")
+	ProjectIniFileName := ProjectName . ".ini"
+	SettingUpProTest(ProjectIniFileName, "Select")
 	}
 else
 	Msgbox, 4096, Ups!, Kein Projekt ausgewählt!
@@ -398,52 +396,66 @@ if (ErrorLevel)
 	Exit
 else
 	{
-	ProjectFileName := ProjectName . ".ini"
+	ProjectIniFileName := ProjectName . ".ini"
 	if Instr(FileList, ProjectName, CaseSensitive := true)
 		{
 		Msgbox, 4096, Ups!, %ProjectName% bereits vorhanden!
 		GoTo 11GuiNewProjectFile
 		}
 	else
-		{
-		SettingUpProTest(ProjectFileName, "Create")
-		}
+		SettingUpProTest(ProjectIniFileName, "Create")
 	}
 return 
 
-SettingUpFiles(ProjectFileName){
+SettingUpFiles(ProjectIniFileName){
 local
 global BasicFile
-global PreloadList
-global ProjectName := StrReplace(ProjectFileName, ".ini")
+global ProjectName := StrReplace(ProjectIniFileName, ".ini")
+global IniParentFolderArray
 ListLines Off
-ProjectFolder := ProjectName 
-if !FileExist(ProjectFolder)
-	FileCreateDir, %ProjectFolder%
-global ProjectFile := ProjectFolder . "\" . ProjectFileName
-; verschieben wenn in Workdir
-if FileExist(ProjectFileName)
-	{
-	if !FileExist(ProjectFile)
-		FileMove, ProjectFileName, ProjectFolder
-	}
 
-; LFDSpeicher
+ProjectFolderPath := IniParentFolderArray[ProjectIniFileName]
+global ProjectFile := ProjectFolderPath . "\" . ProjectIniFileName
+
+; Erstelle Projektordner
+if !FileExist(ProjectFolderPath)
+	FileCreateDir, %ProjectFolderPath%
+
+; verschieben wenn in WorkingDir
+if FileExist(ProjectIniFileName)
+	{
+	NewProjectFolderPath := ProjectFolderPath . "\" . ProjectName
+	if !FileExist(NewProjectFolderPath)
+		{
+		MsgBox, 4132, Projekt integrieren?, Für das Projekt "%ProjectName%" existiert noch kein Projektordner. Soll für dieses Projekt ein der Projektordner "%ProjectName%" angelegt werden?
+		IfMsgBox, Yes
+			{
+			FileCreateDir, %NewProjectFolderPath%
+			FileMove, %ProjectIniFileName%, %NewProjectFolderPath%
+			ProjectFolderPath := NewProjectFolderPath
+			global ProjectFile := ProjectFolderPath . "\" . ProjectIniFileName
+			}
+		} ; ende if
+	} ; ende if
+
+; LFDSpeicher erstellen
 global LFDSpeicherName := "LFDSpeicher_" . ProjectName . ".ini"
-global LFDSpeicherPfad := ProjectFolder . "\" . LFDSpeicherName
+global LFDSpeicherPfad := ProjectFolderPath . "\" . LFDSpeicherName
+
 ; CleanUp
-OldTempFilePath := ProjectFolder . "\" .ProjectName . "_Temp.ini"
+OldTempFilePath := ProjectFolderPath . "\" .ProjectName . "_Temp.ini"
 if FileExist(OldTempFilePath)
 	FileMove, %OldTempFilePath%, %LFDSpeicherPfad% 
 CleanLFDSpeicher(LFDSpeicherPfad)
 
 ; HistoryFile
 global HistoryFileName := "Logbuch_" . ProjectName . "_" . A_YYYY . "_" . A_MM . "_" . A_DD
-global HistoryFile := ProjectFolder  . "\" . HistoryFileName . ".txt"
+global HistoryFile := ProjectFolderPath  . "\" . HistoryFileName . ".txt"
 
 ; PreloadList
+global PreloadList
 global PreloadListName := ProjectName . "_PreloadList.txt"
-global PreloadListPath := ProjectFolder . "\" . PreloadListName
+global PreloadListPath := ProjectFolderPath . "\" . PreloadListName
 ; Load PreloadList
 if !FileExist(PreloadListPath)
 	PreloadList := ""
@@ -452,16 +464,34 @@ else
 
 ; Save to ProjectFile
 SaveIniValue(ProjectFile, "ProjectFiles", "e_LFDSpeicher", LFDSpeicherName)
-SaveIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile", ProjectFileName)
+SaveIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile", ProjectIniFileName)
 
 ; Save To History
 global CreateHistory := GetIniValue(BasicFile, "BasicSettingsMenu",  "c_History")
 if (A_IsCompiled = 1)
 	SaveToHistory("### Projekt: " . ProjectName . " ###")
 
-; CurrentLFD 
-global CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD", A_Space)
-DeleteIniValue(ProjectFile, "ProjectFiles", "CurrentLFD")
+; CurrentLFD
+global LastUsedFile
+global CurrentLFD := GetIniValue(ProjectFile, "ProjectFiles", "CurrentLFD")
+if (CurrentLFD = "ERROR")
+	CurrentLFD := ""
+else
+	{
+	if (LastUsedFile = ProjectIniFileName)
+		{
+		MsgBox, 4132, LFD beibehalten?, ProTest wurde neu gestartet. Die letzte verwendete LFD war %CurrentLFD%. Ist dies auch die aktuelle LFD?
+		IfMsgBox, Yes
+			CurrentLFD := CurrentLFD
+		else
+			{
+			CurrentLFD := ""
+			DeleteIniValue(ProjectFile, "ProjectFiles", "CurrentLFD")
+			}
+		} ; ende if
+	else
+		DeleteIniValue(ProjectFile, "ProjectFiles", "CurrentLFD")
+	}
 
 ; Set OCR Positions
 Gosub SetOCRPositions
@@ -473,6 +503,7 @@ CreateProjectFilesList(){
 local
 global BasicFile
 global LastUsedFile := GetIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile")
+global IniParentFolderArray := {}
 FileList := ""
 ExcludeIniFileArray := ["Capture2Text", "BasicSettings", "Fragenbibliothek", "LFDSpeicher", "Library", "_Temp", "PreloadDetails"]
 IniLoop:
@@ -489,23 +520,29 @@ Loop, Files, *.ini, R
 		FileList .= IniFileName . "||"
 	else
 		FileList .= IniFileName . "|"
+	; Add to IniParentFolderArray
+	IniParentFolder := StrReplace(A_LoopFileLongPath, "\" . A_LoopFileName)
+	IniParentFolderArray[A_LoopFileName] := IniParentFolder
 	}
 return FileList
 }
 
 ;;; SETTING UP PROTEST ;;;
 
-SettingUpProTest(ProjectFileName, Modus){
+SettingUpProTest(ProjectIniFileName, Modus){
 local
-SettingUpFiles(ProjectFileName)
+SettingUpFiles(ProjectIniFileName)
+global BasicFile
+global ProjectName
+global WorkModus
 Gui 11:Destroy
-ThisFileName := StrReplace(ProjectFileName, ".ini")
 if (Modus = "Select")
-	Msgbox, 4096, Projekt ausgewählt, Das Projekt %ThisFileName% wurde erfolgreich ausgewählt.
+	Msgbox, 4096, Projekt ausgewählt, Das Projekt %ProjectName% wurde erfolgreich ausgewählt.
 else if (Modus = "Create")
-	Msgbox, 4096, Projekt erstellt, Neues Projekt erstellt: %ThisFileName%.
+	Msgbox, 4096, Projekt erstellt, Neues Projekt erstellt: %ProjectName%.
 SettingUpCapture2Text()
-Gui 10:Destroy
+if (WorkModus != "TestModus")
+	SaveIniValue(BasicFile, "BasicSettingsMenu", "x_lastProjectFile", ProjectIniFileName)
 }
 
 SettingUpCapture2Text(){
