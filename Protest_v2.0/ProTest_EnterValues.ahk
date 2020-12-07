@@ -198,6 +198,8 @@ Loop, Parse, RealPreloadString, "|"
 		Continue
 		}
 	PreloadValue := GetIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload)
+	if (CurrentLFD = "")
+		DeleteIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD, Preload)
 	if (PreloadValue = 0) and (Preload = "gebtPRE" or Preload = "gebmPRE" or Preload = "gebjPRE")
 		{
 		SaveToHistory("VERBOSE:", fnOCR . " Preload-Angabe ungültig! " . Preload . "=0")

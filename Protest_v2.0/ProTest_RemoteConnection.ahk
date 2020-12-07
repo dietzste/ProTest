@@ -257,16 +257,14 @@ Loop, Parse, MissingPreloadString, "|"
 		if (A_Index = PreloadIndex)
 			{
 			PreloadValue := A_LoopField
-			if (PreloadValue != "false")
+			if (PreloadValue = "false")
+				return PreloadNotExisting := Preload
+			else
 				{
 				if (CurrentLFD != "")
-					{
 					CheckLFDSectionNames(CurrentLFD)
-					SaveIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD, Preload, PreloadValue)
-					}
+				SaveIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD, Preload, PreloadValue)
 				}
-			else
-				return PreloadNotExisting := Preload
 			}
 		} ; ende inner loop
 	} ; end outer loop
