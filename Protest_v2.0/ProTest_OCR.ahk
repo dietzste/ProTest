@@ -119,25 +119,24 @@ MouseMove, %PositionX%, %PositionY% , %SpeedCursor%
 OCRCleanUp(OCR, Part){
 local
 global AllowAlphas
-OCR := StrReplace(OCR, "?", "7") ; ? = 7 
-OCR := RegExReplace(OCR, "\W") ; alle außer  [a-zA-Z0-9_]
-OCR := StrReplace(OCR, "_") ; kein underscore
-OCR := RegExReplace(OCR, "\s") ; keine whitespaces
+OCR := StrReplace(OCR, "?", "7") ; ? = 7
+; Replace control characters
+OCR := RegExReplace(OCR, "[\x00-\x1F\x7F]")
 AlphaMatch := 0
+HashedOCR := ""
 Loop, Parse, OCR
 	{
-	if A_LoopField is alpha
-		++AlphaMatch
-	if (AlphaMatch > AllowAlphas)
+	; entferne alle außer a-zA-Z0-9_
+	if A_LoopField is alnum
 		{
-		; 2. Buchstabe
-		AlphaPosition := A_Index
-		Break
+		if A_LoopField is alpha
+			++AlphaMatch
+		if (AlphaMatch > AllowAlphas)
+			Break
+		HashedOCR .= A_LoopField
 		}
 	}
-if (AlphaMatch > 1)
-	OCR := SubStr(OCR, 1 , --AlphaPosition)
-return OCR
+return HashedOCR
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
