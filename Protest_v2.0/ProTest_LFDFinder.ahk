@@ -247,6 +247,7 @@ ProcessingF3MenuInput(){
 local 
 global ProjectFile
 global LFDFinderMenu
+global PreloadDetailsFile
 global LFDRequestArray := {}
 global LFDExcludeArray := {}
 global PreloadOrderArray := {}
@@ -258,6 +259,11 @@ Preload := GetIniValue(ProjectFile, LFDFinderMenu, "e_LFD_PLN" . A_Index)
 if (Preload != "ERROR")
 	{
 	; (1) Preload in PreloadList?
+	; Convert if necessary
+	EnteredPreload := Preload
+	Conversion := GetIniValue(PreloadDetailsFile, "Converter", Preload)
+	if (Conversion != "ERROR")
+		Preload := Conversion
 	CheckPreloadInPreloadList(Preload)
 	; (2) Add to Arrays
 	PreloadRequest := GetIniValue(ProjectFile, LFDFinderMenu, "e_LFD_PLR" . A_Index, "-")
@@ -267,14 +273,19 @@ if (Preload != "ERROR")
 		LFDRequestArray[Preload] := PreloadRequest
 		LFDExcludeArray[Preload] := PreloadExclude
 		PreloadOrderArray[A_Index] := Preload
-		if (LFDRequestArray[Preload] != "-")
-			DefinedPreloadsArray[Preload] := PreloadRequest
+		if (EnteredPreload = Preload)
+			ConversionInfo := ""
 		else
-			DefinedPreloadsArray[Preload] := "Nicht" . PreloadExclude
+			ConversionInfo := " (" . EnteredPreload . ")"
+		if (LFDRequestArray[Preload] != "-")
+			DefinedPreloadsArray[Preload] := PreloadRequest . ConversionInfo
+		else
+			DefinedPreloadsArray[Preload] := "Nicht" . PreloadExclude . ConversionInfo
 		}
 	else
 		{
-		if (PreloadRequest != "ERROR")
+		; identische Werte definiert
+		if (PreloadRequest != "ERROR" AND PreloadRequest != "-")
 			{
 			Msgbox, 4096, Ups! , Identische Werte für %Preload% (Werte = %PreloadRequest%)!
 			SaveToHistory("Identische Werte - LFD-Suche wird abgebrochen")
