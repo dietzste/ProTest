@@ -9,6 +9,7 @@ MsgboxZusatz := ""
 ; emergency shutdown
 if StrLen(fnValue) > MaxLengthfnValue
 	{
+	Msgbox, 4096, Fehler!, Beim Auslesen der Fragenummer scheint ein Fehler passiert zu sein. Der Durchlauf wird beendet!
 	SaveToHistory("Schwerer Fehler (OCR = " . fnOCR . ")")
 	Exit
 	}
