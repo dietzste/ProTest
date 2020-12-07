@@ -32,6 +32,13 @@ if (e_fnLearn != "")
 		if (CorrectedfnOCR != e_fnLearn)
 			e_fnLearn := CorrectedfnOCR
 		}
+	; Check MaxLengthfnValue
+	if StrLen(fnValue) > MaxLengthfnValue
+		{
+		; Fehler beim Auslesen
+		e_fnLearn := ""
+		fnValue := ""
+		}
 	}
 ; Eintrag noch nicht vorhanden
 if (fnValue = "ERROR")
