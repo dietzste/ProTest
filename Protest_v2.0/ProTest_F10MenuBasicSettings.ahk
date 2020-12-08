@@ -407,14 +407,17 @@ else
 	}
 return 
 
-SettingUpFiles(ProjectIniFileName){
+SettingUpFiles(ProjectIniFileName, Modus){
 local
 global BasicFile
 global ProjectName := StrReplace(ProjectIniFileName, ".ini")
 global IniParentFolderArray
 ListLines Off
 
-ProjectFolderPath := IniParentFolderArray[ProjectIniFileName]
+if (Modus = "Select")
+	ProjectFolderPath := IniParentFolderArray[ProjectIniFileName]
+else
+	ProjectFolderPath := ProjectName
 global ProjectFile := ProjectFolderPath . "\" . ProjectIniFileName
 
 ; Erstelle Projektordner
@@ -531,7 +534,7 @@ return FileList
 
 SettingUpProTest(ProjectIniFileName, Modus){
 local
-SettingUpFiles(ProjectIniFileName)
+SettingUpFiles(ProjectIniFileName, Modus)
 global BasicFile
 global ProjectName
 global WorkModus
