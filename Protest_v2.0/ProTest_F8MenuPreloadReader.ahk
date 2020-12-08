@@ -162,6 +162,7 @@ PreloadUpdateValue := e_PLU%A_Index%
 IF (Preload != "") and (PreloadCheckBox = 1)   ; Checkbox ausgewählt
 	{
 	; Convert if necessary
+	F8PreloadEntered := Preload
 	Conversion := GetIniValue(PreloadDetailsFile, "Converter", Preload)
 	if (Conversion != "ERROR")
 		Preload := Conversion
@@ -173,12 +174,22 @@ IF (Preload != "") and (PreloadCheckBox = 1)   ; Checkbox ausgewählt
 		MsgWindow("Hole Preload-Wert...")
 		PreloadOriginal := L_ReadPreload(Preload)
 		MsgWindow()
-		MsgBox, 4096 ,%Preload%, %Preload% = %PreloadOriginal%
+		F8ResultMessageBoxText := Preload . " = " . PreloadOriginal
+		if (F8PreloadEntered != Preload)
+			F8ResultMessageBoxText .= "(" . F8PreloadEntered . ")"
+		SaveToHistory("#F8# " . F8ResultMessageBoxText)
+		MsgBox, 4096 ,%Preload%, %F8ResultMessageBoxText%
 		}
 	else ; read and update
 		{
+		MsgWindow("Preload-Wert Update...")
 		PreloadOriginal := L_UpdatePreload(Preload, PreloadUpdateValue)
-		Msgbox, 4096 ,%Preload%, %Preload% wurde von %PreloadOriginal% auf %PreloadUpdateValue% umgestellt.
+		MsgWindow()
+		F8ResultMessageBoxText := Preload . ": Preload-Wert von " . PreloadOriginal . " auf " . PreloadUpdateValue . " umgestellt"
+		if (F8PreloadEntered != Preload)
+			F8ResultMessageBoxText .= " (" . F8PreloadEntered . ")"
+		SaveToHistory("#F8# " . F8ResultMessageBoxText)
+		Msgbox, 4096 ,%Preload%, %F8ResultMessageBoxText%
 		}
 	} ;ende if
 } ; ende loop
