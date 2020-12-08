@@ -385,6 +385,7 @@ If (IgnoreLFDConflict = "true")
 	return
 else
 	{
+	DeleteIniSection(LFDSpeicherPfad, "LFD_")
 	LFDListLFDSpeicher := GetIniSectionNames(LFDSpeicherPfad)
 	Loop, parse, LFDListLFDSpeicher, `n, `r
 			{
