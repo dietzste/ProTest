@@ -280,13 +280,6 @@ If (Captur2TextPID = 0) ; is not running
 	}
 }
 
-SendDate(){
-global fast, med
-SetKeyDelay, med
-Send, %A_DD%{Enter}%A_MM%{Enter}%A_YYYY%{Enter}
-SetKeyDelay, fast 
-}
-
 CheckPreloadInPreloadList(Preload){
 local
 global PreloadList

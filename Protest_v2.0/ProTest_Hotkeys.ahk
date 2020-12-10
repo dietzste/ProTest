@@ -49,6 +49,12 @@ return
 Goto AutoEdit
 return
 
+^d::
+SetKeyDelay, med
+Send, %A_DD%{Enter}%A_MM%{Enter}%A_YYYY%{Enter}
+SetKeyDelay, fast 
+return
+
 #if WinActive(GuiF3)
 ~Tab::
 if (TabVar != "")
@@ -72,10 +78,6 @@ return
 #if WinActive(WorkWindow)
 ^m::
 L_SkipXModul()
-return
-
-^d::
-SendDate()
 return
 
 ^r::
