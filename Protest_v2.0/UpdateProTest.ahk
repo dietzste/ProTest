@@ -187,10 +187,14 @@ For Index, Filename in CompareIniFilesArray
 	CompareIniSections(OldFile, NewFile)
 	}
 ; Integrate Old Library
-WaitingProcessWindow(LatestVersion, "Integriere alte Library")
-OldLibraryFile := ConfigFolder . "\Library.ini"
-CleanOldLibrary(OldLibraryFile)
-IntegrateOldLibrary(OldLibraryFile)
+IntegratedLibraryFile := ConfigFolder . "\Library_old.ini"
+if !FileExist(IntegratedLibraryFile)
+	{
+	WaitingProcessWindow(LatestVersion, "Integriere alte Library")
+	OldLibraryFile := ConfigFolder . "\Library.ini"
+	CleanOldLibrary(OldLibraryFile)
+	IntegrateOldLibrary(OldLibraryFile)
+	}
 ; Überschreibe Exe-Dateien
 WaitingProcessWindow(LatestVersion, "Überschreibe exe-Dateien")
 OverwriteExeFiles()
@@ -548,10 +552,9 @@ if FileExist("ProTest_v2.0_RemoteClient.exe")
 }
 
 IntegrateOldLibrary(OldLibraryFile){
-RenamedOldLibraryFile := A_ScriptDir . "\Config\Library_old.ini"
-if FileExist(RenamedOldLibraryFile)
-	return
-NewLibraryFile := A_ScriptDir . "\Config\Fragenbibliothek.ini"
+local 
+global ConfigFolder
+NewLibraryFile := ConfigFolder . "\Fragenbibliothek.ini"
 
 ; Load Sections
 IniRead, OldLibraryKeys, %OldLibraryFile%, OldLibrary
@@ -560,10 +563,10 @@ IniRead, FragenbibliothekKeys, %NewLibraryFile%, Fragenbibliothek
 ; Compare Sections
 ;CompareIniSections(OldFile, NewFile)
 CompareIniSections(NewLibraryFile, OldLibraryFile)
-;CompareIniKeys(OldLibraryFile, NewLibraryFile, "Fragenbibliothek", OldLibraryKeys, FragenbibliothekKeys, "Integrate Old Library")
 
 ; Rename Old Library
-FileMove, %OldLibraryFile%, %RenamedOldLibraryFile%, 1
+IntegratedLibraryFile := ConfigFolder . "\Library_old.ini"
+FileMove, %OldLibraryFile%, %IntegratedLibraryFile%, 1
 }
 
 ;;;;;;;;;;;;;;;;;;;
