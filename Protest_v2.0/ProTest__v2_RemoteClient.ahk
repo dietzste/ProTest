@@ -351,6 +351,13 @@ return
 ^r::
 R_Restart()
 return
+
+^d::
+SetKeyDelay, med
+Send, %A_DD%{Enter}%A_MM%{Enter}%A_YYYY%{Enter}
+SetKeyDelay, fast 
+return
+
 #if
 
 +F10::
