@@ -116,6 +116,8 @@ else
 		Sleep, SleepAfterEnter
 		SaveToHistory(fnOCR, "= " . ReversedValue, Mode)
 		}
+	else if Instr(fnValue, "EnterDate")
+		EnterDate(fnOCR, PreloadString)
 	return
 	}
 }
@@ -236,4 +238,48 @@ CleanPreloadString(PreloadString){
 RealPreloadString := StrReplace(PreloadString, "\" , "|")
 RealPreloadString := StrReplace(RealPreloadString, "/" , "|")
 return RealPreloadString
+}
+
+EnterDate(fnOCR, String){
+local
+global SleepAfterEnter, DefaultSleep
+PreloadString := CleanPreloadString(String)
+StrReplace(PreloadString, "|", "|", Count)
+PreloadCount := Count + 1
+EnterTheseValues := ""
+Loop, Parse, PreloadString , "|"
+	{
+	Value := A_LoopField
+	if A_LoopField is digit
+		Send, %A_LoopField%{Enter}
+	if (A_LoopField = "Tag")
+		{
+		Value := A_DD
+		Send, %A_DD%{Enter}
+		}
+	if (A_LoopField = "Monat")
+		{
+		Value := A_MM
+		Send, %A_MM%{Enter}
+		}
+	if (A_LoopField = "Jahr")
+		{
+		Value := A_YYYY
+		Send, %A_YYYY%{Enter}
+		}
+	if (A_LoopField = "Confirm")
+		{
+		Value := "{Enter}"
+		Sleep, DefaultSleep
+		Send, {Enter}
+		}
+	Sleep, SleepAfterEnter
+	; Save Input
+	if (A_Index = PreloadCount)
+		EnterTheseValues .= Value
+	else
+		EnterTheseValues .= Value . "/"
+	}
+Sleep, SleepAfterEnter
+SaveToHistory(fnOCR, "= " . EnterTheseValues, PreloadString)
 }
