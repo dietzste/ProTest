@@ -164,6 +164,11 @@ ReplaceLast6witha	:= GetIniValue(BasicFile, "OCR",  "ReplaceLast6witha", "true")
 ; Logbuch
 CreateHistory := GetIniValue(BasicFile, BasicSettingsMenu, "c_History")
 
+; TabletMode
+ActivateTabletMode	:= GetIniValue(BasicFile, "TabletMode",  "ActivateTabletMode", "false")
+if (ActivateTabletMode = "true")
+	WorkWindow := GetIniValue(BasicFile, "TabletMode",  "WorkWindow", "ahk_class TV_CClientWindowClass")
+
 ; Monitor Vars
 SysGet, MonitorCoord, MonitorWorkArea
 ScreenWidth := MonitorCoordRight
