@@ -5,7 +5,7 @@
 ProtestMainFunction(){
 local
 global fast, med, CurrentLFD
-global WorkWindow, HistoryFileName, ProjectFile
+global HistoryFileName, ProjectFile
 global DefaultSleep, SleepAfterEnter
 global TimeOutMsgSkippedIntro
 global r_Main1, r_Main2, r_Main3

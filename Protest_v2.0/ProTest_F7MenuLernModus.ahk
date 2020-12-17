@@ -98,7 +98,7 @@ else
 return
 
 7GuiSave:
-WinActivate, %WorkWindow%
+CheckWorkWindow()
 MouseGetPos, F7MousePosX, F7MousePosY
 Gui 7:Submit, NoHide
 ; check if fnValue/Comment exists
@@ -191,7 +191,7 @@ return
 
 7GuiEnter:
 Gui 7:Submit, NoHide
-WinActivate, %WorkWindow%
+CheckWorkWindow()
 MouseGetPos, F7MousePosX, F7MousePosY
 if (e_fnLearn != "" and fnValue != "")
 	{
