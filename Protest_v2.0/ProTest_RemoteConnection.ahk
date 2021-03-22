@@ -134,6 +134,7 @@ MsgWindow()
 L_ReadPreload(Preload){
 local
 global CurrentLFD
+global Privacy
 global LFDSpeicherPfad, ProjectFile
 SaveToHistory("VERBOSE:","Get Preload", Preload)
 CheckFileFirst := true
@@ -160,7 +161,8 @@ if (PreloadValue = "false")
 if (CurrentLFD != "")
 	{
 	CheckLFDSectionNames(CurrentLFD)
-	SaveIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload, PreloadValue)
+	if (Privacy = false)
+		SaveIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD , Preload, PreloadValue)
 	}
 return PreloadValue
 }
@@ -184,7 +186,8 @@ global PreloadList, PreloadListPath
 SendValue := ">PreloadList"
 Detection := SendWait(SendValue, false)
 PreloadList := RemoteExtraction(SendValue, Detection)
-FileAppend , %PreloadList%, %PreloadListPath%
+if (Privacy = false)
+	FileAppend , %PreloadList%, %PreloadListPath%
 }
 
 L_SkipXModul(){
@@ -232,6 +235,7 @@ L_ReadMultiplePreloads(CurrentLFD, PreloadString, PreTested := true){
 local
 global LFDSpeicherPfad
 global MissingPreloadString := ""
+global Privacy
 
 ; (1) PreTested?
 if (PreTested = true)
@@ -263,7 +267,8 @@ Loop, Parse, MissingPreloadString, "|"
 				{
 				if (CurrentLFD != "")
 					CheckLFDSectionNames(CurrentLFD)
-				SaveIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD, Preload, PreloadValue)
+				if (Privacy = false)
+					SaveIniValue(LFDSpeicherPfad, "LFD_" . CurrentLFD, Preload, PreloadValue)
 				}
 			}
 		} ; ende inner loop
