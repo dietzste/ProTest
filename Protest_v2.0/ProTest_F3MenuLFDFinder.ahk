@@ -32,17 +32,26 @@ e_LFD_PLR%A_Index% := GetIniValue(ProjectFile, LFDFinderMenu, "e_LFD_PLR" . A_In
 e_LFD_PLE%A_Index% := GetIniValue(ProjectFile, LFDFinderMenu, "e_LFD_PLE" . A_Index, "-")
 } ; ende loop
 
-; Other 
+; Other
 3GuiControlArray := ["c_CheckAgain", "c_AbortSearch", "e_AbortSearch", "cb_StartLFD", "e_CheckAgain", "c_CheckLFDSpeicherFirst"]
 for i, control in 3GuiControlArray
 	{
-	%control% := GetIniValue(ProjectFile, LFDFinderMenu, control)
-	If (%control% = "ERROR")
-		%control% := GetIniValue(BasicFile, LFDFinderMenu, control)
+	if (Privacy = true and control != "cb_StartLFD")
+		{
+		%control% := GetIniValue(ProjectFile, LFDFinderMenu, control)
+		If (%control% = "ERROR")
+			%control% := GetIniValue(BasicFile, LFDFinderMenu, control)
+		}
 	}
+
+if (Privacy = true)
+	c_CheckLFDSpeicherFirst := 0
 	
 ; Start LFD_List
-cb_StartLFDList := CreateLFDList("F3")
+if (Privacy = true)
+	cb_StartLFDList := cb_StartLFD . "||"
+else
+	cb_StartLFDList := CreateLFDList("F3")
 
 ;;;;;; GUI Menü ;;;;;
 
@@ -84,12 +93,12 @@ Gui, 3:Add, Edit, x75 y240 w30 h18 ve_CheckAgain, %e_CheckAgain%
 Gui, 3:Add, Edit, x75 y262 w30 h18 ve_AbortSearch, %e_AbortSearch%
 Gui, 3:Add, Text, x115 y242 w175 h20 , erfolglosen Abrufen erneut fragen
 Gui, 3:Add, Text, x115 y264 w175 h20 , erfolglosen Abrufen abbrechen
-Gui, 3:Add, CheckBox, x15 y285 w250 h20 Checked%c_CheckLFDSpeicherFirst% vc_CheckLFDSpeicherFirst, %A_Tab%%A_Space% Zuerst LFDs im LFD-Speicher durchsuchen 
+Gui, 3:Add, CheckBox, x15 y285 w250 h20 %PrivacyDis% Checked%c_CheckLFDSpeicherFirst% vc_CheckLFDSpeicherFirst, %A_Tab%%A_Space% Zuerst LFDs im LFD-Speicher durchsuchen 
 
 ; LFD Check
 Gui, 3:Add, Text, x15 y315 w60 h20 , Start LFD:
 Gui, 3:Add, ComboBox, x75 y312 w75 h120 Limit%LFDLimit% vcb_StartLFD, % cb_StartLFDList
-Gui, 3:Add, Button, x170 y312 w75 h20 g3GuiShowLFDValues, LFD Werte
+Gui, 3:Add, Button, x170 y312 w75 h20 %PrivacyDis% g3GuiShowLFDValues, LFD Werte
 
 ; BUTTONS
 Gui, 3:Add, Button, x08 y350 w60 h25 g3GuiResetControls, Reset
@@ -185,7 +194,7 @@ for i, Edit in 3GuiEditArray
 		{
 		if (EditValue = "" Or EditValue = "-")
 			DeleteIniValue(ProjectFile, LFDFinderMenu, EditName)
-		else
+		else if (Privacy = false)
 			SaveIniValue(ProjectFile,LFDFinderMenu, EditName, EditValue)
 		}
 	if (Edit = "e_LFD_PLR" OR Edit = "e_LFD_PLE")
@@ -204,7 +213,7 @@ for i, control in 3GuiControlArray
 	{
 	If (%control% = GetIniValue(BasicFile, LFDFinderMenu, control))
 		DeleteIniValue(ProjectFile, LFDFinderMenu, control)
-	else
+	else if (Privacy = true and control != "cb_StartLFD")
 		SaveIniValue(ProjectFile, LFDFinderMenu, control, %control%)
 	}
 ListLines On
