@@ -35,9 +35,12 @@ if (2GuiReset = true)
 , "r_AdvancedON", "r_AdvancedOFF" ]
 for i, control in 2GuiControlArray
 	{
-	%control% := GetIniValue(ProjectFile, QuickSetupMenu, control)
-	if (%control% = "ERROR")
-		%control% := GetIniValue(BasicFile, QuickSetupMenu, control)
+	if (Privacy = true and control != "cb_UseLFD")
+		{
+		%control% := GetIniValue(ProjectFile, QuickSetupMenu, control)
+		if (%control% = "ERROR")
+			%control% := GetIniValue(BasicFile, QuickSetupMenu, control)
+		}
 	}
 
 ; Datumseingaben
@@ -46,6 +49,7 @@ e_Month := GetIniValue(ProjectFile, QuickSetupMenu, "e_Month", A_MM )
 e_Year := GetIniValue(ProjectFile, QuickSetupMenu, "e_Year", A_YYYY )
 
 ; Untermenüs (de-)aktivieren
+PrivacyDis := DisON
 if (r_Main1 = 1)
 	{
 	IntroDis := DisOFF
@@ -65,7 +69,10 @@ else if (r_Main3 = 1)
 	fnDis := DisOFF
 	}
 
-LFDList := CreateLFDList("F2")
+if (Privacy = true)
+	LFDList := cb_UseLFD . "||"
+else
+	LFDList := CreateLFDList("F2")
 
 if (c_StudyWithLFDs = 0)
 	IntroDisLFD := DisON
@@ -95,7 +102,7 @@ Gui, 2:Add, Radio, x32 y235 w40  h20 %IntroDisLFD% Checked%r_LFD1% vr_LFD1 g2Gui
 Gui, 2:Add, Radio, x32 y257 w170 h20 %IntroDisLFD% Checked%r_LFD2% vr_LFD2 gOpenF3, Suche nach passender LFD
 Gui, 2:Add, Radio, x32 y279 w140  h20 %IntroDisLFD% Checked%r_LFD3% vr_LFD3 g2GuiShowButton, keine Eingabe
 Gui, 2:Add, ComboBox, x77 y235 w75 h100 %IntroDisLFD% Limit%LFDLimit%  vcb_UseLFD, % LFDList
-Gui, 2:Add, Button, x170 y235 w75 h20 %IntroDisLFD% g2GuiShowLFDValues, LFD Werte
+Gui, 2:Add, Button, x170 y235 w75 h20 %PrivacyDis% g2GuiShowLFDValues, LFD Werte
 Gui, 2:Add, CheckBox, x180 y280 w100  h20 %IntroDis% Checked%c_StudyWithLFDs% vc_StudyWithLFDs g2GuiLFDsAvailable, LFDs vorhanden
 ; 3. Last Part 
 Gui, 2:Add, Groupbox, x17 y304 w280 h47 %IntroDis% cBlack , Eingangsfragen mit Fragenummern
@@ -210,10 +217,15 @@ for i, control in 2GuiControlArray
 				Exit
 				}
 			else
-				SaveIniValue(ProjectFile, QuickSetupMenu, control, %control%)
+				{
+				if (Privacy = false)
+					SaveIniValue(ProjectFile, QuickSetupMenu, control, %control%)
+				}
 			} ; ende else
 		} ; ende else
 	}
+if (Privacy = true)
+	DeleteIniValue(ProjectFile, QuickSetupMenu, "cb_UseLFD")
 ; Datumseingaben speichern
 SaveIniValue(ProjectFile, QuickSetupMenu, "e_Day", e_Day)
 SaveIniValue(ProjectFile, QuickSetupMenu, "e_Month", e_Month)
