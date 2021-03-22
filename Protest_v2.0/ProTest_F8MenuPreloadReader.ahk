@@ -21,10 +21,13 @@ if (8GuiReset = true)
 	}
 
 loop, 5 {
-e_PLN%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "e_PLN" . A_Index, A_Space)
-e_PLU%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "e_PLU" . A_Index, "-")
-c_PL%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "c_PL" . A_Index, 0)
+	e_PLU%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "e_PLU" . A_Index, "-")
+	c_PL%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "c_PL" . A_Index, 0)
+	if (Privacy = false)
+		e_PLN%A_Index% := GetIniValue(ProjectFile, PreloadReaderMenu, "e_PLN" . A_Index, A_Space)
+
 } ; ende loop
+
 
 ;;;;;; GUI Menü ;;;;;
 ; EDIT-FIELDs
@@ -130,7 +133,15 @@ For i, control in 8GuiControlArray
 	else if (control = "c_PL") and (%ControlName% = 0)
 		DeleteIniValue(ProjectFile, PreloadReaderMenu, ControlName)
 	else
-		SaveIniValue(ProjectFile, PreloadReaderMenu, ControlName, %ControlName%)
+		{
+		if (Privacy = false)
+			SaveIniValue(ProjectFile, PreloadReaderMenu, ControlName, %ControlName%)
+		else
+			{
+			if (control != "e_PLN")
+				SaveIniValue(ProjectFile, PreloadReaderMenu, ControlName, %ControlName%)
+			}
+		}
 	} ;ende loop 9
 } ; ende for 
 ListLines On
@@ -191,6 +202,8 @@ IF (Preload != "") and (PreloadCheckBox = 1)   ; Checkbox ausgewählt
 		SaveToHistory("#F8# " . F8ResultMessageBoxText)
 		Msgbox, 4096 ,%Preload%, %F8ResultMessageBoxText%
 		}
+	if (Privacy = true)
+		PreloadOriginal := ""
 	} ;ende if
 } ; ende loop
 GoSub 8GuiSaveInput
