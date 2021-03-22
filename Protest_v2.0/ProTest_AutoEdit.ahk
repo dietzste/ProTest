@@ -22,19 +22,27 @@ else
 	AutoEditY := 0
 	}
 ; PreloadList laden
-if !FileExist(PreloadListPath)
-	{
-	PreloadListBox := ""
-	PreloadList := ""
-	5GuiDis := DisON
-	}
-else
+if (Privacy = false and FileExist(PreloadListPath))
 	{
 	PreloadListBox := ""
 	5GuiDis := DisOFF
 	Loop, Read, %PreloadListPath%
 		PreloadListBox .= A_LoopReadLine . "|"
 	FileRead, PreloadList , %PreloadListPath%
+	}
+else
+	{
+	if (Privacy = false)
+		{
+		PreloadListBox := ""
+		PreloadList := ""
+		5GuiDis := DisON
+		}
+	else
+		{
+		Loop, parse, PreloadList, `n, `r
+			PreloadListBox .= A_LoopReadLine . "|"
+		}
 	}
 
 Gui, 5:+AlwaysOnTop ToolWindow
@@ -58,16 +66,19 @@ return
 
 5GuiLoadPreloadList:
 CheckWorkWindow()
-FileGetSize, FileSize , %PreloadListPath%
-if (FileSize != 0 AND FileSize != "")
+if (Privacy = false)
 	{
-	MsgBox, 4132, PreloadList vorhanden, Neue Liste laden und alte Liste (%PreloadListName%) löschen?
-	IfMsgBox, YES
+	FileGetSize, FileSize , %PreloadListPath%
+	if (FileSize != 0 AND FileSize != "")
 		{
-		FileDelete, %PreloadListPath%
+		MsgBox, 4132, PreloadList vorhanden, Neue Liste laden und alte Liste (%PreloadListName%) löschen?
+		IfMsgBox, YES
+			{
+			FileDelete, %PreloadListPath%
+			}
+		else
+			Exit
 		}
-	else
-		Exit
 	}
 MsgWindow("Lade Preload-Liste...")
 L_LoadPreloadList()
