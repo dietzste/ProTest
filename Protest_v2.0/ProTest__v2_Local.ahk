@@ -126,6 +126,9 @@ med := 130
 TabVar := ""
 NewEntryF7 := true
 global Capture2TextPID := GetPID("Capture2Text.exe")
+; Privacy
+Privacy := true
+PrivacyDis := DisON
 
 GetPID(ProgramName){
 Process, Exist , %ProgramName%
