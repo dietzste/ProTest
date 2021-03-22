@@ -123,8 +123,8 @@ return
 
 F12::
 Gui, 12: +AlwaysOnTop ToolWindow
-Gui, 12:Add, Groupbox, x10 y10 w185 h48 cnavy, Löschen
-Gui, 12:Add, CheckBox, x20 y30 w170  h20 vc_DeleteHistoryFile, % HistoryFileName
+Gui, 12:Add, Groupbox, x10 y10 w185 h48 %DisON% cnavy, Löschen
+Gui, 12:Add, CheckBox, x20 y30 w170  h20 %DisON% vc_DeleteHistoryFile, % HistoryFileName
 Gui, 12:Add, Button,   x10 y62 w50 h25 g12GuiBack, Zurück
 Gui, 12:Add, Button, x135 y62 w60 h25 Default g12GuiExit, Beenden
 Gui, 12:Show, Autosize Center, %GuiF12%

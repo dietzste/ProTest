@@ -83,8 +83,8 @@ Gui, 10:Add, Button, x20 y160 w50 h20 g10GuiTestOCR, Test
 Gui, 10:Add, Button, x75 y160 w50 h20 %BasicSettingsDis% g10GuiShowWindow, Show
 Gui, 10:Add, Button, x195 y160 w60 h20 g10GuiHelp, Hilfe
 ; History
-Gui, 10:Add, Groupbox, x10 y195 w260 h55 cNavy, Logbuch Einstellungen
-Gui, 10:Add, CheckBox, x20 y218 w130 h20 Checked%CreateHistory% %BasicSettingsDis% vCreateHistory, Logbuch erstellen
+Gui, 10:Add, Groupbox, x10 y195 w260 h55 %PrivacyDis% cNavy, Logbuch Einstellungen
+Gui, 10:Add, CheckBox, x20 y218 w130 h20 %PrivacyDis% Checked%CreateHistory% vCreateHistory, Logbuch erstellen
 ; Buttons
 Gui, 10:Add, Button,   x10  y260 w55  h25 g10GuiResetControls, Reset
 Gui, 10:Add, Button,   x70  y260 w70  h25 g10GuiChangeButton , % ChangeButtonName 
@@ -412,6 +412,7 @@ local
 global BasicFile
 global ProjectName := StrReplace(ProjectIniFileName, ".ini")
 global IniParentFolderArray
+global Privacy
 ListLines Off
 
 if (Modus = "Select")
@@ -453,6 +454,8 @@ CleanLFDSpeicher(LFDSpeicherPfad)
 
 ; HistoryFile
 global HistoryFileName := "Logbuch_" . ProjectName . "_" . A_YYYY . "_" . A_MM . "_" . A_DD
+if (Privacy = true)
+	HistoryFileName := " kein LogBuch verfügbar"
 global HistoryFile := ProjectFolderPath  . "\" . HistoryFileName . ".txt"
 
 ; PreloadList
@@ -471,6 +474,8 @@ SaveIniValue(ProjectFile, "ProjectFiles", "e_ProjectFile", ProjectIniFileName)
 
 ; Save To History
 global CreateHistory := GetIniValue(BasicFile, "BasicSettingsMenu",  "c_History")
+if (Privacy = true)
+	global CreateHistory := 0
 if (A_IsCompiled = 1)
 	SaveToHistory("### Projekt: " . ProjectName . " ###")
 

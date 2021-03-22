@@ -166,6 +166,8 @@ ReplaceLast6witha	:= GetIniValue(BasicFile, "OCR",  "ReplaceLast6witha", "true")
 
 ; Logbuch
 CreateHistory := GetIniValue(BasicFile, BasicSettingsMenu, "c_History")
+if (Privacy = true)
+	CreateHistory := 0
 
 ; TabletMode
 ActivateTabletMode	:= GetIniValue(BasicFile, "TabletMode",  "ActivateTabletMode", "false")
