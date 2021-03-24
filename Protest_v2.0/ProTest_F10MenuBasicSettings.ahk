@@ -330,7 +330,9 @@ ChooseProjectFileMenuName := " ProTest " . ProTestVersion
 	
 if WinExist(ChooseProjectFileMenuName)
 	{
+	SetTitleMatchMode, 3
 	WinActivate, %ChooseProjectFileMenuName%
+	SetTitleMatchMode, 2
 	Exit
 	}
 
